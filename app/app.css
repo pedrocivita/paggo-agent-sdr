@@ -1,0 +1,42 @@
+/* Small additions on top of paggo.css: fonts from next/font and form fields. */
+
+:root {
+  --display: var(--font-outfit), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: var(--font-plex-mono), ui-monospace, Menlo, monospace;
+}
+
+.form { display: grid; gap: 16px; max-width: 520px; margin-top: 32px; }
+.field { display: grid; gap: 6px; }
+.field label { font: 500 13px/1.3 var(--display); color: var(--ink); }
+.field small { color: var(--mid); font-size: var(--fs-meta); }
+.field input,
+.field textarea {
+  font: 400 15px/1.4 var(--display);
+  color: var(--ink);
+  background: var(--surface);
+  border: 0;
+  border-radius: var(--r-md);
+  box-shadow: 0 0 0 1px var(--hair);
+  padding: 12px 14px;
+}
+.field input:focus-visible,
+.field textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 0; }
+.form .btn { justify-self: start; padding: 12px 20px; font-size: 14px; }
+
+.status { display: flex; align-items: center; gap: 10px; margin-top: 24px; font: 400 var(--fs-meta)/1.4 var(--mono); color: var(--mid); }
+.status i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 1.2s var(--ease-io) infinite; }
+.status.done i { animation: none; background: var(--ok); }
+@keyframes pulse { 50% { opacity: .3; } }
+
+.facts { display: grid; gap: 0; margin: 0; }
+.facts > div { display: grid; grid-template-columns: 180px 1fr; gap: 6px 20px; padding-block: 12px; border-top: 1px solid var(--hair); }
+.facts dt { color: var(--ink); font-weight: 500; }
+.facts dd { margin: 0; font-size: 15px; }
+.facts .src { display: inline; margin: 0 0 0 8px; padding: 0; border: 0; }
+
+.event { border-top: 1px solid var(--hair); padding-block: 12px; }
+.event summary { display: flex; gap: 12px; align-items: baseline; cursor: pointer; list-style: none; }
+.event summary::-webkit-details-marker { display: none; }
+.event pre { margin-top: 10px; background: var(--code); border-radius: var(--r-sm); max-height: 320px; overflow: auto; }
+
+@media (max-width: 600px) { .facts > div { grid-template-columns: 1fr; } }

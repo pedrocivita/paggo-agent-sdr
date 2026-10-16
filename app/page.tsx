@@ -1,69 +1,57 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import { Suspense } from "react";
+import { submitLead } from "./actions";
 
-export default function Home() {
+// The research runs inside this page's server action, so it needs room to finish.
+export const maxDuration = 120;
+
+async function FormError({ searchParams }: { searchParams: Promise<{ erro?: string }> }) {
+  const { erro } = await searchParams;
+  return erro ? <p className="note err">Preencha nome, e-mail, telefone e empresa.</p> : null;
+}
+
+export default function Home({ searchParams }: PageProps<"/">) {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.tsx</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main>
+      <div className="doc-head">
+        <p className="eyebrow">Fale com a Paggo</p>
+        <h1>
+          Conte quem é você<span className="dot">.</span>
+        </h1>
+        <p className="lede">
+          Em menos de um minuto a gente estuda sua empresa e uma assistente da Paggo conversa com você por voz, aqui
+          mesmo no site.
+        </p>
+      </div>
+
+      <form className="form" action={submitLead}>
+        <Suspense>
+          <FormError searchParams={searchParams as Promise<{ erro?: string }>} />
+        </Suspense>
+        <div className="field">
+          <label htmlFor="name">Nome</label>
+          <input id="name" name="name" autoComplete="name" required />
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="field">
+          <label htmlFor="email">E-mail de trabalho</label>
+          <input id="email" name="email" type="email" autoComplete="email" required />
         </div>
-      </main>
-    </div>
+        <div className="field">
+          <label htmlFor="phone">Telefone</label>
+          <input id="phone" name="phone" type="tel" autoComplete="tel" required />
+        </div>
+        <div className="field">
+          <label htmlFor="company">Empresa</label>
+          <input id="company" name="company" autoComplete="organization" required />
+        </div>
+        <div className="field">
+          <label htmlFor="extra">Quer contar mais?</label>
+          <textarea id="extra" name="extra" rows={3} placeholder="Ex.: quantas empresas ou SPEs, tamanho do time financeiro" />
+          <small>Opcional</small>
+        </div>
+        <button className="btn" type="submit">
+          Enviar
+        </button>
+      </form>
+    </main>
   );
 }
