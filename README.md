@@ -7,6 +7,7 @@ Case para a vaga de Marketing e GTM Engineering da Paggo. Um lead preenche um fo
 - [Resumo](#resumo)
 - [Para quem vai mexer no código](#para-quem-vai-mexer-no-código)
 - [Rodar localmente](#rodar-localmente)
+- [Documentação](#documentação)
 - [Estado](#estado)
 
 ## Resumo
@@ -25,8 +26,9 @@ Case para a vaga de Marketing e GTM Engineering da Paggo. Um lead preenche um fo
 | `agent/` | O agente de pesquisa no formato eve: instruções e 3 ferramentas |
 | `lib/` | Lógica compartilhada: CNPJ, site, busca, briefing, banco, rastro, agenda |
 | `db/schema.sql` | As duas tabelas, criadas a cada build se não existirem |
+| `docs/` | Enunciado, arquitetura, regras de negócio, objeções, especificação da voz e o estado atual |
 
-As decisões e o porquê de cada uma estão em [DECISIONS.md](DECISIONS.md).
+Stack: Next.js 16 no Vercel, eve 0.80.1 para o agente de pesquisa, ElevenLabs Agents para a voz, Postgres, BrasilAPI e Exa. As decisões e o porquê de cada uma estão em [DECISIONS.md](DECISIONS.md). Regras para agentes de código (Claude Code, Cursor, Codex) em [AGENTS.md](AGENTS.md).
 
 ## Rodar localmente
 
@@ -35,10 +37,16 @@ Requer Node 24.
 ```bash
 npm install
 cp .env.example .env.local   # preencha DATABASE_URL e as chaves
-npm run dev
+npm run dev                  # http://localhost:3000
 npm test
 ```
 
+Antes de cada push: `npm test`, `npm run typecheck`, `npm run lint` e `npm run build`.
+
+## Documentação
+
+Comece por [docs/STATUS.md](docs/STATUS.md) (onde estamos e próximos passos). O índice completo está em [docs/README.md](docs/README.md).
+
 ## Estado
 
-Em construção até 20/10/2026. Esqueleto ponta a ponta com agenda falsa; voz entra no marco 3.
+Em construção até 20/10/2026. Esqueleto ponta a ponta pronto com agenda falsa; falta o primeiro deploy. A voz entra no marco 3.

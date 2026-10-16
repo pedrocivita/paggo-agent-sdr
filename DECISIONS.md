@@ -19,3 +19,4 @@ One line each: what was chosen, and why it and not the alternative.
 | Calendar | Behind an interface, with a fake until the real one arrives | The whole flow runs today; switching is two environment variables. |
 | Panel access | One password via browser basic auth | It holds lead data, but a login system would be over-engineering for the case. |
 | Research timing | Runs after the response (`after()`), the page polls every 2 s | The lead sees the waiting page at once; polling needs no open connection on Vercel. |
+| Agent context | `AGENTS.md` as the single source, `CLAUDE.md` imports it, `docs/STATUS.md` as running state | Every coding agent reads the same rules; a state file in the repo survives sessions and tools, a tool's private memory does not. |
