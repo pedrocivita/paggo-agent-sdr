@@ -61,6 +61,33 @@ function fakeAgenda(): Agenda {
   };
 }
 
+const TZ = "America/Sao_Paulo";
+
+function spDate(d: Date): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
+}
+
+/** From now to the end of the 5th business day ahead, in São Paulo time: the window the voice agent offers. */
+export function searchWindow(now: Date, businessDays = 5): { from: string; to: string } {
+  const day = new Date(`${spDate(now)}T12:00:00-03:00`);
+  let counted = 0;
+  while (counted < businessDays) {
+    day.setUTCDate(day.getUTCDate() + 1);
+    if (day.getUTCDay() !== 0 && day.getUTCDay() !== 6) counted++;
+  }
+  return { from: now.toISOString(), to: `${spDate(day)}T23:59:59-03:00` };
+}
+
+/** A slot as the agent says it out loud: "terça-feira, dia 20, às 10h". */
+export function spokenSlot(inicio: string): string {
+  const parts = new Intl.DateTimeFormat("pt-BR", {
+    timeZone: TZ, weekday: "long", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+  }).formatToParts(new Date(inicio));
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
+  const minutes = get("minute") === "00" ? "" : get("minute");
+  return `${get("weekday")}, dia ${get("day")}, às ${Number(get("hour"))}h${minutes}`;
+}
+
 export function agenda(): Agenda {
   const { AGENDA_URL, AGENDA_TOKEN } = process.env;
   return AGENDA_URL && AGENDA_TOKEN ? realAgenda(AGENDA_URL.replace(/\/$/, ""), AGENDA_TOKEN) : fakeAgenda();
