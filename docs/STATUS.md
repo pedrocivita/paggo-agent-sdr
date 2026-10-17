@@ -15,7 +15,7 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 ## Onde estamos
 
 - **Marcos 1 e 2** (no ar, pesquisa boa) fechados. **Marco 3** (voz) funciona de ponta a ponta na conta de teste do ElevenLabs. **Marco 4** (agenda e pós-chamada): agenda provada em produção com a agenda falsa; o webhook pós-chamada nunca recebeu uma chamada real.
-- Nesta sessão: o LLM da voz foi escolhido por número (fica o `gemini-2.5-flash`, entre 4 modelos em 20 simulações por texto), o prompt foi corrigido com 3 personas, a UI ganhou a cara do deck (frase na home, bloco escuro na espera, tema escuro, uma fonte só), o Rastro parou de quebrar no celular, o README foi reescrito e o `voice-sync.mjs` passou a adicionar a voz e criar o webhook sozinho. Detalhes e provas em [reasoning.md](reasoning.md).
+- Nesta sessão: o LLM da voz foi escolhido por número (fica o `gemini-2.5-flash`, entre 4 modelos em 20 simulações por texto), o prompt foi corrigido com 3 personas, a UI ganhou a cara do deck (frase na home, bloco escuro na espera, tema escuro, uma fonte só), o Rastro parou de quebrar no celular, o README foi reescrito, o `voice-sync.mjs` passou a adicionar a voz e criar o webhook sozinho, e o agente passou a falar no masculino, como a voz. Detalhes e provas em [reasoning.md](reasoning.md).
 - **Bloqueio:** a chave do ElevenLabs da Paggo não tem permissão de Agents nem de Voices. O Pedro pediu ao Murilo para liberar; a resposta deve vir na segunda, 19/10. Até lá não há voz em produção. Só em caso extremo o Pedro assina o Starter da conta de teste (US$ 1 no primeiro mês).
 
 ## Provado e não provado
@@ -26,7 +26,7 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 | App, banco e pesquisa em produção | Provado | Leads `f68b9483` e `4ba706aa` em https://paggo-agent-sdr.vercel.app, com as 3 ferramentas no Rastro |
 | Pesquisa nos casos difíceis | Provado | `npm run eval` 6/6, 57/57 checagens ([research-cases.md](research-cases.md)) |
 | LLM da voz | Provado por texto | 4 LLMs, 20 simulações: `gemini-2.5-flash` é o único sem fala acima de 2 s até a primeira frase; Haiku 5.5 deixou 31% acima de 2 s; 3.5-flash e `gpt-5-mini` desligaram sem despedida ([reasoning.md](reasoning.md#agente-de-voz)) |
-| Prompt contra 3 personas | Provado por texto | Última versão: interessada e cético marcam reunião, pessoa errada indica o gerente em 3 falas, nenhuma promessa de envio, preço ou integração, nenhuma fala acima de 2 s. Sobra: fechamento esperou o "tchau" em 2 de 7 e o evento crítico não é perguntado quando o lead pede a reunião cedo |
+| Prompt contra 3 personas | Provado por texto | Versão no masculino, 9 rodadas: interessada e cético marcam reunião (4 de 4), pessoa errada indica o gerente em 3 falas, só "obrigado" e "o assistente" nas falas, nenhuma promessa de envio, preço ou integração. Sobra: o fechamento esperou o "tchau" em 1 de 9, o cético ainda tem falas de até 60 palavras quando junta objeções, e o evento crítico não é perguntado quando o lead pede a reunião cedo |
 | Agente de voz publicado | Provado na conta de teste | `voice-sync.mjs` rerodado depois de cada mudança; conferido pela API: `gemini-2.5-flash`, raciocínio desligado, prompt igual ao do repo (12.031 caracteres) |
 | Conversa por voz no site | Provado em dev, com o prompt antigo | 3 conversas com microfone (`conv_3101...`, `conv_8301...`, `conv_5401...`). O prompt de agora ainda não foi ouvido |
 | UI com a cara do deck | Provado no dev local | Screenshots da home, da espera e do Rastro de um lead da Even, no desktop e a 375 px, tema escuro |
@@ -61,8 +61,6 @@ A chave precisa de: Agents (leitura e escrita), Voices (leitura e escrita, para 
 7. Prova por texto, grátis na conta de teste (conferir na da Paggo): `node --env-file=$F scripts/voice-simulate.mjs interessado`.
 8. Prova ao vivo: lead novo pelo formulário em produção, conversa com microfone, e as abas Conversa estruturada, Transcrição e Rastro preenchidas no painel. Se o webhook não chegar, ver no ElevenLabs se ele está ligado ao agente e se o segredo no Vercel é o do arquivo.
 
-Antes do passo 3, decidir a voz: a escolhida é masculina ("Eduardo S. - Brazilian Clear & Pro") e o prompt fala no feminino ("a assistente virtual", "obrigada"). Trocar a voz muda `ELEVENLABS_VOICE_ID` e `ELEVENLABS_VOICE_OWNER`; trocar o prompt muda o gênero das falas.
-
 ### 2. Qualidade da conversa (Alto)
 
 - [ ] Uma conversa de voz com o prompt novo, na conta de teste (sobram 4.534 créditos, uns 6 minutos): ouvir o fechamento (despedida e `end_call` sem esperar o "tchau"), o gancho do briefing e a demora real.
@@ -85,7 +83,7 @@ Antes do passo 3, decidir a voz: a escolhida é masculina ("Eduardo S. - Brazili
 | --- | --- |
 | Sex 16/10 | Esqueleto, repo, primeiro deploy (feito) |
 | Sáb 17/10 | Pesquisa, voz na conta de teste, LLM, personas, UI, README (feito) |
-| Dom 18/10 | Conversa de voz com o prompt novo, decisão da voz, limpeza dos leads de teste |
+| Dom 18/10 | Conversa de voz com o prompt novo, limpeza dos leads de teste |
 | Seg 19/10 | Chave da Paggo: passo 1 inteiro e prova em produção; agenda real se chegar |
 | Ter 20/10 | Revisar documentos e enviar |
 
@@ -99,8 +97,8 @@ Antes do passo 3, decidir a voz: a escolhida é masculina ("Eduardo S. - Brazili
 ## Armadilhas
 
 - A chave da Paggo é restrita: lê webhooks, mas não agentes, ferramentas, segredos nem vozes. O token da conversa em produção (`/api/leads/[id]/voice`) também usa essa chave.
-- A voz escolhida é da biblioteca: não existe na conta da Paggo até ser adicionada (o `voice-sync.mjs` faz isso com `ELEVENLABS_VOICE_OWNER`).
-- Simulação por texto não gasta crédito na conta grátis (42 rodadas, 0 crédito). A demora que ela mede é só a do LLM; a voz soma uns 0,3 a 0,5 s.
+- A voz escolhida é da biblioteca e masculina: não existe na conta da Paggo até ser adicionada (o `voice-sync.mjs` faz isso com `ELEVENLABS_VOICE_OWNER`), e o prompt fala no masculino. Trocar a voz pede trocar o gênero do prompt também.
+- Simulação por texto não gasta crédito na conta grátis (51 rodadas, 0 crédito). A demora que ela mede é só a do LLM; a voz soma uns 0,3 a 0,5 s.
 - O `gemini-2.5-flash` sai em 30/11/2026, e a plataforma começa a desviar parte das chamadas para o `gemini-3.5-flash` perto de 1/11. Na comparação, o 3.5 desligou sem despedida.
 - O `gemini-2.5-flash` segue melhor a regra que está perto do momento de usar: regra nova vai na seção onde a ação acontece, não só em "Objetivo".
 - A transcrição simulada junta pedaços com espaço duplo; regex de checagem usa `\s+`.
