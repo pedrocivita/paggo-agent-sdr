@@ -224,6 +224,39 @@ Escolhido: **manter o `gemini-2.5-flash` sem raciocínio**. Nenhuma das 55 falas
 
 O que continua errado no `gemini-2.5-flash` e vai para as personas: 40% das falas passam de 25 palavras (o "dê antes de pedir" vira duas frases longas, com picos de 72), ainda listou módulos em 1 de 4, e disse "conheço o Sienge sim", que não está nos fatos. Cuidados: a demora medida é só a do LLM (a voz soma fala-para-texto e texto-para-fala, uns 0,3 a 0,5 s); o lead simulado às vezes vaza o raciocínio dele ("THOUGHT:") ou responde duas coisas de uma vez; e o `gemini-2.5-flash` sai em 30/11/2026, com a plataforma começando a desviar parte das chamadas para o `gemini-3.5-flash` perto de 1/11. Para a Paggo usar depois disso, o mesmo script roda a comparação de novo.
 
+**Três personas por texto** (17/10, noite), todas no `gemini-2.5-flash`, com o mesmo script: 21 rodadas em quatro versões do prompt, 0 crédito.
+
+| Persona | Armadilhas |
+| --- | --- |
+| Interessada: Marina, coordenadora financeira de uma incorporadora com 12 SPEs | Pergunta "o que é a Paggo?", cita o Sienge, pede a reunião antes de o agente perguntar quem decide |
+| Cético com preço: Roberto, diretor financeiro de uma construtora, decide sozinho | Pergunta o preço logo e insiste numa faixa, "já tenho ERP", "resolvo na planilha", "me manda por e-mail"; só conta a dor e aceita reunião se a pergunta for boa |
+| Pessoa errada: Juliana, do marketing | Não cuida do financeiro; passa o contato do gerente financeiro se pedirem |
+
+O que errou na primeira volta e o que mudou:
+
+| Erro | Correção |
+| --- | --- |
+| Prometeu o que o sistema não faz: "posso te enviar um material" (cético, 2 de 2) e "vou enviar um e-mail para o Paulo" (pessoa errada) | O agente não manda e-mail nem material: diz que o time manda ou entra em contato, e o pedido entra em `duvidas` |
+| "Já tenho ERP": deu o fato e nunca perguntou o que falta (0 de 2) | O fato numa frase e a pergunta "o que o sistema de hoje não resolve?" |
+| Marcou sem repetir o horário para o lead confirmar | `marcar_reuniao` só depois do sim à repetição de dia e hora |
+| "Ótimo" e "!" na saudação e na despedida, puxados pelo "Oi, Marina!" fixo da abertura | Abertura sem exclamação; nunca "ótimo", nem para confirmar ("certo", "pronto"); nunca ponto de exclamação |
+| Pulou o cargo e o impacto quando o lead abriu com preço | Responde a pergunta de abertura numa frase e pergunta o papel em seguida |
+| Falas longas: o "dê antes de pedir" virava duas frases de 20 palavras cada | Um recurso só, com um exemplo de 18 palavras com recurso e pergunta |
+| Esperou o "tchau" sem dizer "até mais" (pessoa errada) | Exemplo de despedida para a pessoa errada |
+| Coleta: horário em formato ISO, `decisao` vazio quando o lead disse que decide sozinho, pedido de material sem registro | Descrições dos três campos reescritas |
+
+A segunda volta trouxe duas falhas graves que não existiam: um `end_call` mudo no meio da conversa, logo depois de o cético contar a dor, e 14 perguntas sobre o material baixado para a pessoa do marketing, que o agente não reconheceu como pessoa errada. O padrão: o `gemini-2.5-flash` segue a regra quando ela está perto do momento de usar. As regras foram para o lugar da ação: quem decide no topo da seção Agenda, pessoa errada logo na primeira pergunta, `end_call` só depois de "até mais". Na terceira volta o cético não chegou à dor em nenhuma de 3 rodadas, porque o agente não usou o gancho do briefing ("como vocês aprovam os pagamentos de fornecedores"), e o prompt nunca mandava usar. Entrou a regra: a primeira pergunta de descoberta é o gancho ("usa o briefing" é critério Alto).
+
+Última versão do prompt:
+
+| Persona (rodadas) | Resultado | Palavras por fala (média) | Quem decide antes da agenda | Fechou numa fala com `end_call` | O que sobrou |
+| --- | --- | --- | --- | --- | --- |
+| Interessada (2) | Reunião marcada, 2 de 2 | 19 a 21 | 2 de 2 | 1 de 2 | Nunca perguntou o evento crítico: ela pede a reunião logo depois da dor, e o prompt prioriza a decisão |
+| Cético (2) | Reunião marcada, 2 de 2, depois de achar a dor do pagamento duplicado | 27 a 31 | 1 de 1 (na outra ele disse antes que decide sozinho) | 1 de 2 | Falas longas quando ele junta três objeções numa fala só; "o valor é personalizado" sem fonte |
+| Pessoa errada (3) | Indicou outra pessoa, 3 de 3, em 3 falas | 15 a 17 | Não se aplica | 3 de 3 | Numa rodada não pediu o e-mail do indicado, e a coleta não guardou o nome dele; um "ótimo" |
+
+Nenhuma fala passou de 2 s nessas 7 rodadas, e nenhuma teve preço, integração ou envio prometido. O resto conhecido é o fechamento: em 2 de 7 o modelo terminou a despedida sem chamar `end_call` na mesma resposta e esperou o "tchau", o que na voz vira a espera de alguns segundos do terceiro teste. A simulação exagera um pouco (o lead simulado sempre ganha a vez depois de uma fala sem ferramenta), então isso se confere na próxima conversa de voz.
+
 O aviso `error reading from signal stream` no console vem do `livekit-client`, a camada WebRTC do SDK, quando a conexão fecha; o overlay do Next em desenvolvimento mostra qualquer `console.error` como erro.
 
 **A chave da Paggo.** Ao publicar na conta da Paggo, a chave que ela mandou respondeu 401 `missing_permissions` em agentes, ferramentas, segredos, vozes, modelos e no token da conversa; só lista webhooks. Para não confundir com uma chave restrita da conta de teste, foram três provas: o hash é diferente; as permissões são outras (a de teste acessa tudo); e um webhook temporário criado na conta de teste não apareceu para a chave da Paggo (apagado em seguida). Opções pesadas: pedir ao Murilo para liberar as permissões (sem custo, resposta na segunda); usar a conta de teste em produção com o plano Starter (US$ 1 no primeiro mês, 75 minutos, licença comercial); ou esperar. Escolhido: pedir e esperar, seguindo no que não depende da voz em produção; o Starter fica para caso extremo.

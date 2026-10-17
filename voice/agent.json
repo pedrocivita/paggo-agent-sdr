@@ -2,7 +2,7 @@
   "name": "Paggo SDR",
   "conversation_config": {
     "agent": {
-      "first_message": "Oi, {{lead_name}}! Aqui é a assistente virtual da Paggo. Vi que você deixou seu contato agora há pouco. Tem uns minutinhos pra gente conversar?",
+      "first_message": "Oi, {{lead_name}}, aqui é a assistente virtual da Paggo. Vi que você deixou seu contato agora há pouco. Tem uns minutinhos pra gente conversar?",
       "language": "pt-br",
       "dynamic_variables": {
         "dynamic_variable_placeholders": {
@@ -23,7 +23,7 @@
           "end_call": {
             "type": "system",
             "name": "end_call",
-            "description": "Encerra a conversa. Use só depois de falar a despedida em voz alta, sem esperar o lead responder. Nunca use logo depois de outra ferramenta sem falar antes.",
+            "description": "Encerra a conversa. Use só depois de você dizer \"até mais\" em voz alta, sem esperar o lead responder. Nunca no meio da conversa, nem logo depois de outra ferramenta sem falar antes.",
             "params": {
               "system_tool_type": "end_call"
             }
@@ -99,7 +99,7 @@
       },
       "decisao": {
         "type": "string",
-        "description": "Quem decide a compra de um sistema financeiro e como decide, nas palavras do lead. O cargo do próprio lead não vai aqui, vai em dados_corrigidos. Vazio se ele não falou."
+        "description": "Quem decide a compra de um sistema financeiro e como decide, nas palavras do lead. Se o lead disse que decide sozinho, escreva isso. O cargo do próprio lead não vai aqui, vai em dados_corrigidos. Vazio se ele não falou."
       },
       "resultado": {
         "type": "string",
@@ -114,7 +114,7 @@
       },
       "horario_marcado": {
         "type": "string",
-        "description": "Dia e hora da reunião marcada, como o agente confirmou. Vazio se não marcou."
+        "description": "Dia e hora da reunião marcada, do jeito que se fala (segunda-feira, dia 19, às 10h), nunca em formato de data ISO. Vazio se não marcou."
       },
       "objecoes": {
         "type": "string",
@@ -126,7 +126,7 @@
       },
       "duvidas": {
         "type": "string",
-        "description": "O que ficou para o time confirmar: perguntas que o agente não soube responder e pontos como integração com um ERP específico ou preço. Vazio se nada."
+        "description": "O que ficou para o time: perguntas que o agente não soube responder, pontos como integração com um ERP específico ou preço, e pedidos como mandar material por e-mail ou procurar a pessoa indicada. Vazio se nada."
       }
     }
   }
