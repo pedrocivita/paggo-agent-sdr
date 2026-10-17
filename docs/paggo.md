@@ -1,66 +1,81 @@
 # A Paggo
 
-Contexto de produto e tom para o agente de voz e para o mapa de objeções. Base: site [paggo.com.br](https://www.paggo.com.br/), lido em 16/10/2026. Quando o material oficial de produto chegar, ele substitui este resumo e entra na base de conhecimento do agente.
+O que o agente de voz pode dizer sobre a Paggo, e de onde vem cada fato. Fonte principal: a apresentação institucional de agosto de 2026 enviada pela Paggo ("deck", 18 páginas; a página vai entre parênteses). Fonte secundária: o site [paggo.com.br](https://www.paggo.com.br/), lido em 16/10/2026, só onde o deck não fala. O que não está aqui o agente não afirma.
 
 ## Índice
 
 - [Quem é](#quem-é)
-- [Posicionamento](#posicionamento)
-- [Produto](#produto)
-- [Implementação](#implementação)
-- [Perguntas frequentes](#perguntas-frequentes)
-- [Clientes citados no site](#clientes-citados-no-site)
-- [Tom](#tom)
+- [Números](#números)
+- [Módulos](#módulos)
+- [Prova social](#prova-social)
+- [O que vem só do site](#o-que-vem-só-do-site)
+- [O que o agente não sabe](#o-que-o-agente-não-sabe)
+- [Tom e vocabulário](#tom-e-vocabulário)
 
 ## Quem é
 
-Fintech brasileira de software financeiro com IA, fundada em 2022. Foco em empresas de alta complexidade, principalmente construtoras e incorporadoras com vários CNPJs e SPEs. Não é banco: as contas digitais ficam numa Instituição de Pagamento regulada pelo Banco Central. Escritórios em São Paulo e Curitiba.
+- "O orquestrador financeiro da construção" (p. 1, 5). A plataforma centraliza dados e processos para coordenar a operação financeira de construtoras e incorporadoras (p. 5).
+- Tese: o controle financeiro pode ser simples e unificado, sem depender de dezenas de sistemas e planilhas desconectadas (p. 3). A jornada que hoje passa por banco, ERP, Excel e várias ferramentas (orçamento, compras, documentos, pagar, receber, tesouraria, conciliação, contabilidade, relatórios) vira um produto único (p. 3, 4).
+- Três frentes (p. 5):
+  - Centraliza: importa dados de outras plataformas, conecta contas bancárias via Open Finance, integra ao ERP da empresa, elimina planilhas e controles paralelos.
+  - Coordena: ferramentas do orçamento à contabilidade, conta bancária integrada ao produto, automação de tarefas operacionais, relatórios personalizáveis.
+  - Para a construção: várias contas bancárias num só lugar, risco e fluxo de caixa por projeto, pronta para grande volume de fornecedores e contratos, soluções de capital para qualquer momento da obra.
 
-Números do site: R$ 10 bilhões pagos e recebidos, mais de 500 empresas, mais de 80 mil horas economizadas.
+## Números
 
-## Posicionamento
-
-"Performance financeira para empresas de alta complexidade." Plataforma de performance financeira com IA, além da automação de tarefas. Atua em contas a pagar, contas a receber, tesouraria, controladoria e FP&A, rotinas contábeis e na operação financeira que costuma ser terceirizada para BPOs.
-
-Frase do hero: todo o financeiro da empresa em um único lugar; pagar, receber e controlar as finanças num único sistema, de forma segura e automatizada, sem abrir mão do controle sobre o capital.
-
-## Produto
-
-| Vertical | O que faz |
+| Número | O que significa (p. 6) |
 | --- | --- |
-| Inteligência Artificial | Assistente que conhece o negócio, realiza tarefas e consulta dados da operação. Lê NF-e, boletos e guias e sugere lançamento contábil |
-| Tesouraria | Todas as contas (Paggo ou não) num painel; saldo das contas Paggo rende 100% do CDI automaticamente; contas digitais por projeto em minutos, sem tarifas |
-| Contas a pagar | Lançar e liberar pagamentos até 6x mais rápido, horário bancário estendido, alertas contra fraude, juros e multas |
-| Contas a receber | Réguas de cobrança, correção monetária automática, cobrança por WhatsApp, boleto e Pix, portal do cliente, renegociações |
-| Carteiras digitais | App no lugar do cartão físico, com regras de uso |
-| Controladoria | Custos e despesas, orçamentação, resultado gerencial em tempo real |
+| R$ +10 bilhões | Transacionados na plataforma até janeiro de 2026 |
+| +80.000 | Horas economizadas por empresas, automatizando processos financeiros |
+| +300 | Empreendimentos usando a Paggo |
 
-## Implementação
+O deck cita também empresas de capital aberto e empresas listadas no ranking 100+ Intec entre os clientes, sem número (p. 6). O site fala em "mais de 500 empresas": é outra métrica, o agente não mistura as duas.
 
-Gratuita, "em horas, não em meses".
+## Módulos
 
-- Dia 1, testar: projetos e contas em 5 minutos, convidar o time sem custo por usuário, primeira transação.
-- Dia 2, customizar: fluxos de aprovação, acessos, migração.
-- Dia 7: tudo centralizado.
+| Módulo | O que faz | Detalhe concreto |
+| --- | --- | --- |
+| Tesouraria (p. 8, 9) | Contas digitais da Paggo para cada empreendimento, abertas em poucos minutos; saldos e projeções de caixa em tempo real num só lugar | Mostra quantos dias cada conta tem de cobertura de caixa e quais estão sem saldo. Saldo rende 100% do CDI, líquido de IOF. Extrato que facilita a conciliação, integrado ao ERP. Comprovantes em tempo real por e-mail ou WhatsApp |
+| Contas a pagar (p. 10) | Todos os pagamentos dos empreendimentos num lugar, com IA indicando riscos; aprovar, liberar e editar em massa | Pagamentos compensados na conta Paggo e conciliados sozinhos. Aponta pendências, como pagamento sem nota fiscal ou com dado incompleto. Avisa pagamento potencialmente duplicado, escolhe a conta pagadora certa e liga nota e boleto ao pagamento |
+| Contas a receber (p. 11, 12) | Carteira de recebíveis de todos os empreendimentos, com cobrança automática | Recebimento cai no extrato com nome e CPF do pagador. Correção das parcelas pelo índice escolhido, automática. Cobrança por boleto e Pix, com aviso por e-mail ou WhatsApp. Portal do comprador com a marca da incorporadora: contratos, pagamentos, segunda via com multa e juros, serviços de personalização e perguntas frequentes |
+| Cartões digitais (p. 13) | Pagamentos do dia a dia sem dinheiro na "caixinha de obra" nem cartão de débito | Sem tempo de emissão e com mais controle; app no celular com Pix, pagamento e extrato |
+| Orçamento (p. 14) | Orçado vs. realizado em tempo real, com alertas preditivos | Importa o orçamento de uma planilha ou monta na Paggo. Cada linha pode ser conta gerencial ou centro de custo vindo do ERP. O realizado vem dos pagamentos feitos nas contas Paggo |
+| Fluxo de caixa (p. 15) | Projeção por empresa e consolidada para o grupo econômico | Cruza o ERP com as movimentações bancárias e as projeções dos times; antecipa déficit e excesso de caixa dia a dia |
+| Controladoria (p. 16) | DRE atualizada sozinha, porque as transações passam pela Paggo | Compara a DRE no tempo ou entre projetos, SPEs e empresas do grupo em segundos, trabalho que levaria dezenas de horas da controladoria |
+| Automações com IA (p. 17) | Regras de negócio que rodam sozinhas | Gatilhos (novo pagamento, novo documento, rotina recorrente, campo alterado), condições e ações. Exemplo do deck: pagamento acima de R$ 100 mil avisa o gerente no WhatsApp |
 
-Esforço do cliente de 1 a 2 horas em três passos: abrir contas PJ, configurar políticas e controles, treinar usuários. Acompanhamento sem custo.
+## Prova social
 
-## Perguntas frequentes
+- Clientes no deck: Vetter, Hype, BP Incorporadora, ATR, HAPP Incorporações e Treele Construtora (p. 6).
+- Depoimentos (p. 18):
+  - Aline, sócia diretora da ATR Incorporadora: abriram contas em poucos minutos e configuraram limites e acessos como quiseram.
+  - Miguel, sócio fundador da BP Incorporadora: monitoram os pagamentos em tempo real, com menos atraso, multas e juros.
+  - Daniel, sócio fundador da ArtHaus Incorporadora: o time da Paggo atua como extensão do time dele, sempre pronto para ajudar.
+- Time com passagem por McKinsey, Nubank, C6 Bank, Itaú, BTG Pactual, Rappi, Stone, PicPay, QuintoAndar, Morgan Stanley, VTEX, OLX, QI Tech e Maya Capital (p. 6).
+- Investidores: Kaszek, Monashees, ONEVC e Picus Capital (p. 6).
+- O deck tem uma seção "Estudo de Caso" no menu, sem conteúdo: o agente não cita estudo de caso.
 
-Úteis para o [mapa de objeções](objections.md).
+## O que vem só do site
 
-| Pergunta | Resposta do site |
+| Pergunta | Resposta |
 | --- | --- |
-| É banco? | Não. É software e tecnologia, em parceria com infraestruturas bancárias. Contas custodiadas por Instituição de Pagamento regulada e auditada pelo Banco Central |
-| O dinheiro está seguro? | Recursos segregados dos ativos da instituição, liquidez imediata, monitoramento de fraude com IA, 2FA, limites por horário e tipo de pagamento |
-| Rende? | 100% do CDI, sem carência, sem tirar o dinheiro da conta |
-| Meios de pagamento | Pix (agendado e em lote), boleto, TED, transferência interna, cobrança recorrente, no mesmo fluxo de aprovação com rastreabilidade |
-| Cobra clientes? | Sim, boleto e Pix, com lembretes por e-mail ou WhatsApp |
+| É banco? | Não. É tecnologia; as contas ficam numa Instituição de Pagamento regulada e auditada pelo Banco Central |
+| O dinheiro está seguro? | Recursos segregados, monitoramento de fraude com IA, autenticação em duas etapas, limites por horário e tipo de pagamento |
+| Meios de pagamento | Pix (agendado e em lote), boleto, TED, transferência interna e cobrança recorrente, no mesmo fluxo de aprovação |
+| Implementação | Gratuita, com acompanhamento sem custo; o time do cliente gasta de 1 a 2 horas e tudo fica centralizado em cerca de uma semana |
+| Fundação | Fintech brasileira de 2022, com escritórios em São Paulo e Curitiba |
 
-## Clientes citados no site
+## O que o agente não sabe
 
-Todos incorporadoras: BP Incorporadora (controle, segurança e decisão melhores desde a primeira transação), ATR Incorporadora (contas em minutos, aprovação mais rápida, suporte disponível) e Hype Incorporadora (o rendimento do saldo já compensa o custo; menos tarifas, multas e ferramentas).
+Nem o deck nem o site dizem. O agente não inventa: diz que confirma com o time e anota para a reunião.
 
-## Tom
+- Preço ou faixa de preço.
+- Quais ERPs têm integração pronta (por exemplo, Sienge).
+- Como funcionam as "soluções de capital".
+- Prazos, contratos e condições comerciais.
 
-Direto, concreto, sem jargão de vendas. Fala de controle, segurança e tempo economizado. Segmento central: construção civil e incorporação, com expansão para serviços financeiros, seguradoras e securitizadoras.
+## Tom e vocabulário
+
+- Tom do deck: sóbrio e concreto, frases curtas, sem exagero. Fala de controle, visibilidade, tempo real, um só lugar, poucos minutos.
+- Vocabulário do cliente: empreendimento, obra, SPE, grupo econômico, conta pagadora, caixinha de obra, habite-se, INCC, orçado vs. realizado, DRE por SPE, conciliação.
+- A conversa não segue a ordem do deck. Primeiro a dor do lead; depois, no máximo, um módulo ligado a ela, em uma frase; prova social só se ajudar.

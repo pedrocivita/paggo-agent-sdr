@@ -1,6 +1,6 @@
 # Regras de negócio
 
-Entregável do case. Rascunho de 16/10/2026, baseado no site da Paggo; validar com o material oficial de produto quando chegar. As regras de fit já estão em uso nas instruções do agente de pesquisa (`agent/instructions.md`); as de conversa e agenda entram no prompt da voz no marco 3.
+Entregável do case. Conferidas em 17/10/2026 com o deck institucional da Paggo, que confirma o foco em construtoras e incorporadoras ([paggo.md](paggo.md)). As regras de fit estão em uso nas instruções do agente de pesquisa (`agent/instructions.md`); as de conversa e agenda, no prompt da voz (`voice/prompt.md`).
 
 ## Índice
 
@@ -67,7 +67,9 @@ Um por lead:
 - Alvo de 4 a 7 minutos.
 - No máximo duas tentativas na mesma objeção ([mapa de objeções](objections.md)).
 - Pessoa errada: pede nome e contato de quem decide e se ela participaria junto.
-- Se perguntarem, confirma que é uma assistente virtual da Paggo.
+- Se apresenta como assistente virtual da Paggo na abertura e confirma que é IA se perguntarem.
+- Produto só depois da dor: no máximo um módulo por vez, ligado ao que o lead contou, em uma frase.
+- Pergunta que o material não responde (preço, ERP específico, condições): diz que confirma com o time e registra em `duvidas`, que vai para a reunião.
 
 ## Dados pessoais
 
