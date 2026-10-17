@@ -31,7 +31,7 @@ markers; project rules stay below it.
 | --- | --- | --- |
 | Web app | Next.js 16.4 App Router (Turbopack, `cacheComponents`, `proxy.ts`) on Vercel | `app/` |
 | Research agent | eve 0.80.1, exact pin, mounted by `withEve` at `/eve/v1/*`; Claude Sonnet 5.5 direct | `agent/` |
-| Voice | ElevenLabs Agents, React SDK in the browser (not built yet) | `voice/`, spec in `docs/voice-agent.md` |
+| Voice | ElevenLabs Agents, React SDK in the browser, `gemini-2.5-flash` | `voice/`, spec in `docs/voice-agent.md` |
 | Data | Postgres through `postgres` (porsager), two tables | `db/schema.sql`, `lib/db.ts` |
 | Company data | BrasilAPI (Receita mirror) | `lib/cnpj.ts` |
 | Web search | Exa | `lib/search.ts` |
@@ -49,6 +49,7 @@ npm run lint
 npm run build        # runs db/schema.sql first when DATABASE_URL is set
 npm run eval         # eve eval: the 6 hard research cases with real tools (about US$ 0.40)
 node --env-file=<key file> scripts/voice-sync.mjs   # publish voice/ to an ElevenLabs account
+node --env-file=<key file> scripts/voice-simulate.mjs <persona>   # text-only call with a simulated lead
 npx next typegen     # regenerates PageProps/RouteContext types after adding a route
 ```
 
@@ -76,7 +77,7 @@ Gates before every push: test, typecheck, lint and build, all green.
 3. Every tool body runs inside `traced(run, tool, input, fn)` (`lib/trace.ts`): one row in `events`
    per call with input, output, URLs found, ms and ok or error. Research rows get the lead id
    afterwards (`linkRunToLead`).
-4. Voice, to build: the browser gets a conversation token from our server and starts the session
+4. Voice: the browser gets a conversation token from our server and starts the session
    with the briefing as dynamic variables; the agent's webhook tools call `/api/agenda/*` (traced,
    `run.kind = "voice"`); the post-call webhook stores transcript, summary and collected data.
 5. `/painel` (basic auth in `proxy.ts`) lists leads; `/painel/[id]` has 5 tabs: Formulário,
@@ -121,6 +122,9 @@ Diagrams, contracts and the file map: `docs/architecture.md`.
 - A company site can show an unrelated CNPJ (paggo.com.br lists a MEI from another city next to its
   own); the instructions make the agent flag a CNPJ whose name does not match the form.
 - ESLint must ignore `.eve/` and `.output/` (eve build output); both are gitignored.
+- A voice prompt rule goes in the section where the action happens (Agenda, first question):
+  `gemini-2.5-flash` skipped the decision question and hung up mid-call while the rules lived only
+  under Objetivo (2026-10-17).
 
 ## Working with Pedro
 
