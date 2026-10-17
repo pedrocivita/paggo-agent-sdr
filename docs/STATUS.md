@@ -17,7 +17,7 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 - **Marco 1** (no ar) e **Marco 2** (pesquisa boa) estão fechados. Os casos difíceis e o eval estão em [research-cases.md](research-cases.md).
 - **Marco 3** (voz): funciona de ponta a ponta numa conta de teste do ElevenLabs. Foram 3 conversas reais com microfone, e o prompt foi ajustado a cada uma ([reasoning.md](reasoning.md)).
 - **Marco 4** (agenda e pós-chamada): as ferramentas da agenda estão provadas em produção, com a agenda falsa. O webhook pós-chamada está escrito e testado, mas ainda não recebeu uma chamada real.
-- **Bloqueio:** a chave do ElevenLabs que a Paggo mandou não tem permissão de Agents nem de Voices, então o agente não vai para a conta da Paggo e o token em produção não abre conversa.
+- **Bloqueio:** a chave do ElevenLabs que a Paggo mandou não tem permissão de Agents nem de Voices, então o agente não vai para a conta da Paggo e o token em produção não abre conversa. Provado que a chave é da Paggo (outra conta, não a de teste). O Pedro pediu ao Murilo uma chave com permissões; a resposta deve vir na segunda, 19/10. Até lá, a voz só roda no dev local com a conta de teste. Em caso extremo, o Pedro aceita assinar o plano Starter da conta de teste (US$ 1 no primeiro mês, 75 minutos, licença comercial) e usá-la em produção.
 
 ## Provado e não provado
 
@@ -49,7 +49,7 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 
 ### 2. Qualidade da conversa (Alto)
 
-- [ ] Comparar 2 ou 3 LLMs com o mesmo prompt, medindo demora e obediência ao estilo: `gemini-2.5-flash` (atual, ainda diz "Ótimo!" e lista módulos), um Gemini mais novo, `claude-haiku-5-5`, `gpt-5-mini`. Testar por texto (API de testes do agente) antes de gastar voz.
+- [ ] Comparar 2 ou 3 LLMs com o mesmo prompt, medindo demora e obediência ao estilo: `gemini-2.5-flash` (atual, ainda diz "Ótimo!" e lista módulos), um Gemini mais novo, `claude-haiku-5-5`, `gpt-5-mini`. Testar por texto antes de gastar voz: `POST /v1/convai/agents/{agent_id}/simulate-conversation` roda a conversa inteira com um usuário simulado (`simulation_specification.simulated_user_config.prompt` descreve a persona, `tool_mock_config` simula as ferramentas, `extra_evaluation_criteria` avalia). Está descontinuado e sai em 31/10/2026; o substituto é `/v1/convai/agent-testing/create` mais `/v1/convai/agents/{agent_id}/run-tests`. Cobra LLM dos dois lados, não minuto de voz; a conta de teste tem uns 2.000 créditos.
 - [ ] 3 conversas com personas: interessado, cético com preço, pessoa errada. Conferir objeções, SPICED, resultado e coleta.
 - [ ] Testar o fechamento novo: uma fala só com "até mais" e `end_call` logo depois, sem silêncio.
 
@@ -75,7 +75,7 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 
 ## Pendências que dependem da Paggo
 
-- **Chave do ElevenLabs com permissão de Agents, Voices e Webhooks** (a atual responde 401 `missing_permissions`), e quantos minutos ela tem.
+- **Chave do ElevenLabs com permissão de Agents, Voices e Webhooks** (a atual responde 401 `missing_permissions`), e quantos minutos ela tem. Pedido feito ao Murilo no sábado, 17/10. Basta ele editar as permissões da mesma chave.
 - Endpoint da agenda: URL, token, formato do cabeçalho de auth e de `de`/`ate`.
 - Preço ou faixa que o agente pode falar; quais ERPs têm integração pronta (o Sienge aparece nas conversas).
 - O estudo de caso, que aparece no menu do deck sem conteúdo.

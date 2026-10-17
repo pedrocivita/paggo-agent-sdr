@@ -183,6 +183,8 @@ Sobra: o `gemini-2.5-flash` ainda escorrega no estilo (disse "Ótimo!", que est�
 
 O aviso `error reading from signal stream` no console vem do `livekit-client`, a camada WebRTC do SDK, quando a conexão fecha; o overlay do Next em desenvolvimento mostra qualquer `console.error` como erro.
 
+**A chave da Paggo.** Ao publicar na conta da Paggo, a chave que ela mandou respondeu 401 `missing_permissions` em agentes, ferramentas, segredos, vozes, modelos e no token da conversa; só lista webhooks. Para não confundir com uma chave restrita da conta de teste, foram três provas: o hash é diferente; as permissões são outras (a de teste acessa tudo); e um webhook temporário criado na conta de teste não apareceu para a chave da Paggo (apagado em seguida). Opções pesadas: pedir ao Murilo para liberar as permissões (sem custo, resposta na segunda); usar a conta de teste em produção com o plano Starter (US$ 1 no primeiro mês, 75 minutos, licença comercial); ou esperar. Escolhido: pedir e esperar, seguindo no que não depende da voz em produção; o Starter fica para caso extremo.
+
 ## Agenda
 
 O endpoint real ainda está sendo construído pela Paggo. Enquanto isso, uma agenda falsa atende pela mesma interface (`lib/agenda.ts`), e a troca é feita por duas variáveis de ambiente. Do enunciado, assumimos `Authorization: Bearer` e datas ISO em `de`/`ate`; o formato das respostas segue os exemplos do case. Regras: próximos 5 dias úteis, nada começando na próxima hora, até 4 opções, das quais o agente oferece duas.
