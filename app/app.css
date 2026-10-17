@@ -40,3 +40,9 @@
 .event pre { margin-top: 10px; background: var(--code); border-radius: var(--r-sm); max-height: 320px; overflow: auto; }
 
 @media (max-width: 600px) { .facts > div { grid-template-columns: 1fr; } }
+
+/* Voice call on the waiting page */
+.talk { display: grid; justify-items: start; gap: 12px; margin-top: 24px; }
+.talk .status { margin-top: 0; }
+.talk .btn:disabled { opacity: .4; cursor: default; }
+.talk .note, .talk .sub { margin: 0; }

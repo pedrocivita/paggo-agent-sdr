@@ -11,6 +11,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@elevenlabs/react": "1.18.0",
     "@vercel/oidc": "4.0.1",
     "eve": "0.80.1",
     "next": "16.4.2",
