@@ -13,6 +13,9 @@ export type Conversation = {
   spiced: Record<string, string>;
   result: string;
   confirmedData: string;
+  meetingAt: string;
+  objections: string;
+  doubts: string;
 };
 
 export type Lead = {

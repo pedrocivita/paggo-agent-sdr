@@ -116,6 +116,21 @@ function StructuredTab({ lead }: { lead: Lead }) {
           </div>
         ))}
       </dl>
+      <h4>Reunião, objeções e dúvidas</h4>
+      <dl className="facts">
+        <div>
+          <dt>Horário marcado</dt>
+          <dd>{c.meetingAt || "·"}</dd>
+        </div>
+        <div>
+          <dt>Objeções</dt>
+          <dd>{c.objections || "nenhuma"}</dd>
+        </div>
+        <div>
+          <dt>Dúvidas para o time</dt>
+          <dd>{c.doubts || "nenhuma"}</dd>
+        </div>
+      </dl>
     </>
   );
 }

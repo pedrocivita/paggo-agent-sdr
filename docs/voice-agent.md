@@ -38,9 +38,11 @@ Regras de conversa e agenda: [business-rules.md](business-rules.md). Objeções:
 | Variável | Vem de |
 | --- | --- |
 | `lead_id` | Id do lead; vai no corpo das ferramentas para o rastro ligar a chamada ao lead |
-| `lead_name` | Formulário |
+| `lead_name` | Primeiro nome do formulário |
 | `company_name` | `briefing.company.legalName.value`, ou o nome digitado se a pesquisa não achou |
-| `briefing` | `briefing.forAgent`: o que já se sabe, o que falta perguntar e um gancho de abertura |
+| `briefing` | `briefing.forAgent`: o que já se sabe, o que falta perguntar e um gancho de abertura; sem pesquisa, uma frase pedindo para confirmar empresa e papel |
+
+A rota `POST /api/leads/[id]/voice` gera o token e devolve essas variáveis; só atende depois que a pesquisa terminou.
 
 O id do lead também vai como `userId` da sessão e volta no webhook pós-chamada como `data.user_id`.
 
@@ -48,15 +50,28 @@ O id do lead também vai como `userId` da sessão e volta no webhook pós-chamad
 
 | Ferramenta | Tipo | Regra |
 | --- | --- | --- |
-| `consultar_agenda` | Webhook para `POST /api/agenda/consultar` | Próximos 5 dias úteis; oferece dois horários, nunca a lista |
-| `marcar_reuniao` | Webhook para `POST /api/agenda/marcar` | Repete dia e hora; usa o e-mail do formulário; no 409 oferece o próximo |
+| `consultar_agenda` | Webhook para `POST /api/agenda/consultar` | Próximos 5 dias úteis, a partir de 1 hora depois de agora; devolve até 4 opções com o texto falado ("terça-feira, dia 20, às 10h"); o agente oferece duas |
+| `marcar_reuniao` | Webhook para `POST /api/agenda/marcar` | Repete dia e hora; usa nome e e-mail do formulário, ou o e-mail que o lead pedir; no 409 oferece o próximo |
 | `end_call` | Ferramenta de sistema | Encerra depois do resumo e da despedida |
 
-As rotas validam um segredo compartilhado num cabeçalho (configurado como secret no ElevenLabs), chamam `lib/agenda.ts` dentro de `traced()` com `run.kind = "voice"` e `run.id` = id da conversa, e respondem em frases curtas que o agente consegue falar.
+Corpo das duas: `lead_id` e `conversation_id` vêm de variáveis (não do LLM); `inicio` (ISO, de uma opção de `consultar_agenda`) e `email` (opcional) vêm do LLM. As rotas exigem o cabeçalho `x-tool-secret` igual a `VOICE_TOOL_SECRET` (secret no ElevenLabs, variável no Vercel), chamam `lib/agenda.ts` dentro de `traced()` com `run.kind = "voice"` e `run.id` = id da conversa, e respondem em frases curtas. Erro da agenda vira a frase "o time confirma o horário por e-mail" e fica no rastro.
 
 ## Coleta de dados
 
-Campos da aba Analysis, declarados na config do agente, que chegam prontos no webhook pós-chamada: `situacao`, `dor`, `impacto`, `evento_critico`, `decisao` (cada um com a frase do lead ou vazio), `resultado`, `horario_marcado`, `objecoes`, `dados_corrigidos`. Nove campos, abaixo do limite de 25. O painel já espera as chaves SPICED com esses nomes (`app/painel/[id]/lead-tabs.tsx`).
+Campos da aba Analysis, declarados na config do agente, que chegam prontos no webhook pós-chamada. Dez campos, abaixo do limite de 25. O painel lê as chaves SPICED com esses nomes (`app/painel/[id]/lead-tabs.tsx`).
+
+| Campo | Descrição na config |
+| --- | --- |
+| `situacao` | Como o financeiro da empresa funciona hoje, nas palavras do lead. Vazio se ele não falou |
+| `dor` | O que trava ou incomoda o lead no financeiro, nas palavras dele. Vazio se não falou |
+| `impacto` | Quanto a dor custa em tempo, multa, juros ou dinheiro, nas palavras dele. Vazio se não falou |
+| `evento_critico` | O que obriga a resolver agora, com data se ele disse. Vazio se não falou |
+| `decisao` | Quem decide a compra e como, nas palavras dele. Vazio se não falou |
+| `resultado` | Um de: reunião marcada, qualificado sem reunião, retornar depois, indicou outra pessoa, não qualificado |
+| `horario_marcado` | Dia e hora da reunião marcada, ou vazio |
+| `objecoes` | Objeções levantadas e como ficaram, separadas por ponto e vírgula |
+| `dados_corrigidos` | Dados que o lead confirmou ou corrigiu (nome, cargo, empresa, e-mail, indicação de outra pessoa) |
+| `duvidas` | Perguntas que o agente não soube responder e ficaram para o time |
 
 ## Latência
 
