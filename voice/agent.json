@@ -103,7 +103,7 @@
       },
       "resultado": {
         "type": "string",
-        "description": "O resultado da conversa.",
+        "description": "O resultado da conversa. Indicou outra pessoa: o lead não cuida do financeiro e passou quem cuida. Não qualificado: a empresa não tem o perfil da Paggo. Retornar depois: o lead pediu material ou outro momento, sem reunião.",
         "enum": [
           "reunião marcada",
           "qualificado sem reunião",
