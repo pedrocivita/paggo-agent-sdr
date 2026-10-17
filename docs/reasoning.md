@@ -168,6 +168,19 @@ Depois do teste, a voz pareceu lenta e alegre demais. Ajustes: `speed` 1,1 (o m�
 | Transcrição ouviu "Ceng" e "a pago" | Palavras-chave na transcrição (`asr.keywords`): Paggo, Sienge, Cyrela, SPE, INCC, CDI, TOTVS, SAP |
 | Ainda devagar | `speed` 1,2, o máximo da plataforma |
 
+**Terceiro teste** (conversa `conv_5401m55svdjze1xvcpjk1ae4m57k`, 4,3 min, 3.095 créditos). As falas ficaram curtas (11 a 22 palavras), e a abertura foi direto ao papel da pessoa. Problemas novos:
+
+| Erro | Correção |
+| --- | --- |
+| Virou interrogatório: insistiu no impacto com uma pergunta abstrata ("quantas horas por dia ou por semana"), repetiu quando a lead não entendeu, perguntou "o que acontece se não concilia", e a lead reclamou ("quanta pergunta") | Uma seção de perguntas que rendem, uma por letra do SPICED, com régua no impacto; no máximo cinco perguntas de descoberta; quem não sabe ou não entende não ouve a pergunta de novo |
+| A lead pediu duas vezes para conhecer a Paggo e não recebeu nada | "Dê antes de pedir": cada dor contada recebe uma frase de como a Paggo resolve antes da próxima pergunta; ao segundo pedido ou a uma reclamação, para a descoberta e oferece a reunião |
+| A conciliação foi a dor escolhida, e o mapa de dores não tinha resposta para ela | Item novo no mapa, do deck: pagamentos e recebimentos passam pela conta Paggo e caem conciliados no extrato, integrado ao ERP |
+| Um riso ("Rá!") fez ela parar e recomeçar a mesma frase duas vezes, pedindo desculpa | `turn.interruption_ignore_terms` com interjeições em português (aham, uhum, tá, rá, haha) e regra de não recomeçar a frase |
+| Silêncio constrangedor no fim: 11,4 s depois do "não" para a pergunta "tem mais alguma dúvida?" e 5,9 s depois do "tchau" | Fecha numa fala só (dia, hora, convite por e-mail, "até mais") e chama `end_call` logo em seguida, sem perguntar nem esperar |
+| Demora ainda perceptível (0,8 a 1,9 s; a fala já está na velocidade máxima, 1,2) | `turn.speculative_turn` ligado: o LLM começa a responder durante o silêncio, antes da certeza de fim de turno. A ansiedade do turno continua `normal`, porque o lead fala com pausas ("ééé") e `eager` cortaria a fala dele |
+
+Sobra: o `gemini-2.5-flash` ainda escorrega no estilo (disse "Ótimo!", que está proibido, e voltou a listar módulos ao pedir desculpa). O próximo passo é medir 2 ou 3 LLMs mais fortes com o mesmo prompt, já na conta da Paggo; a conta de teste ficou com cerca de 2.000 créditos, uns 3 minutos.
+
 O aviso `error reading from signal stream` no console vem do `livekit-client`, a camada WebRTC do SDK, quando a conexão fecha; o overlay do Next em desenvolvimento mostra qualquer `console.error` como erro.
 
 ## Agenda

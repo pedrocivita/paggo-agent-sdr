@@ -23,7 +23,7 @@
           "end_call": {
             "type": "system",
             "name": "end_call",
-            "description": "Encerra a conversa. Use só depois que você já se despediu e o lead se despediu ou ficou em silêncio.",
+            "description": "Encerra a conversa. Use logo depois da sua fala de despedida, sem esperar o lead responder.",
             "params": {
               "system_tool_type": "end_call"
             }
@@ -41,7 +41,23 @@
     "turn": {
       "turn_timeout": 7,
       "silence_end_call_timeout": 30,
-      "turn_eagerness": "normal"
+      "turn_eagerness": "normal",
+      "speculative_turn": true,
+      "interruption_ignore_terms": [
+        "aham",
+        "uhum",
+        "hum",
+        "hm",
+        "sei",
+        "tá",
+        "ok",
+        "certo",
+        "entendi",
+        "rá",
+        "haha",
+        "hahaha",
+        "kkk"
+      ]
     },
     "conversation": {
       "max_duration_seconds": 600
