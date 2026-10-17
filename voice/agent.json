@@ -24,7 +24,9 @@
             "type": "system",
             "name": "end_call",
             "description": "Encerra a conversa depois do resumo e da despedida, ou quando o lead pedir para parar.",
-            "params": { "system_tool_type": "end_call" }
+            "params": {
+              "system_tool_type": "end_call"
+            }
           }
         }
       }
@@ -43,23 +45,58 @@
     }
   },
   "platform_settings": {
-    "auth": { "enable_auth": true },
+    "auth": {
+      "enable_auth": true
+    },
     "summary_language": "pt",
     "data_collection": {
-      "situacao": { "type": "string", "description": "Como o financeiro da empresa funciona hoje, nas palavras do lead. Vazio se ele não falou." },
-      "dor": { "type": "string", "description": "O que trava ou incomoda o lead no financeiro, nas palavras dele. Vazio se não falou." },
-      "impacto": { "type": "string", "description": "Quanto a dor custa em tempo, multa, juros ou dinheiro, nas palavras dele. Vazio se não falou." },
-      "evento_critico": { "type": "string", "description": "O que obriga a resolver agora, com data se ele disse. Vazio se não falou." },
-      "decisao": { "type": "string", "description": "Quem decide a compra e como, nas palavras dele. Vazio se não falou." },
+      "situacao": {
+        "type": "string",
+        "description": "Como o financeiro da empresa funciona hoje, nas palavras do lead. Vazio se ele não falou."
+      },
+      "dor": {
+        "type": "string",
+        "description": "O que trava ou incomoda o lead no financeiro, nas palavras dele. Vazio se não falou."
+      },
+      "impacto": {
+        "type": "string",
+        "description": "Quanto a dor custa em tempo, multa, juros ou dinheiro, nas palavras dele. Vazio se não falou."
+      },
+      "evento_critico": {
+        "type": "string",
+        "description": "O que obriga a resolver agora, com data se ele disse. Vazio se não falou."
+      },
+      "decisao": {
+        "type": "string",
+        "description": "Quem decide a compra de um sistema financeiro e como decide, nas palavras do lead. O cargo do próprio lead não vai aqui, vai em dados_corrigidos. Vazio se ele não falou."
+      },
       "resultado": {
         "type": "string",
         "description": "O resultado da conversa.",
-        "enum": ["reunião marcada", "qualificado sem reunião", "retornar depois", "indicou outra pessoa", "não qualificado"]
+        "enum": [
+          "reunião marcada",
+          "qualificado sem reunião",
+          "retornar depois",
+          "indicou outra pessoa",
+          "não qualificado"
+        ]
       },
-      "horario_marcado": { "type": "string", "description": "Dia e hora da reunião marcada, como o agente confirmou. Vazio se não marcou." },
-      "objecoes": { "type": "string", "description": "Objeções que o lead levantou e como ficaram, separadas por ponto e vírgula. Vazio se nenhuma." },
-      "dados_corrigidos": { "type": "string", "description": "Dados que o lead confirmou ou corrigiu: nome, cargo, empresa, e-mail, ou nome e contato de quem decide." },
-      "duvidas": { "type": "string", "description": "Perguntas do lead que o agente não soube responder e ficaram para o time. Vazio se nenhuma." }
+      "horario_marcado": {
+        "type": "string",
+        "description": "Dia e hora da reunião marcada, como o agente confirmou. Vazio se não marcou."
+      },
+      "objecoes": {
+        "type": "string",
+        "description": "Objeções que o lead levantou e como ficaram, separadas por ponto e vírgula. Vazio se nenhuma."
+      },
+      "dados_corrigidos": {
+        "type": "string",
+        "description": "Cargo e área do lead, e o que ele confirmou ou corrigiu: nome, empresa, e-mail, ou nome e contato de quem decide."
+      },
+      "duvidas": {
+        "type": "string",
+        "description": "O que ficou para o time confirmar: perguntas que o agente não soube responder e pontos como integração com um ERP específico ou preço. Vazio se nada."
+      }
     }
   }
 }
