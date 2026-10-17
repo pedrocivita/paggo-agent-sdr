@@ -128,9 +128,10 @@ Modelo em `.env.example`. Em produção, só nas variáveis do projeto no Vercel
 | Variável | Para quê | Sem ela |
 | --- | --- | --- |
 | `DATABASE_URL` | Postgres | O app não abre o painel nem salva leads |
+| `ANTHROPIC_API_KEY` | Modelo do agente de pesquisa (Claude Sonnet 5.5, chamada direta) | A pesquisa falha e o lead fica como "failed" |
 | `EXA_API_KEY` | Busca web da pesquisa | `web_search` falha e o agente segue com site e Receita |
 | `AGENDA_URL`, `AGENDA_TOKEN` | Agenda real da Paggo | Usa a agenda falsa |
 | `ELEVENLABS_API_KEY`, `ELEVENLABS_AGENT_ID` | Token da conversa de voz | Sem voz |
 | `PANEL_PASSWORD` | Senha do painel | Painel aberto (só para dev local) |
 
-O modelo do agente eve passa pelo AI Gateway da Vercel com o token OIDC do projeto, sem chave no código.
+O modelo do agente eve é chamado direto na Anthropic com `ANTHROPIC_API_KEY` (helper `anthropic()` do eve). O AI Gateway com OIDC exigiria crédito pago para essa classe de modelo.

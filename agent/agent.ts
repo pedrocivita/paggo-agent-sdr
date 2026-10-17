@@ -1,8 +1,10 @@
 import { defineAgent } from "eve";
+import { anthropic } from "eve/models/anthropic";
 
 export default defineAgent({
-  // Static AI Gateway model id: on Vercel it authenticates with the project's OIDC, no key needed.
-  model: "openai/gpt-6-luna-fast",
+  // Direct Anthropic call with our own ANTHROPIC_API_KEY: the AI Gateway needs paid credits
+  // for this class of model.
+  model: anthropic("claude-sonnet-5-5"),
   reasoning: "low",
   // Only our three tools: no shell, files, built-in fetch or built-in search.
   defaultTools: false,
