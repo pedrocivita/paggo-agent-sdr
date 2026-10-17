@@ -1,6 +1,6 @@
 import { createHmac } from "node:crypto";
 import { describe, expect, it } from "vitest";
-import { toConversation, verifySignature } from "./voice";
+import { toConversation, verifySignature, withoutAudioTags } from "./voice";
 
 const secret = "test-secret";
 const body = '{"type":"post_call_transcription"}';
@@ -57,5 +57,12 @@ describe("post-call payload", () => {
 
   it("ignores other webhook events", () => {
     expect(toConversation({ type: "post_call_audio", data: {} })).toBeNull();
+  });
+});
+
+describe("transcript text", () => {
+  it("drops the voice model emotion tags", () => {
+    expect(withoutAudioTags("[happy] Que bom! [neutral] Ana, vi que a Cyrela cresceu.")).toBe("Que bom! Ana, vi que a Cyrela cresceu.");
+    expect(withoutAudioTags("O índice é o INCC (ver item 2]) e segue.")).toBe("O índice é o INCC (ver item 2]) e segue.");
   });
 });

@@ -52,7 +52,7 @@ export function toConversation(payload: PostCall): PostCallRecord | null {
     conversation: {
       transcript: (d.transcript ?? [])
         .filter((t) => (t.role === "agent" || t.role === "user") && t.message)
-        .map((t) => ({ role: t.role as "agent" | "user", text: String(t.message) })),
+        .map((t) => ({ role: t.role as "agent" | "user", text: withoutAudioTags(String(t.message)) })),
       summary: d.analysis?.transcript_summary ?? "",
       spiced: Object.fromEntries(
         ["situacao", "dor", "impacto", "evento_critico", "decisao"].map((k) => [k, field(k)]),
@@ -64,4 +64,9 @@ export function toConversation(payload: PostCall): PostCallRecord | null {
       doubts: field("duvidas"),
     },
   };
+}
+
+/** The v4 voice model takes emotion tags such as [happy]; they are for the voice, not for the transcript. */
+export function withoutAudioTags(text: string): string {
+  return text.replace(/\[[a-z ]{2,24}\]\s*/gi, "").trim();
 }
