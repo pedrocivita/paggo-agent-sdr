@@ -15,6 +15,7 @@ One line each: what was chosen, and why it and not the alternative.
 | Structured output | eve `outputSchema` with one Zod schema | The same schema types the voice variables and the panel; the result is validated before it is saved. |
 | Trail | `traced()` around every tool, one row per call in `events` | It is the critical criterion: one rule for research and voice, nothing to remember per tool. |
 | Database | Postgres, two tables (`leads`, `events`) | The lead keeps form, briefing and conversation as jsonb; a third table would not pay for itself. |
+| Database host | Neon Free via the Vercel Marketplace, region iad1 | It fills `DATABASE_URL` in every environment by itself and sits in the same region as the functions; a separate Neon account would mean copying secrets by hand. |
 | Research model | Claude Sonnet 5.5, called directly with `ANTHROPIC_API_KEY` | The AI Gateway needs paid credits for this class of model. Against Haiku 5.5 on the same lead it was faster (25 s vs 36 s) and judged better (flagged a test lead, kept to SPICED); Haiku costs a tenth (US$ 0.006 vs 0.056 per briefing), irrelevant at the case's volume. |
 | Migrations | `db/schema.sql` run before each build | Idempotent `create if not exists`; no migration tool for two tables. |
 | Calendar | Behind an interface, with a fake until the real one arrives | The whole flow runs today; switching is two environment variables. |
