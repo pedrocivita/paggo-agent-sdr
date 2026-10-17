@@ -116,7 +116,7 @@ Cada fato é `{ value, source, confidence }`: o valor, a URL de onde veio (ou `n
 | `lib/agenda.ts` | Interface da agenda: real (com URL e token) ou falsa | Falsa ativa |
 | `lib/trace.ts`, `lib/leads.ts`, `lib/db.ts` | Rastro, leitura e escrita dos leads, conexão | Pronto |
 | `db/schema.sql`, `scripts/db-setup.mjs` | Tabelas, criadas antes de cada build | Pronto |
-| `voice/` | Config do agente de voz para a CLI do ElevenLabs | Marco 3 |
+| `voice/` | Config do agente de voz (`agent.json`, `prompt.md`, `tools/`), publicada por `scripts/voice-sync.mjs` | Marco 3 |
 | `app/api/voice/[id]/route.ts` | Gera o conversation token e as variáveis do briefing | Marco 3 |
 | `app/api/agenda/[action]/route.ts` | `consultar` e `marcar`, chamadas pelo ElevenLabs | Marco 4 |
 | `app/api/webhooks/elevenlabs/route.ts` | Pós-chamada: verifica a assinatura e grava a conversa | Marco 4 |

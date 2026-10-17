@@ -1,0 +1,27 @@
+{
+  "type": "webhook",
+  "name": "marcar_reuniao",
+  "description": "Marca a reunião de 30 minutos no horário que o lead escolheu. Use só depois de repetir dia e hora e o lead confirmar. Se a resposta disser que o horário foi ocupado, consulte a agenda de novo.",
+  "api_schema": {
+    "url": "/api/agenda/marcar",
+    "method": "POST",
+    "request_body_schema": {
+      "type": "object",
+      "required": ["lead_id", "conversation_id", "inicio"],
+      "properties": {
+        "lead_id": { "type": "string", "dynamic_variable": "lead_id" },
+        "conversation_id": { "type": "string", "dynamic_variable": "system__conversation_id" },
+        "inicio": {
+          "type": "string",
+          "description": "O valor 'inicio' de uma das opções que consultar_agenda devolveu, exatamente como veio."
+        },
+        "email": {
+          "type": "string",
+          "description": "Só se o lead pediu o convite em outro e-mail. Se não pediu, não envie este campo."
+        }
+      }
+    }
+  },
+  "response_timeout_secs": 10,
+  "pre_tool_speech": "force"
+}

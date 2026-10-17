@@ -1,0 +1,19 @@
+{
+  "type": "webhook",
+  "name": "consultar_agenda",
+  "description": "Consulta os horários livres de 30 minutos com o time da Paggo nos próximos cinco dias úteis. Use quando o lead topar a reunião. Devolve até quatro opções; cada uma tem 'inicio', para marcar, e 'falar', que é como dizer o horário. Ofereça duas.",
+  "api_schema": {
+    "url": "/api/agenda/consultar",
+    "method": "POST",
+    "request_body_schema": {
+      "type": "object",
+      "required": ["lead_id", "conversation_id"],
+      "properties": {
+        "lead_id": { "type": "string", "dynamic_variable": "lead_id" },
+        "conversation_id": { "type": "string", "dynamic_variable": "system__conversation_id" }
+      }
+    }
+  },
+  "response_timeout_secs": 10,
+  "pre_tool_speech": "force"
+}

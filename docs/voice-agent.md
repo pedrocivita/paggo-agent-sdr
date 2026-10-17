@@ -16,7 +16,7 @@ Especificação dos marcos 3 e 4. Nada disto está construído ainda. A seção 
 
 ## Desenho
 
-Um agente só no ElevenLabs Agents, com a config versionada em `voice/` e publicada pela CLI oficial (`@elevenlabs/agents-cli`). Prompt curto, briefing injetado na abertura. O SPICED é checklist, não roteiro. O painel do ElevenLabs serve só para testar.
+Um agente só no ElevenLabs Agents, com a config versionada em `voice/` (`agent.json`, `prompt.md`, `tools/`) e publicada por `scripts/voice-sync.mjs` pela API REST: `node --env-file=<arquivo com a chave> scripts/voice-sync.mjs`. O script acha segredo, ferramentas e agente pelo nome e atualiza, então pode rodar de novo a cada mudança de prompt. Prompt curto, briefing injetado na abertura. O SPICED é checklist, não roteiro. O painel do ElevenLabs serve só para testar.
 
 ## Prompt
 
@@ -79,7 +79,7 @@ Critério alto da banca: soar como pessoa, sem demora.
 
 - LLM rápido com raciocínio no mínimo, escolhido testando 2 ou 3 modelos com o prompt real.
 - Prompt e briefing enxutos.
-- Fala curta antes de cada ferramenta (`force_pre_tool_speech`).
+- Fala curta antes de cada ferramenta (`pre_tool_speech: "force"`).
 - Voz em português do Brasil e dicionário de pronúncia para Paggo, CDI, SPE e CNPJ.
 
 ## Sessão no site
@@ -110,13 +110,14 @@ Conferidos em 16/10/2026 no código publicado no npm, não só na documentação
 | Token WebRTC: `GET https://api.elevenlabs.io/v1/convai/conversation/token?agent_id=...` com o cabeçalho `xi-api-key`; a resposta traz `token` | Docs do SDK React |
 | Assinatura do webhook: cabeçalho `ElevenLabs-Signature` no formato `t=<unix>,v0=<hex>`; `v0` = HMAC-SHA256 com o segredo sobre `` `${t}.${corpoBruto}` ``; tolerância de 30 minutos | `@elevenlabs/elevenlabs-js` 2.73.0, `dist/wrapper/webhooks.js` |
 | Payload pós-chamada: `type = "post_call_transcription"`; em `data`: `conversation_id`, `user_id`, `transcript[]` (`role`, `message`, `tool_calls`, `tool_results`), `analysis` (`transcript_summary`, `call_successful`, `data_collection_results`), `conversation_initiation_client_data.dynamic_variables` | Docs de post-call webhooks |
-| Layout da CLI: `agents.json`, `tools.json`, `agent_configs/`, `tool_configs/`. Ferramentas são recursos próprios, ligadas ao agente por `prompt.tool_ids` | `@elevenlabs/agents-cli` 0.6.1, `dist/cli.js` e `dist/templates.js` |
-| Webhook tool: `api_schema` (`url`, `method`, `request_body_schema`, `request_headers`), `response_timeout_secs`, `force_pre_tool_speech`, `assignments`, `dynamic_variables` | Idem |
-| `agents add-webhook-tool` já cria a ferramenta na conta do ElevenLabs, então a CLI só roda com a chave | Idem |
+| A CLI `@elevenlabs/agents-cli` está descontinuada (parou na 0.6.1); a nova `@elevenlabs/cli` 1.x não cria segredos, webhooks nem dicionários. Por isso o script próprio | `npm view`, 17/10/2026 |
+| Webhook tool: `api_schema` (`url`, `method`, `request_body_schema`, `request_headers`), `response_timeout_secs` (5 a 300), `pre_tool_speech` (`auto`, `force`, `off`; `force_pre_tool_speech` descontinuado). Campo do corpo com `dynamic_variable` é preenchido pela variável, não pelo LLM; cabeçalho secreto como `{ "secret_id": ... }` | OpenAPI embutido em `@elevenlabs/cli` 1.6.1 |
+| Token: `GET /v1/convai/conversation/token?agent_id=` devolve `{ token, conversation_id }`; com `platform_settings.auth.enable_auth` o agente só abre sessão com token. Pós-chamada: `data_collection_results` vem como `{ campo: { value, rationale, ... } }` | Idem |
 
 ## Em aberto
 
-- Como uma propriedade do corpo da ferramenta é preenchida por uma variável dinâmica (`lead_id`). Conferir na referência da API de agentes antes de escrever a config.
-- Shape exato de `data_collection_results` (provavelmente um objeto por campo com `value` e justificativa). Conferir com uma conversa real antes de mapear para `Conversation`.
-- Plano da chave (minutos, concorrência) e em que conta o agente é criado.
-- Verificar a assinatura com o SDK (`webhooks.constructEvent`, uma dependência a mais) ou com 15 linhas nossas usando `crypto`. Preferência: as 15 linhas, com teste.
+- Onde chega o id do lead no pós-chamada: `data.user_id` ou `data.metadata.user_id` (os docs se contradizem). O código lê os dois e ainda cai para a variável `lead_id`; conferir na primeira conversa real.
+- Webhook pós-chamada: criar na conta da Paggo (`POST /v1/workspace/webhooks`, `auth_type: "hmac"`), guardar o segredo devolvido em `ELEVENLABS_WEBHOOK_SECRET` no Vercel e ligar no agente com `POST_CALL_WEBHOOK_ID` no script.
+- Sotaque com `pt-br` no `eleven_v4_turbo`; dicionário de pronúncia (Paggo, CDI, SPE, INCC) só se a voz errar.
+- LLM: começa em `gemini-2.5-flash` sem raciocínio; medir 2 ou 3 com o prompt real.
+- Conta: o teste roda na conta pessoal do Pedro (15 minutos grátis); a versão final vai para a conta da Paggo rodando o mesmo script com a outra chave.
