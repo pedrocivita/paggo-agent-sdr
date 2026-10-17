@@ -10,7 +10,7 @@ A UI usa a linguagem visual do próprio material do case da Paggo, sem bibliotec
 
 ## Tokens
 
-Definidos em `:root` de `app/paggo.css`, com tema escuro em `prefers-color-scheme` e em `[data-theme=dark]`.
+Definidos em `:root` de `app/paggo.css`, com tema escuro em `prefers-color-scheme` e em `[data-theme=dark]`. O app usa sempre o escuro: `data-theme="dark"` no `<html>` de `app/layout.tsx`.
 
 | Token | Claro | Escuro | Uso |
 | --- | --- | --- | --- |
@@ -24,7 +24,7 @@ Definidos em `:root` de `app/paggo.css`, com tema escuro em `prefers-color-schem
 | `--r-md` | 14px | | Cantos de cartões e campos |
 | `--r-pill` | 18px | | Botões em pílula |
 
-Fontes: Outfit (display e texto) e IBM Plex Mono (metadados, código, chips), carregadas por `next/font` em `app/layout.tsx` e ligadas aos tokens `--display` e `--mono` em `app/app.css`.
+Fonte: Outfit em tudo, carregada por `next/font` em `app/layout.tsx`. Em `app/app.css` o token `--mono` aponta para ela também, então chips e metadados usam a mesma fonte; só o JSON cru do Rastro usa a monoespaçada do sistema.
 
 ## Componentes prontos
 
@@ -38,10 +38,11 @@ Fontes: Outfit (display e texto) e IBM Plex Mono (metadados, código, chips), ca
 | `.rows` / `.row`, `.tablewrap` | Listas de pares e tabelas |
 | `.note` (`.ok`, `.warn`, `.err`, `.info`) | Avisos |
 | `.form`, `.field`, `.status`, `.facts`, `.event` | Só deste app (`app/app.css`): formulário, indicador de pesquisa, fatos com fonte, linha do rastro |
+| `.band` | Só deste app: o bloco grafite do último slide do deck, usado como chamada para a voz na tela de espera |
 
 ## Regras
 
 - Reusar classe existente antes de criar CSS novo. CSS novo vai para `app/app.css`, nunca para `app/paggo.css`.
 - Destaque (`--accent`) é para o que importa na tela, não para decorar.
 - Tom dos textos da UI igual ao do site: direto, concreto, sem jargão de vendas ([paggo.md](paggo.md)).
-- Toda mudança de UI se prova olhando a página rodando, em claro e escuro, e em largura de celular.
+- Toda mudança de UI se prova olhando a página rodando, no desktop e em largura de celular.

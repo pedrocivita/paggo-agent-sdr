@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { IBM_Plex_Mono, Outfit } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./paggo.css";
 import "./app.css";
 
 const outfit = Outfit({ subsets: ["latin"], weight: ["300", "400", "500"], variable: "--font-outfit" });
-const plexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-plex-mono" });
 
 export const metadata: Metadata = {
   title: "Paggo · fale com a gente",
@@ -14,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="pt-BR" className={`${outfit.variable} ${plexMono.variable}`}>
+    <html lang="pt-BR" data-theme="dark" className={outfit.variable}>
       <body>
         <div className="doc">
           <header className="masthead">

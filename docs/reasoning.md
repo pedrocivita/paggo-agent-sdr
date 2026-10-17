@@ -12,6 +12,7 @@ O que foi pesquisado em cada parte, as opções, o que foi escolhido e por que n
 - [Auth do eve em produção](#auth-do-eve-em-produção)
 - [Conhecimento da Paggo](#conhecimento-da-paggo)
 - [Agente de voz](#agente-de-voz)
+- [Interface](#interface)
 - [Agenda](#agenda)
 - [O que ainda não sabemos](#o-que-ainda-não-sabemos)
 - [Fontes](#fontes)
@@ -260,6 +261,19 @@ Nenhuma fala passou de 2 s nessas 7 rodadas, e nenhuma teve preço, integração
 O aviso `error reading from signal stream` no console vem do `livekit-client`, a camada WebRTC do SDK, quando a conexão fecha; o overlay do Next em desenvolvimento mostra qualquer `console.error` como erro.
 
 **A chave da Paggo.** Ao publicar na conta da Paggo, a chave que ela mandou respondeu 401 `missing_permissions` em agentes, ferramentas, segredos, vozes, modelos e no token da conversa; só lista webhooks. Para não confundir com uma chave restrita da conta de teste, foram três provas: o hash é diferente; as permissões são outras (a de teste acessa tudo); e um webhook temporário criado na conta de teste não apareceu para a chave da Paggo (apagado em seguida). Opções pesadas: pedir ao Murilo para liberar as permissões (sem custo, resposta na segunda); usar a conta de teste em produção com o plano Starter (US$ 1 no primeiro mês, 75 minutos, licença comercial); ou esperar. Escolhido: pedir e esperar, seguindo no que não depende da voz em produção; o Starter fica para caso extremo.
+
+## Interface
+
+Base: os tokens que vieram com o case (`app/paggo.css`) e o deck institucional, lido nas páginas 1 e 18.
+
+| Decisão | Alternativa | Por que esta |
+| --- | --- | --- |
+| "O orquestrador financeiro da construção" como linha de cima da home, onde estava "Fale com a Paggo" | Uma faixa escura de capa, como a página 1 do deck | É a frase de posicionamento do deck; numa linha só ela aparece sem empurrar o formulário para baixo |
+| A chamada para a voz num bloco grafite, como o do último slide, com status e botão dentro | Botão solto embaixo do texto | O botão é o único passo que importa na tela; o bloco o separa do resto como o deck separa a chamada final |
+| Tema escuro sempre e uma fonte só, sem monoespaçada (exceto o JSON cru do Rastro) | Seguir o tema do sistema e manter a IBM Plex Mono nos chips | Mais limpo e mais perto dos blocos do deck; a monoespaçada fica só onde o alinhamento do JSON ajuda a ler |
+| Rastro: a linha quebra entre itens, nunca dentro de um link, e cada site aparece uma vez | Cortar a linha com reticências | No celular os links estouravam a tela e o mesmo domínio aparecia duas vezes (páginas diferentes do mesmo site) |
+
+Prova: screenshots no navegador do dev local, home, espera e Rastro de um lead da Even, no desktop e a 375 px.
 
 ## Agenda
 

@@ -13,7 +13,7 @@ export default function Home({ searchParams }: PageProps<"/">) {
   return (
     <main>
       <div className="doc-head">
-        <p className="eyebrow">Fale com a Paggo</p>
+        <p className="eyebrow">O orquestrador financeiro da construção</p>
         <h1>
           Conte quem é você<span className="dot">.</span>
         </h1>

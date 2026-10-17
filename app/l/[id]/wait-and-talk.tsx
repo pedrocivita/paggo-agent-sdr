@@ -25,20 +25,14 @@ export function WaitAndTalk({ id, initialStatus }: { id: string; initialStatus: 
     return () => clearInterval(timer);
   }, [id, status]);
 
-  const ready = status !== "researching";
   return (
-    <section>
-      <p className={`status ${ready ? "done" : ""}`}>
-        <i /> {LABEL[status]}
-      </p>
-      <ConversationProvider>
-        <Talk id={id} ready={ready} />
-      </ConversationProvider>
-    </section>
+    <ConversationProvider>
+      <Talk id={id} ready={status !== "researching"} researchLabel={LABEL[status]} />
+    </ConversationProvider>
   );
 }
 
-function Talk({ id, ready }: { id: string; ready: boolean }) {
+function Talk({ id, ready, researchLabel }: { id: string; ready: boolean; researchLabel: string }) {
   const [error, setError] = useState<string | null>(null);
   const [ended, setEnded] = useState(false);
   const conversation = useConversation({
@@ -62,27 +56,36 @@ function Talk({ id, ready }: { id: string; ready: boolean }) {
     conversation.startSession({ conversationToken: token, connectionType: "webrtc", userId, dynamicVariables });
   }
 
-  if (conversation.status === "connecting" || conversation.status === "connected") {
-    const now = conversation.status === "connecting" ? "conectando" : conversation.isSpeaking ? "a Paggo está falando" : "ouvindo você";
-    return (
-      <div className="talk">
-        <p className="status done">
-          <i /> {now}
-        </p>
-        <button className="btn ghost" onClick={() => conversation.endSession()}>
-          Encerrar conversa
-        </button>
-      </div>
-    );
-  }
+  const live = conversation.status === "connecting" || conversation.status === "connected";
+  const now = !live
+    ? researchLabel
+    : conversation.status === "connecting"
+      ? "conectando"
+      : conversation.isSpeaking
+        ? "a Paggo está falando"
+        : "ouvindo você";
 
   return (
-    <div className="talk">
-      <button className="btn" disabled={!ready} onClick={start}>
-        {ended ? "Falar de novo" : "Falar com a Paggo"}
-      </button>
-      {ended && <p className="sub">Conversa encerrada. Obrigado pelo seu tempo.</p>}
+    <>
+      <section className="band">
+        <div>
+          <h2>{ended ? "Conversa encerrada." : "Converse com a Paggo por voz."}</h2>
+          <p>{ended ? "Obrigado pelo seu tempo." : "Uns cinco minutos, aqui no site. O navegador vai pedir o microfone."}</p>
+          <p className={`status ${ready || live ? "done" : ""}`}>
+            <i /> {now}
+          </p>
+        </div>
+        {live ? (
+          <button className="btn ghost" onClick={() => conversation.endSession()}>
+            Encerrar conversa
+          </button>
+        ) : (
+          <button className="btn" disabled={!ready} onClick={start}>
+            {ended ? "Falar de novo" : "Falar com a Paggo"}
+          </button>
+        )}
+      </section>
       {error && <p className="note err">{error}</p>}
-    </div>
+    </>
   );
 }
