@@ -181,6 +181,49 @@ Depois do teste, a voz pareceu lenta e alegre demais. Ajustes: `speed` 1,1 (o m�
 
 Sobra: o `gemini-2.5-flash` ainda escorrega no estilo (disse "Ótimo!", que está proibido, e voltou a listar módulos ao pedir desculpa). O próximo passo é medir 2 ou 3 LLMs mais fortes com o mesmo prompt, já na conta da Paggo; a conta de teste ficou com cerca de 2.000 créditos, uns 3 minutos.
 
+**Comparação de LLMs por texto** (17/10, noite). Com uns 3 minutos de voz sobrando, a comparação foi por texto: o ElevenLabs roda a conversa inteira entre o agente publicado e um lead simulado por outro LLM.
+
+| Opção | Por que sim | Por que não |
+| --- | --- | --- |
+| **`POST /v1/convai/agents/{id}/simulate-conversation` (escolhido)** | Uma chamada por conversa; não cria nada na conta; devolve transcrição, coleta e a demora do LLM em cada fala | Descontinuado, sai em 31/10/2026; não troca o LLM na chamada, então o script troca o LLM do agente antes de rodar |
+| `/v1/convai/agent-testing/create` e `/run-tests` | Substituto oficial; aceita `agent_config_override` | Cria testes guardados na conta, um passo a mais por persona |
+| Conversa de voz de verdade | Mede tudo, inclusive o áudio | Cerca de 700 créditos por minuto, e sobram uns 3 minutos |
+
+Como foi medido (`scripts/voice-simulate.mjs`, personas em `voice/personas.mjs`): mesmo prompt, mesma persona (Marina, coordenadora financeira de uma incorporadora fictícia, que pergunta "o que é a Paggo?", cita o Sienge e pede a reunião antes de o agente perguntar quem decide), lead simulado sempre no `gemini-2.5-flash` com temperatura 0,5, e a agenda simulada (`tool_mock_config`) para não gravar nada em produção. Da transcrição saem: palavras por fala, palavras proibidas pelo prompt ("ótimo", "perfeito", "compreendo"), exclamações, lista de módulos (três ou mais numa fala), se perguntou quem decide antes de consultar a agenda, se fechou numa fala só com `end_call`, e o tempo do LLM até a primeira frase (`convai_llm_service_ttf_sentence`, o que a voz espera para começar). Como uma rodada não prova nada, cada modelo rodou pelo menos duas vezes.
+
+Custo: **0 crédito nas 20 simulações** (4.534 antes e depois); a conta grátis não cobra simulação. Para referência, a estimativa da própria plataforma por minuto de conversa real com este prompt (`/v1/convai/agent/{id}/llm-usage/calculate`): `gemini-2.5-flash` US$ 0,010, `gemini-3.5-flash` US$ 0,054, `claude-haiku-5-5` US$ 0,004, `gpt-5-mini` US$ 0,008.
+
+Rodada 1, com o prompt do terceiro teste de voz:
+
+| LLM (rodadas) | Palavras por fala (média) | Falas acima de 25 palavras | Proibidas | Listou módulos | Quem decide antes da agenda | Fechou numa fala com `end_call` | Até a primeira frase (mediana) | Falas acima de 2 s |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `gemini-2.5-flash` (3) | 30 a 38 | 11 de 20 | 0 | 2 de 3 | 1 de 3 | 3 de 3 | 0,58 a 0,72 s | 0 de 20 |
+| `gemini-3.5-flash`, raciocínio mínimo (2) | 31 a 34 | 7 de 10 | 0 | 0 de 2 | 1 de 2 | 0 de 2 (desligou mudo) | 0,96 a 1,01 s | 1 de 10 |
+| `claude-haiku-5-5`, sem raciocínio (3) | 24 a 27 | 12 de 25 | 0 | 0 de 3 | 2 de 3 | 3 de 3 | 1,27 a 1,97 s | 8 de 25 |
+| `gpt-5-mini`, raciocínio mínimo (2) | 30 a 34 | 11 de 16 | 1 ("perfeito") | 1 de 2 | 2 de 2 | 0 de 2 (marcou sem o lead confirmar e desligou mudo) | 0,81 a 0,89 s | 0 de 16 |
+
+O "Gemini mais novo" foi o `gemini-3.5-flash` porque é o substituto que a plataforma indica para o `gemini-2.5-flash` (descontinuado em 30/11/2026) e o único Gemini novo com raciocínio "mínimo"; o `gemini-3.8-flash` não desce de "baixo".
+
+O que a rodada mostrou: dois modelos chamaram `marcar_reuniao` e logo `end_call`, sem falar nada. A causa era a frase do prompt "logo depois dessa fala, use `end_call`", que um modelo mais obediente a ferramentas lê como "logo depois de marcar". Foi corrigida antes de decidir, para comparar modelos e não a frase: a despedida é falada primeiro, `end_call` nunca vem sem ela, e o exemplo de despedida perdeu a exclamação (os 3 "!" do Gemini e do Haiku eram cópia do exemplo). O `gpt-5-mini` saiu aqui: marcar sem o lead confirmar é o pior erro possível na agenda.
+
+Rodada 2, com o fechamento corrigido:
+
+| LLM (rodadas) | Palavras por fala (média) | Falas acima de 25 palavras | Proibidas | Listou módulos | Quem decide antes da agenda | Fechou numa fala com `end_call` | Até a primeira frase (mediana) | Falas acima de 2 s |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `gemini-2.5-flash` (4) | 23 a 29 | 14 de 35 | 0 | 1 de 4 | 2 de 4 | 4 de 4 | 0,49 a 0,72 s | 0 de 35 |
+| `gemini-3.5-flash` (2) | 25 a 31 | 7 de 11 | 0 | 0 de 2 | 2 de 2 | 0 de 2 (mudo uma vez; na outra esperou o "tchau") | 0,73 a 1,01 s | 0 de 11 |
+| `claude-haiku-5-5` (4) | 23 a 31 | 19 de 39 | 0 | 0 de 4 | 3 de 4 | 4 de 4 | 1,18 a 2,01 s | 12 de 39 |
+
+Regra de decisão: "soa como uma pessoa, sem demora para responder" é critério Alto, no mesmo nível do SPICED, e demora não se corrige no prompt. Então a demora é portão (fala acima de 2 s reprova) e o estilo desempata.
+
+Escolhido: **manter o `gemini-2.5-flash` sem raciocínio**. Nenhuma das 55 falas chegou a 1,6 s até a primeira frase, e com o fechamento corrigido ele fechou certo em 4 de 4.
+
+- `claude-haiku-5-5`: o melhor estilo (nunca listou módulos, perguntou quem decide em 3 de 4, a descoberta mais completa do SPICED), mas 31% das falas passaram de 2 s, com picos de 3,9 e 5,8 s logo depois da agenda e nas falas que juntam "como a Paggo resolve" com a próxima pergunta. Numa ligação isso é silêncio.
+- `gemini-3.5-flash`: rápido, mas não fechou certo em nenhuma das 4 rodadas, e custa 5 vezes mais por minuto.
+- `gpt-5-mini`: fora na rodada 1.
+
+O que continua errado no `gemini-2.5-flash` e vai para as personas: 40% das falas passam de 25 palavras (o "dê antes de pedir" vira duas frases longas, com picos de 72), perguntou quem decide só em 2 de 4, e disse "conheço o Sienge sim", que não está nos fatos. Cuidados: a demora medida é só a do LLM (a voz soma fala-para-texto e texto-para-fala, uns 0,3 a 0,5 s); o lead simulado às vezes vaza o raciocínio dele ("THOUGHT:") ou responde duas coisas de uma vez; e o `gemini-2.5-flash` sai em 30/11/2026, com a plataforma começando a desviar parte das chamadas para o `gemini-3.5-flash` perto de 1/11. Para a Paggo usar depois disso, o mesmo script roda a comparação de novo.
+
 O aviso `error reading from signal stream` no console vem do `livekit-client`, a camada WebRTC do SDK, quando a conexão fecha; o overlay do Next em desenvolvimento mostra qualquer `console.error` como erro.
 
 **A chave da Paggo.** Ao publicar na conta da Paggo, a chave que ela mandou respondeu 401 `missing_permissions` em agentes, ferramentas, segredos, vozes, modelos e no token da conversa; só lista webhooks. Para não confundir com uma chave restrita da conta de teste, foram três provas: o hash é diferente; as permissões são outras (a de teste acessa tudo); e um webhook temporário criado na conta de teste não apareceu para a chave da Paggo (apagado em seguida). Opções pesadas: pedir ao Murilo para liberar as permissões (sem custo, resposta na segunda); usar a conta de teste em produção com o plano Starter (US$ 1 no primeiro mês, 75 minutos, licença comercial); ou esperar. Escolhido: pedir e esperar, seguindo no que não depende da voz em produção; o Starter fica para caso extremo.

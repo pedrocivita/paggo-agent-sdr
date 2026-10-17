@@ -1,6 +1,6 @@
 # Agente de voz
 
-Especificação dos marcos 3 e 4. Nada disto está construído ainda. A seção [Fatos verificados](#fatos-verificados) separa o que foi conferido no código dos pacotes do que ainda é hipótese.
+Especificação dos marcos 3 e 4, construídos e provados na conta de teste do ElevenLabs (o estado de cada parte está em [STATUS.md](STATUS.md)). A seção [Fatos verificados](#fatos-verificados) separa o que foi conferido no código dos pacotes do que ainda é hipótese.
 
 ## Índice
 
@@ -77,9 +77,9 @@ Campos da aba Analysis, declarados na config do agente, que chegam prontos no we
 
 Critério alto da banca: soar como pessoa, sem demora.
 
-- LLM rápido com raciocínio no mínimo, escolhido testando 2 ou 3 modelos com o prompt real.
+- LLM rápido sem raciocínio: `gemini-2.5-flash`, escolhido entre 4 em 20 conversas simuladas por texto ([reasoning.md](reasoning.md#agente-de-voz)).
 - Prompt e briefing enxutos.
-- Fala curta antes de cada ferramenta (`pre_tool_speech: "force"`).
+- Fala curta antes de cada ferramenta só quando o modelo achar preciso (`pre_tool_speech: "auto"`): as duas respondem em menos de 1 s.
 - Voz em português do Brasil e dicionário de pronúncia para Paggo, CDI, SPE e CNPJ.
 
 ## Sessão no site
@@ -119,5 +119,4 @@ Conferidos em 16/10/2026 no código publicado no npm, não só na documentação
 - Onde chega o id do lead no pós-chamada: `data.user_id` ou `data.metadata.user_id` (os docs se contradizem). O código lê os dois e ainda cai para a variável `lead_id`; conferir na primeira conversa real.
 - Webhook pós-chamada: criar na conta da Paggo (`POST /v1/workspace/webhooks`, `auth_type: "hmac"`), guardar o segredo devolvido em `ELEVENLABS_WEBHOOK_SECRET` no Vercel e ligar no agente com `POST_CALL_WEBHOOK_ID` no script.
 - Sotaque com `pt-br` no `eleven_v4_turbo`; dicionário de pronúncia (Paggo, CDI, SPE, INCC) só se a voz errar.
-- LLM: começa em `gemini-2.5-flash` sem raciocínio; medir 2 ou 3 com o prompt real.
 - Conta: o teste roda na conta pessoal do Pedro (15 minutos grátis); a versão final vai para a conta da Paggo rodando o mesmo script com a outra chave.
