@@ -189,7 +189,7 @@ Sobra: o `gemini-2.5-flash` ainda escorrega no estilo (disse "Ótimo!", que est�
 | `/v1/convai/agent-testing/create` e `/run-tests` | Substituto oficial; aceita `agent_config_override` | Cria testes guardados na conta, um passo a mais por persona |
 | Conversa de voz de verdade | Mede tudo, inclusive o áudio | Cerca de 700 créditos por minuto, e sobram uns 3 minutos |
 
-Como foi medido (`scripts/voice-simulate.mjs`, personas em `voice/personas.mjs`): mesmo prompt, mesma persona (Marina, coordenadora financeira de uma incorporadora fictícia, que pergunta "o que é a Paggo?", cita o Sienge e pede a reunião antes de o agente perguntar quem decide), lead simulado sempre no `gemini-2.5-flash` com temperatura 0,5, e a agenda simulada (`tool_mock_config`) para não gravar nada em produção. Da transcrição saem: palavras por fala, palavras proibidas pelo prompt ("ótimo", "perfeito", "compreendo"), exclamações, lista de módulos (três ou mais numa fala), se perguntou quem decide antes de consultar a agenda, se fechou numa fala só com `end_call`, e o tempo do LLM até a primeira frase (`convai_llm_service_ttf_sentence`, o que a voz espera para começar). Como uma rodada não prova nada, cada modelo rodou pelo menos duas vezes.
+Como foi medido (`scripts/voice-simulate.mjs`, personas em `voice/personas.mjs`): mesmo prompt, mesma persona (Marina, coordenadora financeira de uma incorporadora fictícia, que pergunta "o que é a Paggo?", cita o Sienge e pede a reunião antes de o agente perguntar quem decide), lead simulado sempre no `gemini-2.5-flash` com temperatura 0,5, e a agenda simulada (`tool_mock_config`) para não gravar nada em produção. Da transcrição saem: palavras por fala, palavras proibidas pelo prompt ("ótimo", "perfeito", "compreendo"), exclamações, lista de módulos (três ou mais numa fala), se perguntou quem decide antes de consultar a agenda, se fechou numa fala só com `end_call`, e o tempo do LLM até a primeira frase (`convai_llm_service_ttf_sentence`, o que a voz espera para começar). Como uma rodada não prova nada, cada modelo rodou pelo menos duas vezes. A transcrição junta os pedaços do texto com espaço duplo ("quem  mais  participa"), e a primeira versão das checagens não via a pergunta de decisão nesses casos; os números abaixo já foram recalculados com a versão corrigida sobre as transcrições salvas.
 
 Custo: **0 crédito nas 20 simulações** (4.534 antes e depois); a conta grátis não cobra simulação. Para referência, a estimativa da própria plataforma por minuto de conversa real com este prompt (`/v1/convai/agent/{id}/llm-usage/calculate`): `gemini-2.5-flash` US$ 0,010, `gemini-3.5-flash` US$ 0,054, `claude-haiku-5-5` US$ 0,004, `gpt-5-mini` US$ 0,008.
 
@@ -210,7 +210,7 @@ Rodada 2, com o fechamento corrigido:
 
 | LLM (rodadas) | Palavras por fala (média) | Falas acima de 25 palavras | Proibidas | Listou módulos | Quem decide antes da agenda | Fechou numa fala com `end_call` | Até a primeira frase (mediana) | Falas acima de 2 s |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `gemini-2.5-flash` (4) | 23 a 29 | 14 de 35 | 0 | 1 de 4 | 2 de 4 | 4 de 4 | 0,49 a 0,72 s | 0 de 35 |
+| `gemini-2.5-flash` (4) | 23 a 29 | 14 de 35 | 0 | 1 de 4 | 3 de 4 | 4 de 4 | 0,49 a 0,72 s | 0 de 35 |
 | `gemini-3.5-flash` (2) | 25 a 31 | 7 de 11 | 0 | 0 de 2 | 2 de 2 | 0 de 2 (mudo uma vez; na outra esperou o "tchau") | 0,73 a 1,01 s | 0 de 11 |
 | `claude-haiku-5-5` (4) | 23 a 31 | 19 de 39 | 0 | 0 de 4 | 3 de 4 | 4 de 4 | 1,18 a 2,01 s | 12 de 39 |
 
@@ -218,11 +218,11 @@ Regra de decisão: "soa como uma pessoa, sem demora para responder" é critério
 
 Escolhido: **manter o `gemini-2.5-flash` sem raciocínio**. Nenhuma das 55 falas chegou a 1,6 s até a primeira frase, e com o fechamento corrigido ele fechou certo em 4 de 4.
 
-- `claude-haiku-5-5`: o melhor estilo (nunca listou módulos, perguntou quem decide em 3 de 4, a descoberta mais completa do SPICED), mas 31% das falas passaram de 2 s, com picos de 3,9 e 5,8 s logo depois da agenda e nas falas que juntam "como a Paggo resolve" com a próxima pergunta. Numa ligação isso é silêncio.
+- `claude-haiku-5-5`: o melhor estilo (nunca listou módulos, a descoberta mais completa do SPICED; na pergunta de decisão empatou, 3 de 4), mas 31% das falas passaram de 2 s, com picos de 3,9 e 5,8 s logo depois da agenda e nas falas que juntam "como a Paggo resolve" com a próxima pergunta. Numa ligação isso é silêncio.
 - `gemini-3.5-flash`: rápido, mas não fechou certo em nenhuma das 4 rodadas, e custa 5 vezes mais por minuto.
 - `gpt-5-mini`: fora na rodada 1.
 
-O que continua errado no `gemini-2.5-flash` e vai para as personas: 40% das falas passam de 25 palavras (o "dê antes de pedir" vira duas frases longas, com picos de 72), perguntou quem decide só em 2 de 4, e disse "conheço o Sienge sim", que não está nos fatos. Cuidados: a demora medida é só a do LLM (a voz soma fala-para-texto e texto-para-fala, uns 0,3 a 0,5 s); o lead simulado às vezes vaza o raciocínio dele ("THOUGHT:") ou responde duas coisas de uma vez; e o `gemini-2.5-flash` sai em 30/11/2026, com a plataforma começando a desviar parte das chamadas para o `gemini-3.5-flash` perto de 1/11. Para a Paggo usar depois disso, o mesmo script roda a comparação de novo.
+O que continua errado no `gemini-2.5-flash` e vai para as personas: 40% das falas passam de 25 palavras (o "dê antes de pedir" vira duas frases longas, com picos de 72), ainda listou módulos em 1 de 4, e disse "conheço o Sienge sim", que não está nos fatos. Cuidados: a demora medida é só a do LLM (a voz soma fala-para-texto e texto-para-fala, uns 0,3 a 0,5 s); o lead simulado às vezes vaza o raciocínio dele ("THOUGHT:") ou responde duas coisas de uma vez; e o `gemini-2.5-flash` sai em 30/11/2026, com a plataforma começando a desviar parte das chamadas para o `gemini-3.5-flash` perto de 1/11. Para a Paggo usar depois disso, o mesmo script roda a comparação de novo.
 
 O aviso `error reading from signal stream` no console vem do `livekit-client`, a camada WebRTC do SDK, quando a conexão fecha; o overlay do Next em desenvolvimento mostra qualquer `console.error` como erro.
 

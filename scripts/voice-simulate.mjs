@@ -55,8 +55,9 @@ const metric = (turns, name) =>
   median(turns.map((t) => t.conversation_turn_metrics?.metrics?.[name]?.elapsed_time).filter((x) => x != null));
 const FORBIDDEN = /(?<!\p{L})(ótim[oa]|perfeit[oa]|compreendo)(?!\p{L})/giu;
 // "contas a pagar e a receber" names two modules, so "a receber" counts alone.
-const MODULES = /tesouraria|a pagar|a receber|cart(ão|ões)|orçamento|fluxo de caixa|controladoria|automaç/giu;
-const DECISION = /quem (mais )?(decide|participa|aprova|escolhe)|decis[ãa]o/iu;
+// \s+ because the transcript joins streamed chunks with double spaces.
+const MODULES = /tesouraria|a\s+pagar|a\s+receber|cart(ão|ões)|orçamento|fluxo\s+de\s+caixa|controladoria|automaç/giu;
+const DECISION = /quem\s+(mais\s+)?(decide|participa|aprova|escolhe)|decis[ãa]o/iu;
 const toolNames = (turn) => (turn.tool_calls || []).map((c) => c.tool_name);
 
 function measure(turns) {
