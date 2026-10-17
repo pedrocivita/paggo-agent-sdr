@@ -8,6 +8,7 @@ O que foi pesquisado em cada parte, as opções, o que foi escolhido e por que n
 - [Hospedagem e banco](#hospedagem-e-banco)
 - [Modelo do agente de pesquisa](#modelo-do-agente-de-pesquisa)
 - [Busca web](#busca-web)
+- [Pesquisa nos casos difíceis](#pesquisa-nos-casos-difíceis)
 - [Auth do eve em produção](#auth-do-eve-em-produção)
 - [Conhecimento da Paggo](#conhecimento-da-paggo)
 - [Agente de voz](#agente-de-voz)
@@ -62,6 +63,33 @@ Os dois acertaram CNPJ, razão social e regime e não inventaram nada. O Sonnet 
 Exa como ferramenta explícita (`web_search`), e não a busca embutida do modelo: cada busca vira uma linha no Rastro com a consulta e os resultados, e a busca embutida esconde isso. O Rastro é critério Crítico. A Exa oferece uma skill de integração (`build-with-exa`) para busca de pessoa e empresa; fica para quando a busca for ajustada no Marco 2, porque o código atual já funciona.
 
 Prova: `web_search` ok em produção no lead `4ba706aa` (e-mail pessoal, CNPJ achado pela busca e confirmado na Receita).
+
+## Pesquisa nos casos difíceis
+
+Marco 2: os 5 casos difíceis do plano (incorporadora com SPEs, homônimo, e-mail pessoal, site sem CNPJ, estrangeira) mais a própria Paggo, empresas reais com pessoas fictícias, enviados pelo formulário, lidos contra o Rastro, corrigidos e rodados de novo. O detalhe de cada caso, com o CNPJ escolhido e o descartado, está em [research-cases.md](research-cases.md).
+
+Primeira rodada: nenhum CNPJ errado e nenhum fato fora do Rastro. Os erros foram ferramenta pulada (cargo e SPEs nunca buscados, Receita pulada no caso do Gmail), dedução apresentada como fato (estados tirados de um menu, cidade tirada do DDD do lead) e um `forAgent` com CNPJ e notas que não ajudavam a voz. E um bug: `lib/site.ts` procurava o CNPJ só nos primeiros 6.000 caracteres, e o rodapé da Cyrela e o da Paggo ficavam de fora.
+
+| Decisão | Alternativa | Por que esta |
+| --- | --- | --- |
+| Buscar sempre o cargo e as SPEs, em paralelo com o site e a Receita | "Busca só para o que faltar" (a regra antiga) | O Sonnet nunca achou que faltava. Em paralelo, a média foi de 23,8 s para 22,8 s |
+| Receita como única fonte do cadastro | Aceitar agregadores de CNPJ | Os dados batiam, mas sem a Receita o regime tributário sumia, e ele mexe no fit |
+| Busca de SPE no formato "<grupo> SPE Empreendimentos Imobiliários Ltda CNPJ" | "<razão social> SPE" | Testado direto na Exa: o primeiro traz SPEs pelo nome, o segundo só páginas genéricas |
+| Cada passo novo explica o motivo ("a voz usa as SPEs para abrir a conversa") | Ordem seca | Sem o motivo, o Sonnet pulou a busca de SPEs numa rodada da Even porque o fit já era alto |
+| Lead @paggo.com.br: pesquisa normal, fit "desconhecido", voz conduz como lead normal | Fit baixo (antes); não pesquisar (testado: Rastro vazio) | A banca deve usar o próprio e-mail fazendo papel de cliente; fit baixo encerraria a conversa |
+| `forAgent` com 1 ou 2 módulos prováveis | A voz escolher no meio da conversa | A pesquisa sabe se o grupo tem SPEs ou vende na planta; a voz cita um módulo só depois da dor |
+| `lib/search.ts` sem mudança, skill `build-with-exa` não instalada | Ajustar a busca da Exa (categoria de pessoa) | O formato da consulta resolveu as SPEs, e a busca pela pessoa já trouxe perfis do LinkedIn |
+| Nada de otimização de velocidade | Briefing mais curto, paralelismo no código | Máximo de 33 s, abaixo da meta de 45 s. As referências de tempo de resposta falam em 5 minutos até o contato; a pesquisa não é o gargalo |
+
+O mesmo lead seguiu caminhos diferentes em rodadas seguidas, então uma rodada por caso não prova nada. Os 6 casos viraram um eval do eve (`npm run eval`):
+
+| Opção | Por que sim | Por que não |
+| --- | --- | --- |
+| **Ferramentas de verdade e checagens fixas: CNPJ, fit, ferramentas chamadas, sem nome de sócio, dica de módulo, menos de 45 s (escolhido)** | Pega exatamente os erros que importaram; não precisa de juiz | Depende do mundo real: site fora do ar derruba um caso |
+| Ferramentas falsas (tool stubs) | Determinístico e grátis | Testaria uma web inventada; os erros vinham das respostas reais |
+| LLM como juiz | Avalia texto | Custo e ruído para julgar o que uma checagem simples confere |
+
+Prova: rodada 2 com os 6 casos certos (CNPJ, fit, fontes) e a primeira execução do eval, 6 de 6, 57 de 57 gates, US$ 0,39.
 
 ## Auth do eve em produção
 
@@ -152,6 +180,7 @@ O endpoint real ainda está sendo construído pela Paggo. Enquanto isso, uma age
 - Formato exato do endpoint da agenda (cabeçalho de auth, `de`/`ate`).
 - Onde o id do lead chega no pós-chamada (`data.user_id` ou `data.metadata.user_id`): o código lê os dois.
 - Sotaque e latência reais da voz: só se sabe falando com o agente.
+- Se a busca pela pessoa acha o cargo de alguém real: só foi testada com nomes fictícios (o agente rejeitou os homônimos e não inventou).
 
 ## Fontes
 
@@ -159,4 +188,5 @@ O endpoint real ainda está sendo construído pela Paggo. Enquanto isso, uma age
 - [Preços do ElevenAgents](https://elevenlabs.io/pricing/agents) e [preços do ElevenLabs](https://elevenlabs.io/pricing)
 - Pacotes conferidos no npm: `@elevenlabs/agents-cli` 0.6.1, `@elevenlabs/cli` 1.6.1 (OpenAPI embutido), `@elevenlabs/react` 1.18.0, `@elevenlabs/client` 1.28.0, `@elevenlabs/elevenlabs-js` 2.73.0
 - Documentação do eve em `node_modules/eve/docs` (0.80.1)
+- Tempo de resposta a lead: [Exact Sales](https://exactsales.com.br/tempo-de-resposta/), [RD Station](https://www.rdstation.com/blog/vendas/primeiro-contato-com-lead/), [Rework](https://resources.rework.com/pt/libraries/lead-management/lead-response-time)
 - Apresentação institucional da Paggo, agosto de 2026, e [paggo.com.br](https://www.paggo.com.br/)
