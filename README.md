@@ -1,34 +1,16 @@
 # Paggo: agente de pré-vendas por voz
 
-Case para a vaga de Marketing e GTM Engineering da Paggo. Um lead preenche um formulário, um agente pesquisa a pessoa e a empresa, uma assistente de voz conversa com o lead usando essa pesquisa, qualifica pelo SPICED e marca uma reunião. Um painel interno mostra tudo, inclusive cada ferramenta que os agentes usaram.
+Case da Paggo. Um lead preenche um formulário, um agente pesquisa a pessoa e a empresa e escreve um briefing com a fonte de cada fato, uma assistente de voz conversa com o lead no próprio site, qualifica pelo SPICED e marca a reunião, e um painel interno mostra o formulário, a pesquisa, a conversa e o rastro de cada ferramenta usada.
 
-## Índice
+No ar em https://paggo-agent-sdr.vercel.app (painel interno em `/painel`).
 
-- [Resumo](#resumo)
-- [Para quem vai mexer no código](#para-quem-vai-mexer-no-código)
-- [Rodar localmente](#rodar-localmente)
-- [Documentação](#documentação)
-- [Estado](#estado)
+## Como funciona
 
-## Resumo
+**Pesquisa.** Ao enviar o formulário, um agente [eve](https://github.com/vercel/eve) com Claude Sonnet 5.5 roda dentro do próprio app com três ferramentas: `fetch_site` lê o site do domínio do e-mail, `lookup_cnpj` consulta a Receita pela BrasilAPI e `web_search` busca na Exa o cargo da pessoa, o CNPJ que o site não mostra e as SPEs do grupo. Sai um briefing estruturado: cada fato com fonte ou "não encontrado", o fit com o cliente ideal, hipóteses de SPICED e um resumo para a voz. Leva de 12 a 33 s. `npm run eval` roda 6 casos difíceis (homônimo, e-mail pessoal, empresa estrangeira) com as ferramentas reais.
 
-1. O lead preenche nome, e-mail, telefone e empresa.
-2. Um agente lê o site da empresa, consulta a Receita pelo CNPJ e busca na web só o que faltar. Cada fato do briefing sai com a fonte.
-3. A assistente de voz abre a conversa já sabendo quem é a empresa, confirma o que a pesquisa achou e pergunta só o que falta.
-4. No fim, a conversa vira dados: SPICED letra por letra, resultado e reunião marcada.
-5. O painel interno mostra, para cada lead, o formulário, a pesquisa, a conversa e o rastro de cada ferramenta consultada.
+**Voz.** Com o briefing pronto, a tela de espera libera o botão. O servidor gera um token de conversa do ElevenLabs e passa o briefing como variáveis. A assistente (`gemini-2.5-flash` com a voz `eleven_v4_turbo`) confirma o que a pesquisa achou, pergunta só o que falta, responde objeções e consulta e marca a agenda por duas ferramentas que chamam `/api/agenda/*`. No fim, o webhook pós-chamada grava a transcrição, o resumo e os campos do SPICED. O agente está versionado em `voice/` e é publicado por `scripts/voice-sync.mjs`; `scripts/voice-simulate.mjs` testa o prompt por texto contra personas.
 
-## Para quem vai mexer no código
-
-| Pasta | O que tem |
-| --- | --- |
-| `app/` | As telas (formulário, espera, painel) e as rotas da API |
-| `agent/` | O agente de pesquisa no formato eve: instruções e 3 ferramentas |
-| `lib/` | Lógica compartilhada: CNPJ, site, busca, briefing, banco, rastro, agenda |
-| `db/schema.sql` | As duas tabelas, criadas a cada build se não existirem |
-| `docs/` | Enunciado, arquitetura, regras de negócio, objeções, especificação da voz e o estado atual |
-
-Stack: Next.js 16 no Vercel, eve 0.80.1 para o agente de pesquisa, ElevenLabs Agents para a voz, Postgres, BrasilAPI e Exa. As decisões e o porquê de cada uma estão em [DECISIONS.md](DECISIONS.md). Regras para agentes de código (Claude Code, Cursor, Codex) em [AGENTS.md](AGENTS.md).
+**Rastro.** Toda chamada de ferramenta, da pesquisa e da voz, passa por `traced()` e vira uma linha com entrada, saída, fontes, tempo e erro, ligada ao lead. É a aba Rastro do painel.
 
 ## Rodar localmente
 
@@ -36,17 +18,29 @@ Requer Node 24.
 
 ```bash
 npm install
-cp .env.example .env.local   # preencha DATABASE_URL e as chaves
-npm run dev                  # http://localhost:3000
-npm test
+cp .env.example .env.local   # DATABASE_URL, ANTHROPIC_API_KEY e EXA_API_KEY bastam para a pesquisa
+npm run dev                  # http://localhost:3000, com o agente eve em /eve/v1
 ```
 
-Antes de cada push: `npm test`, `npm run typecheck`, `npm run lint` e `npm run build`.
+Sem `AGENDA_URL`, uma agenda falsa responde no lugar da real. A voz precisa de `ELEVENLABS_API_KEY` e do `ELEVENLABS_AGENT_ID` que o `voice-sync.mjs` imprime. Antes de cada push: `npm test`, `npm run typecheck`, `npm run lint` e `npm run build`.
+
+| Pasta | O que tem |
+| --- | --- |
+| `app/` | Telas (formulário, espera, painel) e rotas da API |
+| `agent/`, `evals/` | Agente de pesquisa (instruções e ferramentas) e o eval dos casos difíceis |
+| `lib/` | CNPJ, site, busca, briefing, banco, rastro e agenda |
+| `voice/`, `scripts/` | Prompt, configuração e personas do agente de voz, e os scripts que publicam e simulam |
+| `db/schema.sql` | As duas tabelas |
 
 ## Documentação
 
-Comece por [docs/STATUS.md](docs/STATUS.md) (onde estamos e próximos passos). O índice completo está em [docs/README.md](docs/README.md).
+| Arquivo | O que tem |
+| --- | --- |
+| [docs/reasoning.md](docs/reasoning.md) | O raciocínio de cada parte: opções, escolha, por que não as outras e a prova |
+| [docs/business-rules.md](docs/business-rules.md) | Regras de qualificação, fit, SPICED e agenda |
+| [docs/objections.md](docs/objections.md) | Objeções e como o agente responde cada uma |
+| [docs/architecture.md](docs/architecture.md) | Diagramas, contratos e mapa de arquivos |
+| [DECISIONS.md](DECISIONS.md) | Uma linha por decisão, com o porquê |
+| [docs/STATUS.md](docs/STATUS.md) | Onde o projeto está e o que falta |
 
-## Estado
-
-Em construção até 20/10/2026. Esqueleto ponta a ponta pronto com agenda falsa; falta o primeiro deploy. A voz entra no marco 3.
+O índice completo está em [docs/README.md](docs/README.md). Regras para agentes de código em [AGENTS.md](AGENTS.md).
