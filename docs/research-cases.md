@@ -12,6 +12,7 @@ Relatório do Marco 2: a pesquisa do agente rodada em empresas reais com dados d
 - [Velocidade: quanto tempo o lead aceita esperar](#velocidade-quanto-tempo-o-lead-aceita-esperar)
 - [O que mudou](#o-que-mudou)
 - [Rodada 2: depois das mudanças](#rodada-2-depois-das-mudanças)
+- [Eval: os 6 casos a cada mudança](#eval-os-6-casos-a-cada-mudança)
 - [O que continua fraco](#o-que-continua-fraco)
 
 ## Método
@@ -157,9 +158,51 @@ Rodadas intermediárias, que levaram às últimas mudanças:
 
 Custo total do Marco 2: cerca de US$ 0,95 em modelo e umas 30 buscas na Exa.
 
+## Eval: os 6 casos a cada mudança
+
+Os mesmos 6 casos viraram um eval do eve em `evals/research/hard-cases.eval.ts`, para rodar de novo sempre que `agent/instructions.md`, uma ferramenta ou o modelo mudar:
+
+```bash
+npm run eval
+```
+
+O eval manda ao agente a mesma mensagem e o mesmo `BriefingSchema` que o app (`researchMessage` em `lib/research.ts`), com ferramentas de verdade: sites, Receita e Exa. Por isso confere fatos e comportamento, não texto. Cada checagem nasceu de um erro desta página:
+
+| Checagem | Severidade | Erro da rodada 1 que ela pega |
+| --- | --- | --- |
+| Primeiro CNPJ citado é o da empresa (Even, Tenda, Cury, Pacaembu, Paggo) | gate | Evenmob no lugar da Even, Tenda Atacado, MEI de BH na Paggo |
+| `lookup_cnpj` chamado com esse CNPJ | gate | Cury sem Receita |
+| Fit esperado (alto, baixo na Lennar, desconhecido na Paggo) | gate | Paggo com fit baixo |
+| Nenhum nome de sócio pessoa física, dos quadros que o `lookup_cnpj` trouxe | gate | Regra de dados pessoais. Não pega o caso da Lennar: aquele sobrenome veio de uma busca, não da Receita |
+| `forAgent` com "Módulos prováveis" | gate | Regra nova do Marco 2 |
+| Busca de SPEs nas 4 incorporadoras | gate | SPEs nunca buscadas |
+| Busca pela pessoa com nome realista (Even, Cury) | gate | Cargo nunca buscado |
+| Briefing em menos de 45 s | gate | Meta de velocidade |
+| Caso a caso: Cury sem `fetch_site` e sem confiança alta; Pacaembu em Bauru; Lennar sem CNPJ escolhido; Paggo com "lead normal" | gate | Regras de e-mail pessoal, homônimo, estrangeira e Paggo |
+| Todo CNPJ citado passou pelo `lookup_cnpj` | soft, meta 100% | Dados cadastrais vindos de agregador |
+
+Primeira rodada completa, 17/10/2026, 3 casos em paralelo: **6 de 6 passaram, 57 de 57 gates**, CNPJs citados 100% conferidos na Receita.
+
+| Caso | Tempo | Ferramentas | Tokens entrada / saída |
+| --- | --- | --- | --- |
+| Even | 32,6 s | 7 | 83,0 mil / 2,4 mil |
+| Tenda | 30,1 s | 6 | 54,2 mil / 2,4 mil |
+| Cury (gmail) | 28,3 s | 6 | 63,6 mil / 2,4 mil |
+| Pacaembu | 33,2 s | 4 | 47,8 mil / 2,6 mil |
+| Lennar | 11,7 s | 2 | 17,0 mil / 1,5 mil |
+| Paggo | 12,0 s | 3 | 36,9 mil / 1,5 mil |
+
+Custo da rodada: cerca de US$ 0,39, em 1 minuto. Os detalhes de cada execução (eventos, asserções, `t.log`) ficam em `.eve/evals/<data>/`, fora do git.
+
+Cuidados:
+
+- Roda contra o mundo real: um site que muda ou a BrasilAPI fora do ar derrubam um caso sem que o agente tenha piorado. Antes de mexer nas instruções por causa de uma falha, olhe o evento da ferramenta no artefato.
+- As ferramentas gravam no Neon compartilhado com produção pelo `traced()`: cada rodada deixa uma linha por chamada de ferramenta (28 na primeira) em `events`, sem `lead_id`, que o painel não mostra.
+- O tempo medido inclui a concorrência de 3 casos por vez; rodando um só, cai uns segundos.
+
 ## O que continua fraco
 
-- **Variação entre rodadas.** O mesmo lead da Even rodou 3 vezes com 3 caminhos diferentes. Uma rodada por caso não é medida; o próximo passo é um eval do eve com estes 6 casos e as checagens desta página.
+- **Variação entre rodadas.** O mesmo lead da Even rodou 3 vezes com 3 caminhos diferentes. O eval acima não elimina a variação, mas mostra se ela quebra algo que importa; vale rodá-lo 2 ou 3 vezes antes de mudar uma regra.
 - **Cargo de pessoa real não provado.** Todos os nomes são fictícios: está provado que o agente busca e rejeita homônimos (Cury), não que acha o cargo de alguém real. Teste pendente com uma pessoa real que autorize.
 - **Pequenas deduções ainda passam.** "Companhia aberta" da Pacaembu, e às vezes a fonte de um fato aponta para a Receita quando o dado veio do site (escritórios da Pacaembu).
 - **SPEs vêm de agregadores.** Só a da Even foi conferida na Receita; a BrasilAPI não lista as empresas de que um CNPJ é sócio, então o total de SPEs fica sempre "pelo menos N".
