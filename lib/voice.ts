@@ -22,6 +22,7 @@ type PostCall = {
   data?: {
     conversation_id?: string;
     user_id?: string;
+    metadata?: { user_id?: string };
     transcript?: { role?: string; message?: string | null }[];
     analysis?: { transcript_summary?: string; data_collection_results?: Record<string, unknown> };
     conversation_initiation_client_data?: { dynamic_variables?: Record<string, unknown> };
@@ -34,7 +35,7 @@ export type PostCallRecord = { leadId: string; conversationId: string; conversat
 export function toConversation(payload: PostCall): PostCallRecord | null {
   const d = payload.data;
   if (payload.type !== "post_call_transcription" || !d?.conversation_id) return null;
-  const leadId = d.user_id ?? String(d.conversation_initiation_client_data?.dynamic_variables?.lead_id ?? "");
+  const leadId = d.user_id ?? d.metadata?.user_id ?? String(d.conversation_initiation_client_data?.dynamic_variables?.lead_id ?? "");
   if (!leadId) return null;
 
   const results = d.analysis?.data_collection_results ?? {};
