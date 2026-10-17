@@ -33,7 +33,10 @@
     },
     "tts": {
       "model_id": "eleven_v4_turbo",
-      "voice_id": "set by scripts/voice-sync.mjs from ELEVENLABS_VOICE_ID"
+      "voice_id": "set by scripts/voice-sync.mjs from ELEVENLABS_VOICE_ID",
+      "speed": 1.1,
+      "stability": 0.65,
+      "expressive_mode": false
     },
     "turn": {
       "turn_timeout": 7,
