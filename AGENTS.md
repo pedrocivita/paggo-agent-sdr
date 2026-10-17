@@ -30,7 +30,7 @@ markers; project rules stay below it.
 | Piece | Choice | Where |
 | --- | --- | --- |
 | Web app | Next.js 16.4 App Router (Turbopack, `cacheComponents`, `proxy.ts`) on Vercel | `app/` |
-| Research agent | eve 0.80.1, exact pin, mounted by `withEve` at `/eve/v1/*` | `agent/` |
+| Research agent | eve 0.80.1, exact pin, mounted by `withEve` at `/eve/v1/*`; Claude Sonnet 5.5 direct | `agent/` |
 | Voice | ElevenLabs Agents, React SDK in the browser (not built yet) | `voice/`, spec in `docs/voice-agent.md` |
 | Data | Postgres through `postgres` (porsager), two tables | `db/schema.sql`, `lib/db.ts` |
 | Company data | BrasilAPI (Receita mirror) | `lib/cnpj.ts` |
@@ -58,7 +58,10 @@ Gates before every push: test, typecheck, lint and build, all green.
   the Vercel project exists. Production secrets live only in Vercel env vars. Never commit, print
   or paste a secret; log its length only.
 - Without `AGENDA_URL` and `AGENDA_TOKEN` the fake calendar in `lib/agenda.ts` answers. Without
-  `EXA_API_KEY` the `web_search` tool fails and the agent goes on with site and Receita.
+  `EXA_API_KEY` the `web_search` tool fails and the agent goes on with site and Receita. Without
+  `ANTHROPIC_API_KEY` the research fails and the lead is marked "failed".
+- `.env.local` from `vercel env pull` points at the same Neon database as production: local test
+  leads show up in the production panel.
 - Pedro works on Windows 11: Git Bash in Claude Code, PowerShell elsewhere. Scripts `.ps1` and
   `.sh` are pure ASCII.
 
@@ -102,8 +105,11 @@ Diagrams, contracts and the file map: `docs/architecture.md`.
   APIs. `ClientSession` has no `id`; use `session.state.sessionId`.
 - `eve build` needs `just-bash` (dev dependency) for the local sandbox fallback.
   `defaultTools: false` turns off bash, file and web tools: only our 3 tools exist.
-- The channel auth `[vercelOidc(), localDev()]` fails closed in production. The first deploy must
-  prove a session opens.
+- The channel auth `[vercelOidc(), localDev()]` works in production: `lib/research.ts` reaches the
+  agent at `VERCEL_URL` with the project's OIDC token, even though that URL answers 302 to a
+  browser because of Deployment Protection (proved 2026-10-16).
+- The AI Gateway refuses gateway model ids on this team (`customer_verification_required`, paid
+  credits needed); the agent calls Anthropic directly with `anthropic()` (2026-10-16).
 - With `cacheComponents`, a page that reads the database must `await connection()`, or the build
   tries to prerender it and fails without `DATABASE_URL`.
 - BrasilAPI answers 403 without a `user-agent` header. MEI legal names end with the owner's CPF:
