@@ -17,7 +17,8 @@ function eveClient(): Client {
   return new Client({ host: process.env.EVE_HOST ?? "http://localhost:3000" });
 }
 
-function researchMessage(form: LeadForm): string {
+/** The research request for a lead; the evals send the same one. */
+export function researchMessage(form: LeadForm): string {
   return [
     "Pesquise este lead e devolva o briefing.",
     `Nome: ${form.name}`,

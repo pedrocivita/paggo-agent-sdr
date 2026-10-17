@@ -24,6 +24,7 @@ One line each: what was chosen, and why it and not the alternative.
 | Registry source | Every CNPJ goes through `lookup_cnpj`; aggregator sites only find the number | Aggregators matched the Receita in the test, but skipping the lookup lost the tax regime, which moves the fit. |
 | Lead from Paggo itself | Research Paggo like any company, fit "desconhecido", voice runs a normal conversation | The judges will likely type their own @paggo.com.br e-mail while playing a client; fit "baixo" or "is this a test?" would end the call they came to judge. |
 | Module hint | `forAgent` names 1 or 2 Paggo modules from a signal table (many SPEs, sells off-plan, many suppliers) | The voice may cite one module after a pain; picking it from research beats the voice guessing mid-call. Marked as a hint, never a fact about the lead. |
+| Research eval | `eve eval` over the 6 hard cases with live tools and deterministic checks (CNPJ, fit, tools called, no partner names), no LLM judge | Stubbed tools would test a fake web; the failures that mattered were facts and skipped tools, which plain checks catch for US$ 0.39 a run, while a judge adds cost and noise. |
 | Migrations | `db/schema.sql` run before each build | Idempotent `create if not exists`; no migration tool for two tables. |
 | Calendar | Behind an interface, with a fake until the real one arrives | The whole flow runs today; switching is two environment variables. |
 | Panel access | One password via browser basic auth | It holds lead data, but a login system would be over-engineering for the case. |

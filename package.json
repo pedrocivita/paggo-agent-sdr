@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "eval": "eve eval"
   },
   "dependencies": {
     "@elevenlabs/react": "1.18.0",
