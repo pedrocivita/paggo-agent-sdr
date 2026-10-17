@@ -28,9 +28,14 @@ async function call(method, path, body) {
   return text ? JSON.parse(text) : {};
 }
 
+// Optional: a restricted key may not read the subscription.
 async function creditsLeft() {
-  const s = await call("GET", "/v1/user/subscription");
-  return s.character_limit - s.character_count;
+  try {
+    const s = await call("GET", "/v1/user/subscription");
+    return s.character_limit - s.character_count;
+  } catch {
+    return null;
+  }
 }
 
 // Two business days from tomorrow at 10h and 15h, said the way lib/agenda.ts says them.
@@ -135,7 +140,7 @@ console.log(
     llm: live.llm,
     reasoning: live.reasoning_effort ?? `thinking_budget=${live.thinking_budget}`,
     ...measure(turns),
-    credits: before - after,
+    credits: before == null || after == null ? null : before - after,
     creditsLeft: after,
     seconds,
   }),
