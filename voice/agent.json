@@ -23,7 +23,7 @@
           "end_call": {
             "type": "system",
             "name": "end_call",
-            "description": "Encerra a conversa. Use logo depois da sua fala de despedida, sem esperar o lead responder.",
+            "description": "Encerra a conversa. Use só depois de falar a despedida em voz alta, sem esperar o lead responder. Nunca use logo depois de outra ferramenta sem falar antes.",
             "params": {
               "system_tool_type": "end_call"
             }
