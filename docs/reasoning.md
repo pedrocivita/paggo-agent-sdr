@@ -112,6 +112,20 @@ O que o deck muda em relação ao site: o posicionamento é mais focado em const
 
 **Pós-chamada:** a assinatura HMAC é conferida com 15 linhas nossas usando `crypto`, com teste, e não com o SDK, que seria uma dependência a mais. A coleta tem 10 campos: os 5 do SPICED, resultado, horário, objeções, dados corrigidos e `duvidas`. O último guarda o que o agente não soube responder, para virar pauta da reunião.
 
+**Primeiro teste com microfone** (17/10, conversa `conv_3101m55qx2jcfcbas9b27h3p55n2`, 3,4 min, lead fictício da Cyrela), medido pela API de conversas do ElevenLabs:
+
+| O que | Resultado |
+| --- | --- |
+| Fluxo | Abertura, briefing usado ("vi que a Cyrela tem vários lançamentos"), cargo, horários, confirmação, reunião marcada, `end_call` |
+| Demora até a voz (do silêncio do lead ao áudio) | 1,0 a 1,25 s na maioria das falas; 2,35 s na primeira, com o LLM frio (1,72 s até o primeiro token) |
+| Ferramentas | `consultar_agenda` (0,53 s) e `marcar_reuniao` (0,23 s), as duas no Rastro com o id da conversa e o lead certo |
+| Transcrição | "Sienge" ouvido como "Sunkia"; o LLM corrigiu sozinho |
+| Custo | 2.452 créditos: 2.280 de voz e 172 de LLM (US$ 0,017). Na prática, crédito equivale a minuto |
+
+O que errou e foi corrigido no prompt e na coleta: pulou da frase "não conheço, quero conhecer" direto para a reunião, sem dor nem decisão (agora oferece duas dores comuns para o lead escolher e pergunta quem decide antes de marcar); disse "entender como a Paggo pode se integrar com o Sienge", o que insinua uma integração que ninguém confirmou (agora ERP citado vira dúvida para o time); gravou o cargo do lead no campo `decisao` (descrições dos campos reescritas); as tags de emoção do modelo de voz (`[happy]`) apareciam na transcrição (agora são removidas antes de gravar).
+
+O aviso `error reading from signal stream` no console vem do `livekit-client`, a camada WebRTC do SDK, quando a conexão fecha; o overlay do Next em desenvolvimento mostra qualquer `console.error` como erro.
+
 ## Agenda
 
 O endpoint real ainda está sendo construído pela Paggo. Enquanto isso, uma agenda falsa atende pela mesma interface (`lib/agenda.ts`), e a troca é feita por duas variáveis de ambiente. Do enunciado, assumimos `Authorization: Bearer` e datas ISO em `de`/`ate`; o formato das respostas segue os exemplos do case. Regras: próximos 5 dias úteis, nada começando na próxima hora, até 4 opções, das quais o agente oferece duas.
