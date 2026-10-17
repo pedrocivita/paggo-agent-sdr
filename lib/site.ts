@@ -35,8 +35,9 @@ export function htmlToText(html: string): string {
 
 export type SitePage = { url: string; text: string };
 export type SiteResult = { domain: string; pages: SitePage[]; cnpjs: string[] };
+type Page = SitePage & { cnpjs: string[] };
 
-async function getPage(url: string): Promise<SitePage | null> {
+async function getPage(url: string): Promise<Page | null> {
   try {
     const res = await fetch(url, {
       redirect: "follow",
@@ -44,7 +45,9 @@ async function getPage(url: string): Promise<SitePage | null> {
       headers: { "user-agent": "Mozilla/5.0 (compatible; PaggoResearchBot/1.0)" },
     });
     if (!res.ok || !(res.headers.get("content-type") ?? "").includes("html")) return null;
-    return { url: res.url, text: htmlToText(await res.text()).slice(0, MAX_TEXT) };
+    const text = htmlToText(await res.text());
+    // The CNPJ usually sits in the footer, past the text the agent gets: search the whole page.
+    return { url: res.url, text: text.slice(0, MAX_TEXT), cnpjs: findCnpjs(text) };
   } catch {
     return null;
   }
@@ -56,13 +59,13 @@ export async function readSite(domain: string): Promise<SiteResult> {
     throw new Error(`Domínio sem site da empresa: ${domain}`);
   }
 
-  const pages: SitePage[] = [];
+  const pages: Page[] = [];
   for (const path of PATHS) {
     if (pages.length >= MAX_PAGES) break;
     const page = (await getPage(`https://${host}${path}`)) ?? (path === "" ? await getPage(`https://www.${host}`) : null);
     if (page && !pages.some((p) => p.url === page.url)) pages.push(page);
   }
 
-  const cnpjs = [...new Set(pages.flatMap((p) => findCnpjs(p.text)))];
-  return { domain: host, pages, cnpjs };
+  const cnpjs = [...new Set(pages.flatMap((p) => p.cnpjs))];
+  return { domain: host, pages: pages.map(({ url, text }) => ({ url, text })), cnpjs };
 }
