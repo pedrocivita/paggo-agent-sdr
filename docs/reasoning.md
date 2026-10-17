@@ -126,6 +126,20 @@ O que errou e foi corrigido no prompt e na coleta: pulou da frase "não conheço
 
 Depois do teste, a voz pareceu lenta e alegre demais. Ajustes: `speed` 1,1 (o máximo é 1,2), `stability` de 0,5 para 0,65 (menos variação de emoção), `expressive_mode` desligado (é ele que leva o LLM a pôr tags como `[happy]`) e uma linha de tom no prompt: profissional e neutro, sem exclamação. A voz continua a mesma; trocar de voz fica para depois de ouvir o ajuste.
 
+**Segundo teste** (conversa `conv_8301m55rhhcmedx8hxzbcns92sd1`, 3,4 min, 2.371 créditos). A voz já soava mais rápida e contida, mas o texto ficou prolixo: quatro falas tiveram de 34 a 59 palavras, e a lead reclamou duas vezes ("essa pergunta foi muito longa", "consegue ser menos prolixo?"). Erros lidos na transcrição e o que mudou:
+
+| Erro | Correção |
+| --- | --- |
+| Falas longas, com pergunta composta | Limite de duas frases curtas (umas 20 palavras), uma ideia por pergunta, e exemplos de fala ruim e boa no prompt |
+| Abriu lendo dados ("seu nome é Ana Teste e você é da Cyrela, certo?") | Não confirma nome nem empresa lendo de volta; pergunta direto qual parte do financeiro a pessoa cuida |
+| Repetia a fala inteira do lead, elogiava ("isso é ótimo") e começava as frases com "Ana" | Eco de no máximo três palavras; nome só na despedida; "compreendo", "perfeito" e "ótimo" proibidos |
+| Leu uma lista de módulos quando pediram para conhecer a Paggo | Uma frase pronta ("junta pagamentos, cobrança e caixa de todas as obras num lugar só") e duas dores para escolher |
+| "Consultando agenda" e "Marcando reunião" falados, o segundo duas vezes, com a ferramenta chamada 13 s depois | `pre_tool_speech` de `force` para `auto` (as duas ferramentas respondem em menos de 1 s) e regra de marcar logo depois da confirmação, sem anunciar |
+| Despedida cortada no meio ("Re"): encerrou a chamada enquanto falava | `end_call` só depois que os dois se despediram |
+| Não perguntou quem decide antes de marcar | Pergunta de decisão obrigatória antes da agenda, mesmo quando o lead pede a reunião |
+| Transcrição ouviu "Ceng" e "a pago" | Palavras-chave na transcrição (`asr.keywords`): Paggo, Sienge, Cyrela, SPE, INCC, CDI, TOTVS, SAP |
+| Ainda devagar | `speed` 1,2, o máximo da plataforma |
+
 O aviso `error reading from signal stream` no console vem do `livekit-client`, a camada WebRTC do SDK, quando a conexão fecha; o overlay do Next em desenvolvimento mostra qualquer `console.error` como erro.
 
 ## Agenda

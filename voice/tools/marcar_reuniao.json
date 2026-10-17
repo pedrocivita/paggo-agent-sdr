@@ -7,10 +7,20 @@
     "method": "POST",
     "request_body_schema": {
       "type": "object",
-      "required": ["lead_id", "conversation_id", "inicio"],
+      "required": [
+        "lead_id",
+        "conversation_id",
+        "inicio"
+      ],
       "properties": {
-        "lead_id": { "type": "string", "dynamic_variable": "lead_id" },
-        "conversation_id": { "type": "string", "dynamic_variable": "system__conversation_id" },
+        "lead_id": {
+          "type": "string",
+          "dynamic_variable": "lead_id"
+        },
+        "conversation_id": {
+          "type": "string",
+          "dynamic_variable": "system__conversation_id"
+        },
         "inicio": {
           "type": "string",
           "description": "O valor 'inicio' de uma das opções que consultar_agenda devolveu, exatamente como veio."
@@ -23,5 +33,5 @@
     }
   },
   "response_timeout_secs": 10,
-  "pre_tool_speech": "force"
+  "pre_tool_speech": "auto"
 }

@@ -23,7 +23,7 @@
           "end_call": {
             "type": "system",
             "name": "end_call",
-            "description": "Encerra a conversa depois do resumo e da despedida, ou quando o lead pedir para parar.",
+            "description": "Encerra a conversa. Use só depois que você já se despediu e o lead se despediu ou ficou em silêncio.",
             "params": {
               "system_tool_type": "end_call"
             }
@@ -34,7 +34,7 @@
     "tts": {
       "model_id": "eleven_v4_turbo",
       "voice_id": "set by scripts/voice-sync.mjs from ELEVENLABS_VOICE_ID",
-      "speed": 1.1,
+      "speed": 1.2,
       "stability": 0.65,
       "expressive_mode": false
     },
@@ -45,6 +45,18 @@
     },
     "conversation": {
       "max_duration_seconds": 600
+    },
+    "asr": {
+      "keywords": [
+        "Paggo",
+        "Sienge",
+        "Cyrela",
+        "SPE",
+        "INCC",
+        "CDI",
+        "TOTVS",
+        "SAP"
+      ]
     }
   },
   "platform_settings": {
