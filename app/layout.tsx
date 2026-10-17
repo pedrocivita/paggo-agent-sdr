@@ -4,6 +4,7 @@ import Script from "next/script";
 import { Outfit } from "next/font/google";
 import "./paggo.css";
 import "./app.css";
+import { PaggoLogo } from "./logo";
 import { ThemeToggle } from "./theme-toggle";
 
 const outfit = Outfit({ subsets: ["latin"], weight: ["300", "400", "500"], variable: "--font-outfit" });
@@ -26,7 +27,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </Script>
         <div className="doc">
           <header className="masthead">
-            <Link className="brand" href="/">Paggo</Link>
+            <Link className="brand" href="/" aria-label="Paggo, início">
+              <PaggoLogo />
+            </Link>
             <div className="end">
               <span>agente de pré-vendas · case</span>
               <ThemeToggle />
