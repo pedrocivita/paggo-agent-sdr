@@ -29,6 +29,7 @@ One line each: what was chosen, and why it and not the alternative.
 | Research eval | `eve eval` over the 6 hard cases with live tools and deterministic checks (CNPJ, fit, tools called, no partner names), no LLM judge | Stubbed tools would test a fake web; the failures that mattered were facts and skipped tools, which plain checks catch for US$ 0.39 a run, while a judge adds cost and noise. |
 | Migrations | `db/schema.sql` run before each build | Idempotent `create if not exists`; no migration tool for two tables. |
 | Calendar | Behind an interface, with a fake until the real one arrives | The whole flow runs today; switching is two environment variables. |
+| Voice gender | Keep the male library voice (Eduardo S.) and make the prompt masculine | The voice already went through 3 real calls; a female voice would need a new voice test with few credits left. |
 | UI theme | Dark theme always, one typeface (Outfit), monospace only for raw JSON | Closer to the graphite blocks of Paggo's deck and simpler to read; a theme switch would be code no criterion asks for. |
 | Panel access | One password via browser basic auth | It holds lead data, but a login system would be over-engineering for the case. |
 | Research timing | Runs after the response (`after()`), the page polls every 2 s | The lead sees the waiting page at once; polling needs no open connection on Vercel. |

@@ -18,7 +18,7 @@ export default function Home({ searchParams }: PageProps<"/">) {
           Conte quem é você<span className="dot">.</span>
         </h1>
         <p className="lede">
-          Em menos de um minuto a gente estuda sua empresa e uma assistente da Paggo conversa com você por voz, aqui
+          Em menos de um minuto a gente estuda sua empresa e um assistente da Paggo conversa com você por voz, aqui
           mesmo no site.
         </p>
       </div>

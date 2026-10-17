@@ -1,6 +1,6 @@
 # Paggo: agente de pré-vendas por voz
 
-Case da Paggo. Um lead preenche um formulário, um agente pesquisa a pessoa e a empresa e escreve um briefing com a fonte de cada fato, uma assistente de voz conversa com o lead no próprio site, qualifica pelo SPICED e marca a reunião, e um painel interno mostra o formulário, a pesquisa, a conversa e o rastro de cada ferramenta usada.
+Case da Paggo. Um lead preenche um formulário, um agente pesquisa a pessoa e a empresa e escreve um briefing com a fonte de cada fato, um assistente de voz conversa com o lead no próprio site, qualifica pelo SPICED e marca a reunião, e um painel interno mostra o formulário, a pesquisa, a conversa e o rastro de cada ferramenta usada.
 
 No ar em https://paggo-agent-sdr.vercel.app (painel interno em `/painel`).
 
@@ -8,7 +8,7 @@ No ar em https://paggo-agent-sdr.vercel.app (painel interno em `/painel`).
 
 **Pesquisa.** Ao enviar o formulário, um agente [eve](https://github.com/vercel/eve) com Claude Sonnet 5.5 roda dentro do próprio app com três ferramentas: `fetch_site` lê o site do domínio do e-mail, `lookup_cnpj` consulta a Receita pela BrasilAPI e `web_search` busca na Exa o cargo da pessoa, o CNPJ que o site não mostra e as SPEs do grupo. Sai um briefing estruturado: cada fato com fonte ou "não encontrado", o fit com o cliente ideal, hipóteses de SPICED e um resumo para a voz. Leva de 12 a 33 s. `npm run eval` roda 6 casos difíceis (homônimo, e-mail pessoal, empresa estrangeira) com as ferramentas reais.
 
-**Voz.** Com o briefing pronto, a tela de espera libera o botão. O servidor gera um token de conversa do ElevenLabs e passa o briefing como variáveis. A assistente (`gemini-2.5-flash` com a voz `eleven_v4_turbo`) confirma o que a pesquisa achou, pergunta só o que falta, responde objeções e consulta e marca a agenda por duas ferramentas que chamam `/api/agenda/*`. No fim, o webhook pós-chamada grava a transcrição, o resumo e os campos do SPICED. O agente está versionado em `voice/` e é publicado por `scripts/voice-sync.mjs`; `scripts/voice-simulate.mjs` testa o prompt por texto contra personas.
+**Voz.** Com o briefing pronto, a tela de espera libera o botão. O servidor gera um token de conversa do ElevenLabs e passa o briefing como variáveis. O assistente (`gemini-2.5-flash` com a voz `eleven_v4_turbo`) confirma o que a pesquisa achou, pergunta só o que falta, responde objeções e consulta e marca a agenda por duas ferramentas que chamam `/api/agenda/*`. No fim, o webhook pós-chamada grava a transcrição, o resumo e os campos do SPICED. O agente está versionado em `voice/` e é publicado por `scripts/voice-sync.mjs`; `scripts/voice-simulate.mjs` testa o prompt por texto contra personas.
 
 **Rastro.** Toda chamada de ferramenta, da pesquisa e da voz, passa por `traced()` e vira uma linha com entrada, saída, fontes, tempo e erro, ligada ao lead. É a aba Rastro do painel.
 

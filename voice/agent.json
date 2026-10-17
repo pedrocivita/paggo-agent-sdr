@@ -2,7 +2,7 @@
   "name": "Paggo SDR",
   "conversation_config": {
     "agent": {
-      "first_message": "Oi, {{lead_name}}, aqui é a assistente virtual da Paggo. Vi que você deixou seu contato agora há pouco. Tem uns minutinhos pra gente conversar?",
+      "first_message": "Oi, {{lead_name}}, aqui é o assistente virtual da Paggo. Vi que você deixou seu contato agora há pouco. Tem uns minutinhos pra gente conversar?",
       "language": "pt-br",
       "dynamic_variables": {
         "dynamic_variable_placeholders": {
