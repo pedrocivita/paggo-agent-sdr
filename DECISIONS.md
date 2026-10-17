@@ -30,7 +30,7 @@ One line each: what was chosen, and why it and not the alternative.
 | Migrations | `db/schema.sql` run before each build | Idempotent `create if not exists`; no migration tool for two tables. |
 | Calendar | Behind an interface, with a fake until the real one arrives | The whole flow runs today; switching is two environment variables. |
 | Voice gender | Keep the male library voice (Eduardo S.) and make the prompt masculine | The voice already went through 3 real calls; a female voice would need a new voice test with few credits left. |
-| UI theme | Dark theme always, one typeface (Outfit), monospace only for raw JSON | Closer to the graphite blocks of Paggo's deck and simpler to read; a theme switch would be code no criterion asks for. |
+| UI theme | Dark by default with a switch to light kept in the browser; one typeface (Outfit), monospace only for raw JSON | Dark is closer to the graphite blocks of Paggo's deck and light stays one click away; following the system theme would open light for most visitors. |
 | Panel access | One password via browser basic auth | It holds lead data, but a login system would be over-engineering for the case. |
 | Research timing | Runs after the response (`after()`), the page polls every 2 s | The lead sees the waiting page at once; polling needs no open connection on Vercel. |
 | Agent context | `AGENTS.md` as the single source, `CLAUDE.md` imports it, `docs/STATUS.md` as running state | Every coding agent reads the same rules; a state file in the repo survives sessions and tools, a tool's private memory does not. |

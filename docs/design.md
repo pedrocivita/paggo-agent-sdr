@@ -10,7 +10,7 @@ A UI usa a linguagem visual do próprio material do case da Paggo, sem bibliotec
 
 ## Tokens
 
-Definidos em `:root` de `app/paggo.css`, com tema escuro em `prefers-color-scheme` e em `[data-theme=dark]`. O app usa sempre o escuro: `data-theme="dark"` no `<html>` de `app/layout.tsx`.
+Definidos em `:root` de `app/paggo.css`, com tema escuro em `prefers-color-scheme` e em `[data-theme=dark]`. O app abre no escuro (`data-theme="dark"` no `<html>` de `app/layout.tsx`) e o interruptor do cabeçalho (`.theme-toggle`, em `app/theme-toggle.tsx`) troca para o claro e guarda a escolha no navegador.
 
 | Token | Claro | Escuro | Uso |
 | --- | --- | --- | --- |
@@ -38,6 +38,7 @@ Fonte: Outfit em tudo, carregada por `next/font` em `app/layout.tsx`. Em `app/ap
 | `.rows` / `.row`, `.tablewrap` | Listas de pares e tabelas |
 | `.note` (`.ok`, `.warn`, `.err`, `.info`) | Avisos |
 | `.form`, `.field`, `.status`, `.facts`, `.event` | Só deste app (`app/app.css`): formulário, indicador de pesquisa, fatos com fonte, linha do rastro |
+| `.theme-toggle` | Interruptor de tema do cabeçalho, já desenhado em `app/paggo.css` |
 | `.band` | Só deste app: o bloco grafite do último slide do deck, usado como chamada para a voz na tela de espera |
 
 ## Regras
@@ -45,4 +46,4 @@ Fonte: Outfit em tudo, carregada por `next/font` em `app/layout.tsx`. Em `app/ap
 - Reusar classe existente antes de criar CSS novo. CSS novo vai para `app/app.css`, nunca para `app/paggo.css`.
 - Destaque (`--accent`) é para o que importa na tela, não para decorar.
 - Tom dos textos da UI igual ao do site: direto, concreto, sem jargão de vendas ([paggo.md](paggo.md)).
-- Toda mudança de UI se prova olhando a página rodando, no desktop e em largura de celular.
+- Toda mudança de UI se prova olhando a página rodando, no claro e no escuro, no desktop e em largura de celular.

@@ -272,7 +272,7 @@ Base: os tokens que vieram com o case (`app/paggo.css`) e o deck institucional, 
 | --- | --- | --- |
 | "O orquestrador financeiro da construção" como linha de cima da home, onde estava "Fale com a Paggo" | Uma faixa escura de capa, como a página 1 do deck | É a frase de posicionamento do deck; numa linha só ela aparece sem empurrar o formulário para baixo |
 | A chamada para a voz num bloco grafite, como o do último slide, com status e botão dentro | Botão solto embaixo do texto | O botão é o único passo que importa na tela; o bloco o separa do resto como o deck separa a chamada final |
-| Tema escuro sempre e uma fonte só, sem monoespaçada (exceto o JSON cru do Rastro) | Seguir o tema do sistema e manter a IBM Plex Mono nos chips | Mais limpo e mais perto dos blocos do deck; a monoespaçada fica só onde o alinhamento do JSON ajuda a ler |
+| Escuro por padrão, com interruptor para o claro, e uma fonte só, sem monoespaçada (exceto o JSON cru do Rastro) | Seguir o tema do sistema; ou escuro fixo; e manter a IBM Plex Mono nos chips | O escuro é mais perto dos blocos do deck, e o claro fica a um clique; o bloco da voz é grafite nos dois temas, como no deck, que é claro com bloco escuro. A monoespaçada fica só onde o alinhamento do JSON ajuda a ler |
 | Rastro: a linha quebra entre itens, nunca dentro de um link, e cada site aparece uma vez | Cortar a linha com reticências | No celular os links estouravam a tela e o mesmo domínio aparecia duas vezes (páginas diferentes do mesmo site) |
 
 Prova: screenshots no navegador do dev local, home, espera e Rastro de um lead da Even, no desktop e a 375 px.

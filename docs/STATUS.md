@@ -106,7 +106,7 @@ A chave precisa de: Agents (leitura e escrita), Voices (leitura e escrita, para 
 - Dev e produção usam o mesmo banco Neon: leads e eventos de teste aparecem no painel de produção.
 - O ElevenLabs só alcança a produção: ferramentas e webhook apontam para `paggo-agent-sdr.vercel.app`. Mudou rota, precisa de push antes de testar a voz.
 - O `vercel env pull` acrescenta `.env*.local` ao `.gitignore` toda vez; a linha é redundante e não deve ser commitada.
-- O app usa sempre o tema escuro (`data-theme="dark"` em `app/layout.tsx`); o claro dos tokens não aparece mais.
+- O tema é escuro por padrão, com um interruptor no cabeçalho (`app/theme-toggle.tsx`); a escolha fica no `localStorage` do navegador, e um `next/script` `beforeInteractive` a aplica antes da primeira pintura. Um `<script>` cru no layout funciona, mas faz o React reclamar no console em dev.
 - Mais armadilhas do código em `AGENTS.md`, seção Gotchas.
 
 ## Linha de corte
