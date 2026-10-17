@@ -78,7 +78,9 @@ agent.conversation_config.agent.prompt.prompt = await readFile(new URL("prompt.m
 agent.conversation_config.agent.prompt.tool_ids = toolIds;
 agent.conversation_config.tts.voice_id = env("ELEVENLABS_VOICE_ID");
 if (process.env.POST_CALL_WEBHOOK_ID) {
-  agent.platform_settings.workspace_overrides = { webhooks: { post_call_webhook_id: process.env.POST_CALL_WEBHOOK_ID } };
+  agent.platform_settings.workspace_overrides = {
+    webhooks: { post_call_webhook_id: process.env.POST_CALL_WEBHOOK_ID, events: ["transcript"] },
+  };
 }
 
 const agentId = await upsertAgent(agent);
