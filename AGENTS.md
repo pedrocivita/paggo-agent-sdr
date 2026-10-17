@@ -88,6 +88,8 @@ Diagrams, contracts and the file map: `docs/architecture.md`.
   the case criterion it serves; if none, it does not go in.
 - Every relevant decision gets one row in `DECISIONS.md`: what was chosen and why this and not the
   alternative, short enough to defend in a conversation.
+- Every research and choice also goes to `docs/reasoning.md` as it happens: what was looked at, the
+  options, what was chosen, why not the others, and the proof (measurement, source or live test).
 - Every tool call of any agent goes through `traced()`. An untraced tool does not ship: the trail
   is a critical criterion.
 - The briefing never invents: a fact not found is "não encontrado" with `source: null`. Never store
