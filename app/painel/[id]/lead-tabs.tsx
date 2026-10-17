@@ -155,6 +155,16 @@ function TranscriptTab({ lead }: { lead: Lead }) {
   );
 }
 
+// One link per site: several pages of the same site would repeat the same hostname.
+function sites(urls: string[]): [string, string][] {
+  const byHost = new Map<string, string>();
+  for (const url of urls) {
+    const host = new URL(url).hostname.replace(/^www\./, "");
+    if (!byHost.has(host)) byHost.set(host, url);
+  }
+  return [...byHost].slice(0, 3);
+}
+
 function TrailTab({ events }: { events: TrailEvent[] }) {
   if (events.length === 0) return <Empty>Nenhuma chamada de ferramenta registrada ainda.</Empty>;
   const runs = Map.groupBy(events, (e) => `${e.runKind}:${e.runId}`);
@@ -172,9 +182,9 @@ function TrailTab({ events }: { events: TrailEvent[] }) {
                 <span className="chip">{e.tool}</span>
                 <span className={`chip ${e.ok ? "ok" : "err"}`}>{e.ok ? "ok" : "erro"}</span>
                 <span className="when">{e.ms} ms</span>
-                {e.sources.slice(0, 3).map((s) => (
-                  <a key={s} href={s} target="_blank" rel="noreferrer">
-                    {new URL(s).hostname}
+                {sites(e.sources).map(([host, url]) => (
+                  <a key={host} href={url} target="_blank" rel="noreferrer">
+                    {host}
                   </a>
                 ))}
               </summary>
