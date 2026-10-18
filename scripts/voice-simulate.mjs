@@ -3,7 +3,7 @@
 // Usage: node --env-file=<file> scripts/voice-simulate.mjs <persona> [--llm=<id>] [--reasoning=<effort>] [--out=<file>]
 // --llm switches the agent's LLM on the account before the run (thinking off,
 // or the given reasoning effort); rerun scripts/voice-sync.mjs to go back to voice/agent.json.
-// Costs LLM credits on both sides, never voice minutes. The agenda tools are mocked.
+// Uses no voice minutes; the free plan did not bill the LLM either. The agenda tools are mocked.
 
 import { writeFile } from "node:fs/promises";
 import { PERSONAS } from "../voice/personas.mjs";

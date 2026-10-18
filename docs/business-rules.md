@@ -31,7 +31,7 @@ Calculado pela pesquisa, antes da conversa, e mostrado no briefing com os motivo
 
 ## Pesquisa
 
-- Ordem: site do domínio do e-mail, depois a Receita com o CNPJ achado, depois a busca web só para o que faltar (no máximo 4 buscas).
+- Ordem: na primeira rodada, em paralelo, o site do domínio do e-mail e uma busca pelo cargo da pessoa; depois a Receita com o CNPJ achado; para construtora ou incorporadora, uma busca pelas SPEs do grupo. No máximo 4 buscas. O detalhe está em `agent/instructions.md`.
 - E-mail pessoal (gmail, outlook, hotmail e similares): pula o site e pesquisa pelo nome da empresa. A confiança da empresa cai para média e a voz confirma logo no começo.
 - CNPJ cuja razão social não bate com a empresa do formulário é tratado como possível homônimo: confiança baixa e confirmação na conversa ("vocês são a X de Curitiba?").
 - Nunca inventar. O que não foi achado sai como "não encontrado", sem fonte.

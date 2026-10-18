@@ -20,16 +20,20 @@ Um agente só no ElevenLabs Agents, com a config versionada em `voice/` (`agent.
 
 ## Prompt
 
-Seis blocos:
+Dez seções em `voice/prompt.md`. Cada regra fica na seção onde a ação acontece: o `gemini-2.5-flash` pulou regras que só estavam em "Objetivo".
 
-| Bloco | O que diz |
+| Seção | O que diz |
 | --- | --- |
-| Identidade | Assistente virtual da Paggo; diz isso na abertura e confirma que é IA se perguntarem |
-| Contexto | O briefing; usa o que sabe para confirmar ("vi que vocês têm algumas SPEs, é isso?") |
-| Objetivo | Entender a operação, completar o SPICED e, se fizer sentido, marcar 30 minutos |
-| Estilo | Uma pergunta por vez, frases curtas, sem lista falada, nada de pitch antes da dor |
-| Limites | Não inventa preço nem recurso; não fala dado pessoal da pesquisa; pessoa errada pede indicação |
-| Ferramentas | Quando chamar cada uma e o que falar enquanto ela roda |
+| Quem você é | O assistente virtual da Paggo, voz masculina; diz que é IA e oferece alguém do time se perguntarem |
+| Com quem você fala | O briefing como hipótese; o gancho do briefing é a primeira pergunta de descoberta |
+| Objetivo | Papel da pessoa, SPICED como checklist, quem decide antes da agenda, fechar e desligar |
+| Perguntas que rendem | Uma pergunta por letra do SPICED, impacto sempre com régua, dê antes de pedir |
+| Como falar | Duas frases curtas por fala, sem lista, sem exclamação, palavras proibidas, exemplos de fala ruim e boa |
+| Dor do lead e o que a Paggo faz | Uma frase de solução para cada dor, só depois de ouvir a dor |
+| Fatos da Paggo | O que o agente pode afirmar, do deck ([paggo.md](paggo.md)) |
+| Objeções | Resposta curta para cada uma, no máximo duas tentativas |
+| Limites | Não inventa preço nem integração, não manda e-mail, pessoa errada indica quem decide |
+| Agenda | Quem decide antes de consultar, dois horários, marcar só depois do sim, despedida e `end_call` |
 
 Regras de conversa e agenda: [business-rules.md](business-rules.md). Objeções: [objections.md](objections.md).
 
@@ -80,7 +84,7 @@ Critério alto da banca: soar como pessoa, sem demora.
 - LLM rápido sem raciocínio: `gemini-2.5-flash`, escolhido entre 4 em 20 conversas simuladas por texto ([reasoning.md](reasoning.md#agente-de-voz)).
 - Prompt e briefing enxutos.
 - Fala curta antes de cada ferramenta só quando o modelo achar preciso (`pre_tool_speech: "auto"`): as duas respondem em menos de 1 s.
-- Voz em português do Brasil e dicionário de pronúncia para Paggo, CDI, SPE e CNPJ.
+- Voz em português do Brasil e palavras-chave na transcrição (`asr.keywords`: Paggo, Sienge, SPE, INCC e outras); dicionário de pronúncia só se a voz errar.
 
 ## Sessão no site
 

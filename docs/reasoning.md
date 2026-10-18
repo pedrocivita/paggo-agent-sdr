@@ -121,7 +121,7 @@ O que o deck muda em relação ao site: o posicionamento é mais focado em const
 
 | Opção | Por que sim | Por que não |
 | --- | --- | --- |
-| **Script próprio pela API REST, `scripts/voice-sync.mjs` (escolhido)** | Cria segredo, ferramentas e agente; acha tudo pelo nome e atualiza; o prompt fica num markdown legível | Código nosso para manter (80 linhas) |
+| **Script próprio pela API REST, `scripts/voice-sync.mjs` (escolhido)** | Cria segredo, ferramentas e agente; acha tudo pelo nome e atualiza; o prompt fica num markdown legível | Código nosso para manter (um script curto) |
 | `@elevenlabs/agents-cli` | Era o plano | Descontinuada, parou na 0.6.1 |
 | `@elevenlabs/cli` 1.x | Sucessora oficial | Saiu no mesmo dia; não cria segredos, webhooks nem dicionários de pronúncia |
 | Configurar no painel | Rápido | Nada versionado; a banca não conseguiria ler o agente no repo |
