@@ -79,7 +79,7 @@ ${CALL_STYLE}`,
 
 O que é verdade:
 - Você não sabe nada do financeiro da empresa: bancos, ERP, conciliação, nada.
-- Quem cuida é o Paulo Mendes, gerente financeiro, e-mail paulo.mendes@vertice.com.br. Você pode passar o contato dele se o agente pedir.
+- Quem cuida é o Paulo Mendes, gerente financeiro, e-mail paulo.mendes@exemplo.com.br. Você pode passar o contato dele se o agente pedir.
 
 Como agir:
 - Quando o agente perguntar do seu papel ou do financeiro, diga que é do marketing e não cuida disso.

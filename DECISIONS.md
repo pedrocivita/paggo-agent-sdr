@@ -9,7 +9,7 @@ One line each: what was chosen, and why it and not the alternative.
 | Voice | ElevenLabs Agents, voice on the site | Turn taking, interruptions and latency come solved; building STT + LLM + TTS by hand would spend the time on plumbing instead of the agent. |
 | Channel | Browser voice now, phone later | The case says the channel matters less. Web needs no number or WhatsApp approval; the same agent can take calls later. |
 | Research flow | The agent follows an order written in its instructions | One path to read and debug. Hard-coded steps before the agent would be a second path doing the same work. |
-| Company data | BrasilAPI (Receita mirror), logic rewritten from Action's `cnpj_lookup.py` | Free, public, already proven in production. Only works by CNPJ, so the CNPJ comes from the company site first. |
+| Company data | BrasilAPI (Receita mirror) | Free, public, already proven in production. Only works by CNPJ, so the CNPJ comes from the company site first. |
 | CNPJ rules | Alphanumeric CNPJ accepted | Valid since July 2026; a digits-only check would reject every company opened after it. |
 | Web search | Exa as an explicit tool | Every search lands in the trail with its query and results, which a model's built-in search hides. |
 | Structured output | eve `outputSchema` with one Zod schema | The same schema types the voice variables and the panel; the result is validated before it is saved. |

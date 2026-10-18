@@ -120,4 +120,4 @@ Conferidos em 16/10/2026 no código publicado no npm, não só na documentação
 - Webhook pós-chamada: o `voice-sync.mjs` acha o webhook pela URL ou, com `WEBHOOK_SECRET_FILE`, cria (`POST /v1/workspace/webhooks`, `auth_type: "hmac"`), grava o segredo nesse arquivo sem imprimir e liga no agente. O segredo vai para `ELEVENLABS_WEBHOOK_SECRET` no Vercel. Ainda não rodou numa conta de verdade.
 - Voz: a escolhida é da biblioteca ("Eduardo S. - Brazilian Clear & Pro", masculina); o script a adiciona à conta com `ELEVENLABS_VOICE_OWNER` quando falta. Prompt e primeira fala estão no masculino ("o assistente virtual", "obrigado") para combinar com ela.
 - Sotaque com `pt-br` no `eleven_v4_turbo`; dicionário de pronúncia (Paggo, CDI, SPE, INCC) só se a voz errar.
-- Conta: o teste roda na conta pessoal do Pedro (15 minutos grátis); a versão final vai para a conta da Paggo rodando o mesmo script com a outra chave.
+- Conta: o teste roda numa conta de teste (15 minutos grátis); a versão final vai para a conta da Paggo rodando o mesmo script com a outra chave.

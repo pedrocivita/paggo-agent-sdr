@@ -141,7 +141,7 @@ O que o deck muda em relação ao site: o posicionamento é mais focado em const
 
 **Pós-chamada:** a assinatura HMAC é conferida com 15 linhas nossas usando `crypto`, com teste, e não com o SDK, que seria uma dependência a mais. A coleta tem 10 campos: os 5 do SPICED, resultado, horário, objeções, dados corrigidos e `duvidas`. O último guarda o que o agente não soube responder, para virar pauta da reunião.
 
-**Primeiro teste com microfone** (17/10, conversa `conv_3101m55qx2jcfcbas9b27h3p55n2`, 3,4 min, lead fictício da Cyrela), medido pela API de conversas do ElevenLabs:
+**Primeiro teste com microfone** (17/10, conversa `conv_3101...`, 3,4 min, lead fictício da Cyrela), medido pela API de conversas do ElevenLabs:
 
 | O que | Resultado |
 | --- | --- |
@@ -155,7 +155,7 @@ O que errou e foi corrigido no prompt e na coleta: pulou da frase "não conheço
 
 Depois do teste, a voz pareceu lenta e alegre demais. Ajustes: `speed` 1,1 (o máximo é 1,2), `stability` de 0,5 para 0,65 (menos variação de emoção), `expressive_mode` desligado (é ele que leva o LLM a pôr tags como `[happy]`) e uma linha de tom no prompt: profissional e neutro, sem exclamação. A voz continua a mesma; trocar de voz fica para depois de ouvir o ajuste.
 
-**Segundo teste** (conversa `conv_8301m55rhhcmedx8hxzbcns92sd1`, 3,4 min, 2.371 créditos). A voz já soava mais rápida e contida, mas o texto ficou prolixo: quatro falas tiveram de 34 a 59 palavras, e a lead reclamou duas vezes ("essa pergunta foi muito longa", "consegue ser menos prolixo?"). Erros lidos na transcrição e o que mudou:
+**Segundo teste** (conversa `conv_8301...`, 3,4 min, 2.371 créditos). A voz já soava mais rápida e contida, mas o texto ficou prolixo: quatro falas tiveram de 34 a 59 palavras, e a lead reclamou duas vezes ("essa pergunta foi muito longa", "consegue ser menos prolixo?"). Erros lidos na transcrição e o que mudou:
 
 | Erro | Correção |
 | --- | --- |
@@ -169,7 +169,7 @@ Depois do teste, a voz pareceu lenta e alegre demais. Ajustes: `speed` 1,1 (o m�
 | Transcrição ouviu "Ceng" e "a pago" | Palavras-chave na transcrição (`asr.keywords`): Paggo, Sienge, Cyrela, SPE, INCC, CDI, TOTVS, SAP |
 | Ainda devagar | `speed` 1,2, o máximo da plataforma |
 
-**Terceiro teste** (conversa `conv_5401m55svdjze1xvcpjk1ae4m57k`, 4,3 min, 3.095 créditos). As falas ficaram curtas (11 a 22 palavras), e a abertura foi direto ao papel da pessoa. Problemas novos:
+**Terceiro teste** (conversa `conv_5401...`, 4,3 min, 3.095 créditos). As falas ficaram curtas (11 a 22 palavras), e a abertura foi direto ao papel da pessoa. Problemas novos:
 
 | Erro | Correção |
 | --- | --- |
@@ -180,7 +180,7 @@ Depois do teste, a voz pareceu lenta e alegre demais. Ajustes: `speed` 1,1 (o m�
 | Silêncio constrangedor no fim: 11,4 s depois do "não" para a pergunta "tem mais alguma dúvida?" e 5,9 s depois do "tchau" | Fecha numa fala só (dia, hora, convite por e-mail, "até mais") e chama `end_call` logo em seguida, sem perguntar nem esperar |
 | Demora ainda perceptível (0,8 a 1,9 s; a fala já está na velocidade máxima, 1,2) | `turn.speculative_turn` ligado: o LLM começa a responder durante o silêncio, antes da certeza de fim de turno. A ansiedade do turno continua `normal`, porque o lead fala com pausas ("ééé") e `eager` cortaria a fala dele |
 
-Sobra: o `gemini-2.5-flash` ainda escorrega no estilo (disse "Ótimo!", que está proibido, e voltou a listar módulos ao pedir desculpa). O próximo passo é medir 2 ou 3 LLMs mais fortes com o mesmo prompt, já na conta da Paggo; a conta de teste ficou com cerca de 2.000 créditos, uns 3 minutos.
+Sobra: o `gemini-2.5-flash` ainda escorrega no estilo (disse "Ótimo!", que está proibido, e voltou a listar módulos ao pedir desculpa). O próximo passo é medir 2 ou 3 LLMs mais fortes com o mesmo prompt, por texto, sem gastar os poucos minutos de voz da conta de teste.
 
 **Comparação de LLMs por texto** (17/10, noite). Com uns 3 minutos de voz sobrando, a comparação foi por texto: o ElevenLabs roda a conversa inteira entre o agente publicado e um lead simulado por outro LLM.
 
@@ -262,7 +262,7 @@ Nenhuma fala passou de 2 s nessas 7 rodadas, e nenhuma teve preço, integração
 
 O aviso `error reading from signal stream` no console vem do `livekit-client`, a camada WebRTC do SDK, quando a conexão fecha; o overlay do Next em desenvolvimento mostra qualquer `console.error` como erro.
 
-**A chave da Paggo.** Ao publicar na conta da Paggo, a chave que ela mandou respondeu 401 `missing_permissions` em agentes, ferramentas, segredos, vozes, modelos e no token da conversa; só lista webhooks. Para não confundir com uma chave restrita da conta de teste, foram três provas: o hash é diferente; as permissões são outras (a de teste acessa tudo); e um webhook temporário criado na conta de teste não apareceu para a chave da Paggo (apagado em seguida). Opções pesadas: pedir ao Murilo para liberar as permissões (sem custo, resposta na segunda); usar a conta de teste em produção com o plano Starter (US$ 1 no primeiro mês, 75 minutos, licença comercial); ou esperar. Escolhido: pedir e esperar, seguindo no que não depende da voz em produção; o Starter fica para caso extremo.
+**A chave da Paggo.** Ao publicar na conta da Paggo, a chave que ela mandou respondeu 401 `missing_permissions` em agentes, ferramentas, segredos, vozes, modelos e no token da conversa; só lista webhooks. Para não confundir com uma chave restrita da conta de teste, foram três provas: o hash é diferente; as permissões são outras (a de teste acessa tudo); e um webhook temporário criado na conta de teste não apareceu para a chave da Paggo (apagado em seguida). Opções pesadas: pedir à Paggo que libere as permissões (sem custo); usar a conta de teste em produção, num plano pago que permite uso comercial; ou esperar. Escolhido: pedir a liberação e seguir no que não depende da voz em produção, com a conta de teste como plano B e prazo para decidir.
 
 ## Interface
 

@@ -57,8 +57,7 @@ Gates before every push: test, typecheck, lint and build, all green.
 
 ## Environment
 
-- Local secrets in `.env.local` (gitignored), from `.env.example`; `vercel env pull` fills it once
-  the Vercel project exists. Production secrets live only in Vercel env vars. Never commit, print
+- Local secrets in `.env.local` (gitignored), from `.env.example`; `vercel env pull` fills it. Production secrets live only in Vercel env vars. Never commit, print
   or paste a secret; log its length only.
 - Without `AGENDA_URL` and `AGENDA_TOKEN` the fake calendar in `lib/agenda.ts` answers. Without
   `EXA_API_KEY` the `web_search` tool fails and the agent goes on with site and Receita. Without
@@ -101,8 +100,6 @@ Diagrams, contracts and the file map: `docs/architecture.md`.
 - UI uses Paggo's tokens and classes in `app/paggo.css`; new CSS goes to `app/app.css`. No UI
   library. See `docs/design.md`.
 - Few files, obvious names, small functions, no dead code. Comments say why, not what.
-- Logic reused from Pedro's other projects is rewritten, never copied, and never uses their keys or
-  systems.
 
 ## Gotchas (proved 2026-10-16)
 
