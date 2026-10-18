@@ -260,6 +260,19 @@ Nenhuma fala passou de 2 s nessas 7 rodadas, e nenhuma teve preço, integração
 
 **Gênero da voz.** A voz escolhida ("Eduardo S. - Brazilian Clear & Pro", da biblioteca) é masculina, e o prompt falava no feminino ("a assistente virtual", "obrigada"). Opções: trocar por uma voz feminina ou passar o prompt para o masculino. Escolhido: o masculino, porque a voz já passou por 3 conversas reais e trocar pediria um teste de voz novo com poucos créditos. Mudaram o prompt, a primeira fala, o texto da home, o README e as objeções. Prova: as 3 personas, duas vezes cada, com 6 "obrigado" e nenhum feminino nas falas do agente; reunião marcada nas 4 de interessada e cético; fechamento numa fala só em 6 de 6. Numa rodada da pessoa errada a coleta marcou "não qualificado" em vez de "indicou outra pessoa"; a descrição do campo `resultado` passou a dizer quando usar cada valor, e mais 3 rodadas deram "indicou outra pessoa" nas 3.
 
+**Quarto teste, com o prompt de agora e o webhook ligado** (17/10, noite, conversa `conv_6601...`, 4,5 min, 3.199 créditos). Primeira chamada de ponta a ponta: formulário, pesquisa com 4 ferramentas, conversa, `consultar_agenda` e `marcar_reuniao` no Rastro com o id da conversa, e o pós-chamada assinado gravando resultado, SPICED, horário, resumo e transcrição no painel. O lead foi o próprio desenvolvedor, no papel de responsável de tecnologia (não do financeiro) de uma consultoria que atende construtoras.
+
+| O que | Resultado |
+| --- | --- |
+| Estilo | Tudo no masculino, falas de uma ou duas frases, sem "ótimo" nem exclamação |
+| SPICED | As cinco letras na coleta, inclusive o evento crítico, que nas simulações não aparecia; perguntou quem decide antes da agenda |
+| Condução | Quem não cuida do financeiro mas escolhe as ferramentas foi tratado como lead, não como pessoa errada: o agente perguntou o papel dele na decisão antes de seguir |
+| Agenda | Dois horários, repetidos quando o lead pediu, e a reunião marcada só depois do "sim" |
+| Fechamento | Despedida e `end_call` na mesma fala, sem esperar o "tchau" |
+| Demora até o áudio, do fim do silêncio do lead (`convai_ttf_audio_since_silence`) | Mediana de 1,32 s e máximo de 2,1 s (logo depois da agenda e na despedida). O LLM responde em uns 0,6 s; o resto é a detecção do fim do turno, a voz e a rede |
+
+Sobra só um detalhe: as horas saem em formatos diferentes ("dez da manhã" e "quatorze horas").
+
 O aviso `error reading from signal stream` no console vem do `livekit-client`, a camada WebRTC do SDK, quando a conexão fecha; o overlay do Next em desenvolvimento mostra qualquer `console.error` como erro.
 
 **A chave da Paggo.** Ao publicar na conta da Paggo, a chave que ela mandou respondeu 401 `missing_permissions` em agentes, ferramentas, segredos, vozes, modelos e no token da conversa; só lista webhooks. Para não confundir com uma chave restrita da conta de teste, foram três provas: o hash é diferente; as permissões são outras (a de teste acessa tudo); e um webhook temporário criado na conta de teste não apareceu para a chave da Paggo (apagado em seguida). Opções pesadas: pedir à Paggo que libere as permissões (sem custo); usar a conta de teste em produção, num plano pago que permite uso comercial; ou esperar. Escolhido: pedir a liberação e seguir no que não depende da voz em produção, com a conta de teste como plano B e prazo para decidir.

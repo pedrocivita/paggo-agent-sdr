@@ -28,11 +28,11 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 | LLM da voz | Provado por texto | 4 LLMs, 20 simulações: `gemini-2.5-flash` é o único sem fala acima de 2 s até a primeira frase; Haiku 5.5 deixou 31% acima de 2 s; 3.5-flash e `gpt-5-mini` desligaram sem despedida ([reasoning.md](reasoning.md#agente-de-voz)) |
 | Prompt contra 3 personas | Provado por texto | Versão no masculino, 9 rodadas: interessada e cético marcam reunião (4 de 4), pessoa errada indica o gerente em 3 falas, só "obrigado" e "o assistente" nas falas, nenhuma promessa de envio, preço ou integração. Sobra: o fechamento esperou o "tchau" em 1 de 9, o cético ainda tem falas de até 60 palavras quando junta objeções, e o evento crítico não é perguntado quando o lead pede a reunião cedo |
 | Agente de voz publicado | Provado na conta de teste | `voice-sync.mjs` rerodado depois de cada mudança; conferido pela API: `gemini-2.5-flash`, raciocínio desligado, prompt igual ao do repo (12.031 caracteres) |
-| Conversa por voz no site | Provado em dev, com o prompt antigo | 3 conversas com microfone (`conv_3101...`, `conv_8301...`, `conv_5401...`). O prompt de agora ainda não foi ouvido |
+| Conversa por voz no site | Provado em dev, com o prompt de agora | 4 conversas com microfone; a última (`conv_6601...`, 4,5 min) já com o prompt no masculino: SPICED completo, reunião marcada, despedida e `end_call` na mesma fala, demora até o áudio com mediana de 1,32 s e máximo de 2,1 s ([reasoning.md](reasoning.md#agente-de-voz)) |
 | UI com a cara do deck | Provado no dev local | Screenshots da home, da espera e do Rastro de um lead da Even, no desktop e a 375 px, tema escuro |
 | Ferramentas da agenda em produção | Provado | Chamadas pelo agente nas conversas, no Rastro com o id da conversa e o lead certo |
 | `voice-sync.mjs` criando e achando o webhook | Provado na conta de teste | Criou o webhook com `WEBHOOK_SECRET_FILE` (segredo em arquivo, só o tamanho impresso) e, rerodado, achou o mesmo pela URL. Adicionar a voz da biblioteca só roda na conta da Paggo |
-| Webhook pós-chamada, abas Conversa estruturada e Transcrição | Ligado, falta uma chamada | Webhook da conta de teste aponta para a produção; segredo em `ELEVENLABS_WEBHOOK_SECRET` (produção) e redeploy feito; sem assinatura a rota responde 401. Falta uma conversa real para ver as abas preenchidas |
+| Webhook pós-chamada, abas Conversa estruturada e Transcrição | Provado na conta de teste | Na conversa `conv_6601...` o pós-chamada assinado chegou à produção e gravou resultado, SPICED, horário, resumo e transcrição; as ferramentas da agenda aparecem no Rastro com o id da conversa. Na conta da Paggo, refazer com o segredo dela |
 | Conversa por voz em produção | Não provado | Depende da chave da Paggo |
 | Agenda real | Não provado | Endpoint ainda sendo construído pela Paggo |
 
@@ -62,7 +62,7 @@ A chave precisa de: Agents (leitura e escrita), Voices (leitura e escrita, para 
 
 ### 2. Qualidade da conversa (Alto)
 
-- [ ] Uma conversa de voz com o prompt novo, no Chrome (o Browser pane bloqueia o microfone), pelo dev local na conta de teste (sobram uns 6 minutos de voz): prova o webhook e as abas do painel, e deixa ouvir o fechamento (despedida e `end_call` sem esperar o "tchau"), o gancho do briefing e a demora real.
+- [x] Conversa de voz com o prompt novo e o webhook ligado (17/10). Sobram uns 1.300 créditos na conta de teste, menos de 2 minutos: guardar para uma emergência.
 - [ ] Decidir se vale perguntar o evento crítico mesmo quando o lead pede a reunião cedo (hoje o prompt prioriza a decisão).
 - [ ] O `simulate-conversation` sai do ar em 31/10/2026; se a Paggo for usar depois, trocar por `/v1/convai/agent-testing/create` e `run-tests` no `voice-simulate.mjs`.
 
@@ -72,7 +72,7 @@ A chave precisa de: Agents (leitura e escrita), Voices (leitura e escrita, para 
 
 ### 4. Acabamento e entrega
 
-- [ ] Limpar os leads de teste ("Ana Teste" e os dos casos difíceis) e os eventos `teste-manual`, com ok do dono do projeto.
+- [ ] Limpar os leads de teste ("Ana Teste", os dos casos difíceis e o da conversa de prova de 17/10, que tem dados reais do desenvolvedor) e os eventos `teste-manual`, com ok do dono do projeto. Fazer depois da prova em produção.
 - [ ] Revisão final de [reasoning.md](reasoning.md), [business-rules.md](business-rules.md) e [objections.md](objections.md). O repo é lido como público: a auditoria de 17/10 tirou nomes, caminhos locais e ids reais e atualizou `architecture.md`; o histórico do git não foi reescrito (duas mensagens de commit citam a conta de teste).
 - [ ] Ver o painel de produção com senha na tela.
 
@@ -82,7 +82,7 @@ A chave precisa de: Agents (leitura e escrita), Voices (leitura e escrita, para 
 | --- | --- |
 | Sex 16/10 | Esqueleto, repo, primeiro deploy (feito) |
 | Sáb 17/10 | Pesquisa, voz na conta de teste, LLM, personas, UI, README (feito) |
-| Dom 18/10 | Conversa de voz com o prompt novo, limpeza dos leads de teste |
+| Dom 18/10 | Folga para o que a conversa de prova mostrar (nada urgente); limpeza dos leads de teste fica para depois da prova em produção |
 | Seg 19/10 | Chave da Paggo: passo 1 inteiro e prova em produção; agenda real se chegar |
 | Ter 20/10 | Revisar documentos e enviar |
 
