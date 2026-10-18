@@ -31,8 +31,8 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 | Conversa por voz no site | Provado em dev, com o prompt antigo | 3 conversas com microfone (`conv_3101...`, `conv_8301...`, `conv_5401...`). O prompt de agora ainda não foi ouvido |
 | UI com a cara do deck | Provado no dev local | Screenshots da home, da espera e do Rastro de um lead da Even, no desktop e a 375 px, tema escuro |
 | Ferramentas da agenda em produção | Provado | Chamadas pelo agente nas conversas, no Rastro com o id da conversa e o lead certo |
-| `voice-sync.mjs` adicionando voz e criando webhook | Não provado | Rerodado na conta de teste (voz achada, nenhum webhook criado); os dois caminhos novos só rodam na conta da Paggo |
-| Webhook pós-chamada, abas Conversa estruturada e Transcrição | Não provado ao vivo | Assinatura e mapeamento com testes (`lib/voice.test.ts`); falta uma chamada real com o webhook ligado |
+| `voice-sync.mjs` criando e achando o webhook | Provado na conta de teste | Criou o webhook com `WEBHOOK_SECRET_FILE` (segredo em arquivo, só o tamanho impresso) e, rerodado, achou o mesmo pela URL. Adicionar a voz da biblioteca só roda na conta da Paggo |
+| Webhook pós-chamada, abas Conversa estruturada e Transcrição | Ligado, falta uma chamada | Webhook da conta de teste aponta para a produção; segredo em `ELEVENLABS_WEBHOOK_SECRET` (produção) e redeploy feito; sem assinatura a rota responde 401. Falta uma conversa real para ver as abas preenchidas |
 | Conversa por voz em produção | Não provado | Depende da chave da Paggo |
 | Agenda real | Não provado | Endpoint ainda sendo construído pela Paggo |
 
@@ -62,7 +62,7 @@ A chave precisa de: Agents (leitura e escrita), Voices (leitura e escrita, para 
 
 ### 2. Qualidade da conversa (Alto)
 
-- [ ] Uma conversa de voz com o prompt novo, na conta de teste (sobram uns 6 minutos de voz): ouvir o fechamento (despedida e `end_call` sem esperar o "tchau"), o gancho do briefing e a demora real.
+- [ ] Uma conversa de voz com o prompt novo, no Chrome (o Browser pane bloqueia o microfone), pelo dev local na conta de teste (sobram uns 6 minutos de voz): prova o webhook e as abas do painel, e deixa ouvir o fechamento (despedida e `end_call` sem esperar o "tchau"), o gancho do briefing e a demora real.
 - [ ] Decidir se vale perguntar o evento crítico mesmo quando o lead pede a reunião cedo (hoje o prompt prioriza a decisão).
 - [ ] O `simulate-conversation` sai do ar em 31/10/2026; se a Paggo for usar depois, trocar por `/v1/convai/agent-testing/create` e `run-tests` no `voice-simulate.mjs`.
 
@@ -73,7 +73,7 @@ A chave precisa de: Agents (leitura e escrita), Voices (leitura e escrita, para 
 ### 4. Acabamento e entrega
 
 - [ ] Limpar os leads de teste ("Ana Teste" e os dos casos difíceis) e os eventos `teste-manual`, com ok do dono do projeto.
-- [ ] Revisão final de [reasoning.md](reasoning.md), [business-rules.md](business-rules.md) e [objections.md](objections.md).
+- [ ] Revisão final de [reasoning.md](reasoning.md), [business-rules.md](business-rules.md) e [objections.md](objections.md). O repo é lido como público: a auditoria de 17/10 tirou nomes, caminhos locais e ids reais e atualizou `architecture.md`; o histórico do git não foi reescrito (duas mensagens de commit citam a conta de teste).
 - [ ] Ver o painel de produção com senha na tela.
 
 ## Calendário até a entrega
