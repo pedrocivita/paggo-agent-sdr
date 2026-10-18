@@ -15,10 +15,6 @@ const TIMEOUT_MS = 6000;
 const MAX_TEXT = 6000;
 const HOSTNAME = /^(?=.{4,253}$)([a-z0-9-]+\.)+[a-z]{2,}$/;
 
-export function emailDomain(email: string): string {
-  return email.split("@")[1]?.trim().toLowerCase() ?? "";
-}
-
 export function isPersonalDomain(domain: string): boolean {
   return PERSONAL_DOMAINS.has(domain);
 }
