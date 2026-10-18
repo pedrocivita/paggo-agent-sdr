@@ -12,8 +12,6 @@ Um app Next.js no Vercel, dois agentes e duas tabelas. As peças só se falam po
 
 ## Visão geral
 
-Tracejado = ainda não construído (marcos 3 e 4 do [STATUS.md](STATUS.md)).
-
 ```mermaid
 flowchart LR
   lead(["Lead"]) -->|"preenche"| form["Formulário<br/>app/page.tsx"]
@@ -29,12 +27,9 @@ flowchart LR
   voice -->|"webhook tools"| agenda["/api/agenda/*"]
   agenda -->|"traced()"| db
   agenda --> cal["Agenda da Paggo"]
-  voice -->|"pós-chamada assinado"| hook["/api/webhooks/elevenlabs"]
+  voice -->|"pós-chamada assinado"| hook["/api/voice/webhook"]
   hook --> db
   panel["Painel /painel"] -->|"lê"| db
-
-  classDef todo stroke-dasharray: 5 4
-  class voice,agenda,cal,hook todo
 ```
 
 Por que a voz fica fora do eve: o eve não fala, e passar a fala por ele só somaria latência. O ElevenLabs resolve turnos, interrupções e áudio; nosso backend entra só onde há ferramenta, e toda ferramenta passa por `traced()`.
@@ -97,29 +92,32 @@ Cada fato é `{ value, source, confidence }`: o valor, a URL de onde veio (ou `n
 
 ## Mapa de arquivos
 
-| Caminho | O que faz | Estado |
-| --- | --- | --- |
-| `app/page.tsx` | Formulário do lead | Pronto |
-| `app/actions.ts` | `submitLead`: valida, cria o lead, roda a pesquisa em `after()` e redireciona | Pronto |
-| `app/l/[id]/` | Tela de espera; consulta o status a cada 2 s; botão "Falar com a Paggo" | Botão desativado até o marco 3 |
-| `app/api/leads/[id]/route.ts` | Status do lead para a tela de espera | Pronto |
-| `app/painel/` | Lista de leads e detalhe em 5 abas (Formulário, Pesquisa, Conversa estruturada, Transcrição, Rastro) | Pronto, sem dados reais ainda |
-| `proxy.ts` | Senha do painel por basic auth (`PANEL_PASSWORD`) | Pronto |
-| `agent/agent.ts` | Modelo do agente eve, raciocínio baixo, sem tools padrão | Pronto |
-| `agent/instructions.md` | Ordem da pesquisa, regras de fit, nunca inventar | Pronto, a ajustar com empresas reais |
-| `agent/tools/` | `fetch_site`, `lookup_cnpj`, `web_search`, cada uma com `traced()` | Pronto |
-| `agent/channels/eve.ts` | Auth do canal: OIDC do Vercel em produção, livre em dev | A provar no primeiro deploy |
-| `lib/cnpj.ts` | CNPJ alfanumérico, mod 11, consulta à BrasilAPI | Pronto, 6 testes |
-| `lib/site.ts` | Lê home e páginas de contato do domínio do e-mail; acha CNPJs | Pronto |
-| `lib/search.ts` | Busca web na Exa | Pronto, sem chave ainda |
-| `lib/research.ts` | Abre a sessão do eve e salva o briefing | Pronto |
-| `lib/agenda.ts` | Interface da agenda: real (com URL e token) ou falsa | Falsa ativa |
-| `lib/trace.ts`, `lib/leads.ts`, `lib/db.ts` | Rastro, leitura e escrita dos leads, conexão | Pronto |
-| `db/schema.sql`, `scripts/db-setup.mjs` | Tabelas, criadas antes de cada build | Pronto |
-| `voice/` | Config do agente de voz (`agent.json`, `prompt.md`, `tools/`), publicada por `scripts/voice-sync.mjs` | Marco 3 |
-| `app/api/voice/[id]/route.ts` | Gera o conversation token e as variáveis do briefing | Marco 3 |
-| `app/api/agenda/[action]/route.ts` | `consultar` e `marcar`, chamadas pelo ElevenLabs | Marco 4 |
-| `app/api/webhooks/elevenlabs/route.ts` | Pós-chamada: verifica a assinatura e grava a conversa | Marco 4 |
+O estado de cada parte (provado ou não) fica em [STATUS.md](STATUS.md).
+
+| Caminho | O que faz |
+| --- | --- |
+| `app/page.tsx`, `app/actions.ts` | Formulário do lead; `submitLead` valida, cria o lead, roda a pesquisa em `after()` e redireciona |
+| `app/l/[id]/` | Tela de espera: consulta o status a cada 2 s e abre a conversa de voz pelo SDK do ElevenLabs |
+| `app/api/leads/[id]/route.ts` | Status do lead para a tela de espera |
+| `app/api/leads/[id]/voice/route.ts` | Gera o conversation token e as variáveis do briefing; só responde depois da pesquisa |
+| `app/api/agenda/[action]/route.ts` | `consultar` e `marcar`, chamadas pelo agente de voz com `x-tool-secret`, dentro de `traced()` |
+| `app/api/voice/webhook/route.ts` | Pós-chamada: confere a assinatura HMAC e grava a conversa no lead |
+| `app/painel/` | Lista de leads e detalhe em 5 abas (Formulário, Pesquisa, Conversa estruturada, Transcrição, Rastro) |
+| `app/layout.tsx`, `app/logo.tsx`, `app/theme-toggle.tsx` | Cabeçalho com o logo da Paggo e o interruptor de tema |
+| `app/paggo.css`, `app/app.css` | Tokens e componentes da Paggo; o que é só deste app ([design.md](design.md)) |
+| `proxy.ts` | Senha do painel por basic auth (`PANEL_PASSWORD`) |
+| `agent/agent.ts`, `agent/channels/eve.ts` | Agente eve (Claude Sonnet 5.5, raciocínio baixo, só as 3 tools) e a auth do canal (OIDC do Vercel em produção, livre em dev) |
+| `agent/instructions.md` | Ordem da pesquisa, regras de fit, formato do `forAgent`, nunca inventar |
+| `agent/tools/` | `fetch_site`, `lookup_cnpj`, `web_search`, cada uma dentro de `traced()` |
+| `evals/` | Eval do eve com os 6 casos difíceis ([research-cases.md](research-cases.md)) |
+| `lib/cnpj.ts`, `lib/site.ts`, `lib/search.ts` | Receita pela BrasilAPI, leitura do site, busca na Exa |
+| `lib/briefing.ts`, `lib/research.ts` | Schema do briefing; abre a sessão do eve e salva o resultado |
+| `lib/voice.ts` | Assinatura do webhook e conversão do pós-chamada para o registro do lead |
+| `lib/agenda.ts` | Interface da agenda: real (com URL e token) ou falsa |
+| `lib/trace.ts`, `lib/leads.ts`, `lib/db.ts` | Rastro, leitura e escrita dos leads, conexão |
+| `db/schema.sql`, `scripts/db-setup.mjs` | Tabelas, criadas antes de cada build |
+| `voice/` | Agente de voz: `prompt.md`, `agent.json`, `tools/` e as personas de teste |
+| `scripts/voice-sync.mjs`, `scripts/voice-simulate.mjs` | Publica o agente numa conta do ElevenLabs; conversa por texto com uma persona e mede a transcrição |
 
 ## Variáveis de ambiente
 
@@ -132,6 +130,9 @@ Modelo em `.env.example`. Em produção, só nas variáveis do projeto no Vercel
 | `EXA_API_KEY` | Busca web da pesquisa | `web_search` falha e o agente segue com site e Receita |
 | `AGENDA_URL`, `AGENDA_TOKEN` | Agenda real da Paggo | Usa a agenda falsa |
 | `ELEVENLABS_API_KEY`, `ELEVENLABS_AGENT_ID` | Token da conversa de voz | Sem voz |
+| `VOICE_TOOL_SECRET` | Segredo que as ferramentas da agenda exigem no cabeçalho `x-tool-secret` | As rotas da agenda recusam tudo |
+| `ELEVENLABS_WEBHOOK_SECRET` | Confere a assinatura do pós-chamada | O webhook recusa tudo e a conversa não é gravada |
 | `PANEL_PASSWORD` | Senha do painel | Painel aberto (só para dev local) |
+| `EVE_HOST` | Endereço do eve no dev local quando o servidor não está na porta 3000 | Usa `http://localhost:3000` |
 
 O modelo do agente eve é chamado direto na Anthropic com `ANTHROPIC_API_KEY` (helper `anthropic()` do eve). O AI Gateway com OIDC exigiria crédito pago para essa classe de modelo.
