@@ -15,7 +15,7 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 ## Onde estamos
 
 - **Em produção:** formulário, pesquisa, voz na conta da Paggo, agenda real da Paggo e painel com Rastro. A voz usa a Samuel, uma voz brasileira que já estava na conta da Paggo (a Eduardo, usada nos testes, é da biblioteca e pede permissão de escrita de vozes).
-- **Falta para o mínimo do case:** o pós-chamada em produção. A chave da Paggo não tem escrita de webhooks (`webhooks_write`), então conversas de produção não enchem as abas Conversa estruturada e Transcrição. O mesmo fluxo está provado na conta de teste.
+- **Pós-chamada na conta da Paggo ligado (19/10):** com a escrita de webhooks liberada, o webhook foi criado, ligado ao agente, o segredo foi para o Vercel e a produção foi redeployada. **Falta para o mínimo do case:** uma conversa de prova em produção para ver as abas Conversa estruturada e Transcrição cheias.
 - **Hoje (19/10):** agenda real ligada e provada; agente publicado na conta da Paggo; formulário com cargo no formato da Paggo (persona do comitê de compra), aceite de dados e campo antirrobô; prompt com os fatos do FAQ da Paggo e a Reforma Tributária como evento crítico. Detalhes e provas em [reasoning.md](reasoning.md).
 
 ## Provado e não provado
@@ -29,12 +29,14 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 | Conversa por voz | Provado no dev, conta de teste | 4 conversas com microfone; a última com o prompt no masculino: SPICED completo, reunião marcada, despedida e `end_call` juntos, demora até o áudio com mediana de 1,32 s |
 | Voz em produção | Pronto, falta a conversa com microfone | Agente na conta da Paggo, `ELEVENLABS_AGENT_ID` no Vercel, token da conversa sai pela rota de produção |
 | Agenda real | Provado em produção | Consulta com horários reais, marcação aceita, a mesma marcação recusada com o 409 da Paggo, horário fora da disponibilidade depois; 4 chamadas no Rastro. Uma reunião de teste ficou na agenda da Paggo em 19/10 às 12h |
-| Pós-chamada (abas Conversa estruturada e Transcrição) | Provado na conta de teste; na da Paggo falta permissão | Conversa `conv_6601...` gravou tudo no painel. O segredo no Vercel ainda é o da conta de teste |
+| Pós-chamada (abas Conversa estruturada e Transcrição) | Provado na conta de teste; ligado na da Paggo, falta a conversa | Conversa `conv_6601...` (conta de teste) gravou tudo no painel. Na conta da Paggo: um webhook HMAC só, ligado ao agente, segredo no Vercel de produção, rota recusando chamada sem assinatura. Conversas da conta de teste deixaram de ser gravadas |
 | UI | Provado no dev local | Screenshots de home, espera, Rastro e formulário, claro e escuro, desktop e 375 px |
 
 ## Próximos passos
 
-### 1. Pós-chamada na conta da Paggo (Alto)
+### 1. Pós-chamada na conta da Paggo (Alto, feito em 19/10)
+
+Feito com os comandos abaixo. Ficam para rerodar se o segredo precisar ser trocado: desligar o webhook do agente, apagar, rerodar o script.
 
 Com `webhooks_write` liberada na mesma chave (pedido feito à Paggo em 19/10), cerca de 5 minutos. No Git Bash, na raiz do repo; `$F` é o arquivo de chave da Paggo, fora do repo, que já tem `WEBHOOK_SECRET_FILE`:
 
@@ -75,7 +77,7 @@ Se a permissão não vier a tempo: buscar a conversa do nosso lado. Quando a lig
 
 ## Pendências que dependem da Paggo
 
-- **`webhooks_write` na chave do ElevenLabs**, para o pós-chamada em produção. `voices_write` só se quiserem a voz Eduardo.
+- `voices_write` na chave do ElevenLabs, só se quiserem a voz Eduardo. A escrita de webhooks foi liberada em 19/10.
 - Preço ou faixa que o agente pode falar; quais ERPs têm integração pronta.
 - O estudo de caso, que aparece no menu do deck sem conteúdo.
 
