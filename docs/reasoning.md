@@ -352,6 +352,19 @@ Sobra conhecida, de antes desta mudança: numa rodada do cético o agente consul
 | **O documento diz o que o código faz: a voz não recebe o fit, e o time filtra no painel (escolhido)** | Nenhuma mudança de comportamento na véspera; um fit errado da pesquisa não encerra uma conversa boa | Uma empresa fora do perfil pode sair com reunião marcada |
 | Passar o fit para a voz, com uma regra no prompt | A regra antiga passaria a valer | Cerca de 1 hora de código, prompt e simulações na véspera, e o agente poderia encerrar a conversa com a banca por um fit errado |
 
+**Decisão pulada e desligamento mudo** (19/10). Nas simulações do dia, o agente consultou a agenda sem saber quem decide em 1 de 8 reuniões, e desligou sem falar, logo depois de uma fala do lead, em 1 de 15 rodadas. Nas 6 conversas reais por voz, nenhum dos dois aconteceu. As duas regras já existiam, mas no prompt, longe da chamada.
+
+| Opção | Por que sim | Por que não |
+| --- | --- | --- |
+| **A regra na descrição de `consultar_agenda` e de `end_call`, onde a ação acontece (escolhido)** | Só texto; o mesmo padrão que corrigiu outros desvios | Com taxas tão baixas, poucas rodadas não provam efeito |
+| A despedida no campo `message` do `end_call`, que a plataforma fala antes de desligar | Nenhum desligamento sairia mudo | Muda o fechamento que funciona e arrisca despedida dupla; um desligamento no meio da conversa continua no meio |
+| Campo obrigatório `quem_decide` na consulta da agenda | O agente não consulta sem dizer quem decide | Se o modelo não preencher ou inventar, a agenda quebra na véspera |
+| Só registrar | Nenhum risco | O erro conhecido fica como está |
+
+Prova: duas checagens novas no `voice-simulate.mjs`, conferidas antes nas transcrições salvas: `decisionBeforeAgenda` (a pergunta do agente ou a frase do lead antes da consulta) e `endCallWithoutGoodbye`. Num lote de 15 (10 do cético, 5 da interessada), as taxas não mudaram: decisão pulada em 1 de 12 consultas e desligamento mudo em 1 de 15. A transcrição mostrou a causa do mudo: o lead disse que tem 3 obras e que o mestre de obras paga em dinheiro vivo, e o agente marcou "não qualificado" e desligou. Ele julgou o fit sozinho, o contrário da regra de negócio. Entrou a linha "nunca encerre por achar que a empresa não tem o perfil: quem decide isso é o time", no prompt e no `end_call`. Em 5 rodadas do cético depois dela, nenhum desligamento mudo e nenhuma decisão pulada; isso mostra que nada quebrou, não que a taxa caiu.
+
+Uma dessas 5 rodadas achou um erro pior: o lead simulado disse "pode ser às duas da tarde" antes de ouvir horários, e o agente marcou terça, 27/10, às 14h, sem consultar a agenda e sem repetir para o lead confirmar. É o mesmo erro do horário inventado da primeira conversa em produção.
+
 ## O que ainda não sabemos
 
 - Preço e ERPs integrados: perguntado à Paggo.
