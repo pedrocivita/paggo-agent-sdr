@@ -311,6 +311,8 @@ Erros lidos na transcrição, ainda sem correção:
 | O lead pediu "outro dia, à tarde", e o agente ofereceu a tarde do mesmo dia; ao pedido das 18h, chamou 13h de "final da tarde" | Leitura errada do pedido; os horários continuaram sendo da lista |
 | Não perguntou o evento crítico | A pergunta de decisão tem prioridade no prompt, como nas simulações |
 
+**Abertura sem ler o formulário** (19/10). O primeiro erro foi corrigido na mesma noite. O resumo da pesquisa pedia, com razão, para confirmar um cargo que a busca contradizia; o jeito de confirmar veio do próprio prompt, cujo exemplo era "vi que vocês têm alguns empreendimentos em andamento, é isso?". Mudou: o exemplo perdeu o "vi que", a regra passou a citar o cargo ("não confirme nome, cargo nem empresa lendo dados de volta"), e entrou um par de exemplos, ruim ("Vi aqui que você é Analista ou Coordenador Financeiro na Cyrela. Confirma?") e bom ("Você cuida mais do financeiro ou de outra área aí?"). Para medir, uma persona nova, `direto`, reproduz a chamada: cargo do formulário diferente do da busca, resumo pedindo para confirmar, e o lead que só diz "pode falar"; a checagem `openingReadsForm` conta a primeira pergunta que lê o formulário. Antes: 2 de 5 aberturas leram ("Vi aqui que você é Analista ou Coordenador Financeiro na Vértice. Confirma?"). Depois: 0 de 5, todas direto ao gancho, e nas 5 o agente perguntou quem decide antes da agenda, marcou horário da lista, não prometeu envio e se despediu antes de desligar.
+
 ## Interface
 
 Base: os tokens que vieram com o case (`app/paggo.css`) e o deck institucional, lido nas páginas 1 e 18.

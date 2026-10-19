@@ -124,6 +124,8 @@ Diagrams, contracts and the file map: `docs/architecture.md`.
   under Objetivo (2026-10-17).
 - A good-reply example in the voice prompt beats a rule: the agent kept asking the role the form
   already gave until the example "você cuida de qual parte do financeiro?" was made conditional (2026-10-19).
+- A prompt example teaches its sentence shape, not only its content: "vi que... é isso?" for confirming
+  the hook came back as "vi aqui que você atua como <cargo do formulário>... confirma?" (2026-10-19).
 - A one-time secret file is deleted only after the Vercel CLI prints "Added" or "Overrode"; and an
   ElevenLabs webhook in use by an agent cannot be deleted until the agent drops it (2026-10-19).
 
