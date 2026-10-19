@@ -19,6 +19,7 @@ Entregável do case. Conferidas em 17/10/2026 com o deck institucional da Paggo 
 - Pede nome completo, e-mail de trabalho, telefone, **cargo**, empresa e um campo livre opcional. O cargo usa as opções do formulário da própria Paggo, e cada uma vira o papel na compra que o time comercial dela usa: Decisor Financeiro, Influenciador Técnico, Usuário Principal ou Decisor Não-Financeiro ([paggo.md](paggo.md#como-a-paggo-capta-leads-hoje)). A pesquisa recebe o cargo, a voz não pergunta de novo, e o painel mostra a persona.
 - Segmento e desafio principal ficam de fora, de propósito: a pesquisa descobre o segmento pelo CNAE, e a conversa descobre a dor. Formulário curto é menos atrito.
 - Aceite obrigatório para guardar e processar os dados, com aviso de que a pesquisa usa dados públicos da empresa e de que a conversa é com IA. A data e hora do aceite ficam no lead.
+- A origem do lead (as UTM da URL e o site de origem) vai em campos escondidos e aparece no painel, para medir o custo por canal. Nenhum cookie é gravado, e a pesquisa e a voz não a recebem.
 - Um campo escondido que só robôs preenchem: envio com ele preenchido volta para a home sem criar lead, porque cada lead dispara uma pesquisa paga.
 
 ## Qualificação
