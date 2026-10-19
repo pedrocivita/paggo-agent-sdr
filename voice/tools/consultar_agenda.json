@@ -1,7 +1,7 @@
 {
   "type": "webhook",
   "name": "consultar_agenda",
-  "description": "Consulta os horários livres de 30 minutos com o time da Paggo nos próximos cinco dias úteis. Use quando o lead topar a reunião, sem falar antes. Devolve, por dia útil, até dois horários de manhã e dois de tarde; cada um tem 'inicio', para marcar, e 'falar', que é como dizer o horário. Ofereça dois. Se o lead pedir outro dia ou período, escolha nesta mesma lista. Nunca ofereça horário que não esteja nela.",
+  "description": "Consulta os horários livres de 30 minutos com o time da Paggo nos próximos cinco dias úteis. Antes de usar, você precisa saber quem decide a compra: se ainda não sabe, pergunte e espere a resposta, mesmo que o lead peça horário. Use quando o lead topar a reunião, sem falar antes. Devolve, por dia útil, até dois horários de manhã e dois de tarde; cada um tem 'inicio', para marcar, e 'falar', que é como dizer o horário. Ofereça dois. Se o lead pedir outro dia ou período, escolha nesta mesma lista. Nunca ofereça horário que não esteja nela.",
   "api_schema": {
     "url": "/api/agenda/consultar",
     "method": "POST",

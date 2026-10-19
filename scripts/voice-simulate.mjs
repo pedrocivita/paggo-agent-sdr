@@ -85,6 +85,19 @@ function measure(turns, slots) {
     exclamations: agent.reduce((n, t) => n + (t.message.match(/!/g) || []).length, 0),
     moduleList: agent.some((t) => new Set((t.message.match(MODULES) || []).map((m) => m.toLowerCase())).size >= 3),
     askedDecisionBeforeBooking: firstBooking < 0 ? null : before.some((t) => t.role === "agent" && DECISION.test(t.message || "")),
+    // Who decides must be known before the calendar is checked: asked by the agent or said by the lead.
+    decisionBeforeAgenda: (() => {
+      const firstAgenda = turns.findIndex((t) => toolNames(t).includes("consultar_agenda"));
+      if (firstAgenda < 0) return null;
+      return turns
+        .slice(0, firstAgenda)
+        .some((t) => (t.role === "agent" ? DECISION : /decid|sozinh/iu).test(t.message || ""));
+    })(),
+    // A hang-up is silent when the last thing the agent said before it was not a goodbye.
+    endCallWithoutGoodbye:
+      endIndex < 0
+        ? null
+        : !/até\s+mais|tchau/iu.test(turns.slice(0, endIndex + 1).findLast((t) => t.role === "agent" && t.message?.trim())?.message ?? ""),
     tools: turns.flatMap(toolNames),
     closedInOneTurn: endIndex >= 0 && closing.length === 1 && !closing[0].message.includes("?"),
     // Nothing sends invites, material or e-mail, so the agent must never promise one.
