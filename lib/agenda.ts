@@ -78,6 +78,25 @@ export function searchWindow(now: Date, businessDays = 5): { from: string; to: s
   return { from: now.toISOString(), to: `${spDate(day)}T23:59:59-03:00` };
 }
 
+/**
+ * The slots the voice agent may offer: per business day, the first two of the morning and the first
+ * two of the afternoon, none starting before `earliest`. The agent picks another day or period from
+ * this same list, so it never has to make up a time (it did once, when only the first four came back).
+ */
+export function pickOptions(slots: Slot[], earliest: number, perPeriod = 2): Slot[] {
+  const taken = new Map<string, number>();
+  return slots
+    .filter((s) => Date.parse(s.inicio) >= earliest)
+    .sort((a, b) => Date.parse(a.inicio) - Date.parse(b.inicio))
+    .filter((s) => {
+      const hour = Number(new Intl.DateTimeFormat("en-GB", { timeZone: TZ, hour: "2-digit", hourCycle: "h23" }).format(new Date(s.inicio)));
+      const key = `${spDate(new Date(s.inicio))}-${hour < 12 ? "manha" : "tarde"}`;
+      const count = taken.get(key) ?? 0;
+      taken.set(key, count + 1);
+      return count < perPeriod;
+    });
+}
+
 /** A slot as the agent says it out loud: "terça-feira, dia 20, às 10h". */
 export function spokenSlot(inicio: string): string {
   const parts = new Intl.DateTimeFormat("pt-BR", {

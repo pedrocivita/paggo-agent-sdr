@@ -38,17 +38,19 @@ async function creditsLeft() {
   }
 }
 
-// Two business days from tomorrow at 10h and 15h, said the way lib/agenda.ts says them.
+// Three business days from tomorrow, two morning and two afternoon slots each, the shape
+// the real route returns (pickOptions in lib/agenda.ts), said the way it says them.
 function mockSlots(now = new Date()) {
   const slots = [];
   const day = new Date(now);
-  while (slots.length < 4) {
+  for (let days = 0; days < 3; ) {
     day.setUTCDate(day.getUTCDate() + 1);
     if ([0, 6].includes(day.getUTCDay())) continue;
-    for (const hour of [10, 15]) {
-      const inicio = `${day.toISOString().slice(0, 10)}T${hour}:00:00-03:00`;
+    days++;
+    for (const [hour, minute] of [[10, "00"], [10, "30"], [14, "00"], [14, "30"]]) {
+      const inicio = `${day.toISOString().slice(0, 10)}T${hour}:${minute}:00-03:00`;
       const weekday = new Intl.DateTimeFormat("pt-BR", { weekday: "long", timeZone: "America/Sao_Paulo" }).format(new Date(inicio));
-      slots.push({ inicio, falar: `${weekday}, dia ${Number(inicio.slice(8, 10))}, às ${hour}h` });
+      slots.push({ inicio, falar: `${weekday}, dia ${Number(inicio.slice(8, 10))}, às ${hour}h${minute === "00" ? "" : minute}` });
     }
   }
   return slots;
@@ -65,7 +67,7 @@ const MODULES = /tesouraria|a\s+pagar|a\s+receber|cart(ão|ões)|orçamento|flux
 const DECISION = /quem\s+(mais\s+)?(decide|participa|aprova|escolhe)|decis[ãa]o/iu;
 const toolNames = (turn) => (turn.tool_calls || []).map((c) => c.tool_name);
 
-function measure(turns) {
+function measure(turns, slots) {
   const agent = turns.filter((t) => t.role === "agent" && t.message?.trim()).slice(1); // the first one is the fixed first_message
   const counts = agent.map((t) => words(t.message));
   const firstBooking = turns.findIndex((t) => toolNames(t).includes("consultar_agenda"));
@@ -84,6 +86,11 @@ function measure(turns) {
     askedDecisionBeforeBooking: firstBooking < 0 ? null : before.some((t) => t.role === "agent" && DECISION.test(t.message || "")),
     tools: turns.flatMap(toolNames),
     closedInOneTurn: endIndex >= 0 && closing.length === 1 && !closing[0].message.includes("?"),
+    // The time it booked must be one the agenda offered: once, the agent made one up.
+    bookedOfferedSlot: (() => {
+      const call = turns.flatMap((t) => t.tool_calls || []).find((c) => c.tool_name === "marcar_reuniao");
+      return call ? slots.some((s) => s.inicio === JSON.parse(call.params_as_json || "{}").inicio) : null;
+    })(),
     // Seconds from the end of the lead's turn to the LLM's first token and first full sentence (what the voice starts with).
     llmFirstTokenMedian: metric(turns, "convai_llm_service_ttfb"),
     llmFirstSentenceMedian: metric(turns, "convai_llm_service_ttf_sentence"),
@@ -139,7 +146,7 @@ console.log(
     persona: process.argv[2],
     llm: live.llm,
     reasoning: live.reasoning_effort ?? `thinking_budget=${live.thinking_budget}`,
-    ...measure(turns),
+    ...measure(turns, slots),
     credits: before == null || after == null ? null : before - after,
     creditsLeft: after,
     seconds,

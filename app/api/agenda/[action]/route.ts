@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { agenda, searchWindow, spokenSlot } from "@/lib/agenda";
+import { agenda, pickOptions, searchWindow, spokenSlot } from "@/lib/agenda";
 import { getLead } from "@/lib/leads";
 import { traced, type Run } from "@/lib/trace";
 
@@ -13,7 +13,6 @@ const Body = z.object({
   email: z.email().optional(),
 });
 
-const OPTIONS = 4; // the agent offers two, and keeps two more if neither fits
 const MIN_LEAD_MS = 60 * 60 * 1000; // no meeting starting within the next hour
 
 export async function POST(req: Request, { params }: RouteContext<"/api/agenda/[action]">) {
@@ -42,7 +41,7 @@ export async function POST(req: Request, { params }: RouteContext<"/api/agenda/[
 async function consult() {
   const { from, to } = searchWindow(new Date());
   const earliest = Date.now() + MIN_LEAD_MS;
-  const slots = (await agenda().available(from, to)).filter((s) => Date.parse(s.inicio) > earliest).slice(0, OPTIONS);
+  const slots = pickOptions(await agenda().available(from, to), earliest);
   if (slots.length === 0) return { opcoes: [], mensagem: "Não há horário livre nos próximos cinco dias úteis." };
   return { opcoes: slots.map((s) => ({ inicio: s.inicio, falar: spokenSlot(s.inicio) })) };
 }

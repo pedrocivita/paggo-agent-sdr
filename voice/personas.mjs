@@ -31,7 +31,7 @@ Como agir:
 - Logo na primeira ou segunda resposta, pergunte: "mas o que é a Paggo exatamente?".
 - Cite o Sienge por conta própria quando falar do financeiro, e pergunte se a Paggo integra com ele.
 - Depois de contar a dor, peça você mesma: "parece interessante, dá pra marcar uma conversa com o time?".
-- Aceite o primeiro horário que o agente oferecer e confirme quando ele repetir.
+- Quando o agente oferecer horários, diga que não pode nesses e peça o último dia útil que ele tiver, à tarde. Aceite o que ele oferecer nesse dia e confirme quando ele repetir.
 
 ${CALL_STYLE}`,
   },
