@@ -34,7 +34,7 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 | `voice-sync.mjs` criando e achando o webhook | Provado na conta de teste | Criou o webhook com `WEBHOOK_SECRET_FILE` (segredo em arquivo, só o tamanho impresso) e, rerodado, achou o mesmo pela URL. Adicionar a voz da biblioteca só roda na conta da Paggo |
 | Webhook pós-chamada, abas Conversa estruturada e Transcrição | Provado na conta de teste | Na conversa `conv_6601...` o pós-chamada assinado chegou à produção e gravou resultado, SPICED, horário, resumo e transcrição; as ferramentas da agenda aparecem no Rastro com o id da conversa. Na conta da Paggo, refazer com o segredo dela |
 | Conversa por voz em produção | Não provado | Depende da chave da Paggo |
-| Agenda real | Não provado | Endpoint ainda sendo construído pela Paggo |
+| Agenda real | Consulta provada em produção; marcação não | Token no Vercel (produção e desenvolvimento); a rota `/api/agenda/consultar` de produção devolveu horários reais do dia, no formato que o cliente já lia, e ficou no Rastro. Falta uma marcação real, que deve sair da conversa de prova |
 
 ## Próximos passos
 
@@ -53,7 +53,8 @@ A chave precisa de: Agents (leitura e escrita), Voices (leitura e escrita, para 
 4. Vercel (a chave da Paggo e o `VOICE_TOOL_SECRET` já estão lá):
    ```bash
    vercel env add ELEVENLABS_WEBHOOK_SECRET production --force < ~/.paggo-webhook-secret && rm ~/.paggo-webhook-secret
-   vercel env add ELEVENLABS_AGENT_ID --value <id impresso> --yes
+   vercel env add ELEVENLABS_AGENT_ID production --value <id impresso> --yes
+   vercel env add ELEVENLABS_AGENT_ID development --value <id impresso> --yes
    ```
 5. Redeploy da produção: `vercel ls --prod` mostra a URL do último deploy; `vercel redeploy <url> --target production --scope <time do projeto>` (sem `--scope` o CLI pode estar em outro time e recusar).
 6. Local: apagar o `.env.development.local` (aponta para a conta de teste) e rodar `vercel env pull .env.local`.
@@ -68,7 +69,7 @@ A chave precisa de: Agents (leitura e escrita), Voices (leitura e escrita, para 
 
 ### 3. Agenda real (Alto)
 
-- [ ] Quando o endpoint chegar: `AGENDA_URL` e `AGENDA_TOKEN` no Vercel; conferir o cabeçalho de auth e o formato de `de`/`ate`.
+- [x] Endpoint real ligado em 19/10 (`AGENDA_URL` e `AGENDA_TOKEN` no Vercel). Falta ver uma marcação real (`POST /reunioes`) numa conversa de prova.
 
 ### 4. Acabamento e entrega
 
@@ -83,13 +84,13 @@ A chave precisa de: Agents (leitura e escrita), Voices (leitura e escrita, para 
 | Sex 16/10 | Esqueleto, repo, primeiro deploy (feito) |
 | Sáb 17/10 | Pesquisa, voz na conta de teste, LLM, personas, UI, README (feito) |
 | Dom 18/10 | Folga para o que a conversa de prova mostrar (nada urgente); limpeza dos leads de teste fica para depois da prova em produção |
-| Seg 19/10 | Chave da Paggo: passo 1 inteiro e prova em produção; agenda real se chegar |
+| Seg 19/10 | Agenda real ligada (feito). Chave da Paggo: passo 1 inteiro e prova em produção; plano B às 15h |
 | Ter 20/10 | Revisar documentos e enviar |
 
 ## Pendências que dependem da Paggo
 
 - **Permissões da chave do ElevenLabs** (Agents, Voices, Webhooks), pedidas no sábado, 17/10. Basta editar as permissões da mesma chave.
-- Endpoint da agenda: URL, token, formato do cabeçalho de auth e de `de`/`ate`.
+- Endpoint da agenda: recebido e ligado em 19/10.
 - Preço ou faixa que o agente pode falar; quais ERPs têm integração pronta.
 - O estudo de caso, que aparece no menu do deck sem conteúdo.
 

@@ -293,7 +293,9 @@ Prova: screenshots no navegador do dev local, home, espera e Rastro de um lead d
 
 ## Agenda
 
-O endpoint real ainda está sendo construído pela Paggo. Enquanto isso, uma agenda falsa atende pela mesma interface (`lib/agenda.ts`), e a troca é feita por duas variáveis de ambiente. Do enunciado, assumimos `Authorization: Bearer` e datas ISO em `de`/`ate`; o formato das respostas segue os exemplos do case. Regras: próximos 5 dias úteis, nada começando na próxima hora, até 4 opções, das quais o agente oferece duas.
+Enquanto o endpoint real não existia, uma agenda falsa atendeu pela mesma interface (`lib/agenda.ts`), e a troca é feita por duas variáveis de ambiente, `AGENDA_URL` e `AGENDA_TOKEN`. Regras nossas: próximos 5 dias úteis, nada começando na próxima hora, até 4 opções, das quais o agente oferece duas.
+
+O endpoint real chegou em 19/10: base `https://sales.paggo.io/api/case/agenda`, com `GET /disponibilidade?de=&ate=` e `POST /reunioes` (`inicio`, `nome`, `email`; 409 se o horário foi ocupado), autenticado com `Authorization: Bearer`. A única mudança no código foi usar a base exatamente como a Paggo a entrega. Prova: sem token as rotas respondem 401 e 405 (existem); com o token, a disponibilidade respondeu `{ fuso, livres: [{ inicio, fim }] }`, o formato que o cliente já lia, aceitou as datas ISO com fuso que mandamos e trouxe 81 horários nos próximos 7 dias; depois do deploy, a rota de produção que o agente de voz chama devolveu horários do mesmo dia, que a agenda falsa nunca daria, e a chamada ficou no Rastro do lead de teste. A marcação real ainda não foi feita, para não criar compromisso nem convite fora de uma conversa de prova.
 
 ## O que ainda não sabemos
 
