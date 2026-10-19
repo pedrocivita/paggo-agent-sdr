@@ -87,6 +87,8 @@ function measure(turns, slots) {
     askedDecisionBeforeBooking: firstBooking < 0 ? null : before.some((t) => t.role === "agent" && DECISION.test(t.message || "")),
     tools: turns.flatMap(toolNames),
     closedInOneTurn: endIndex >= 0 && closing.length === 1 && !closing[0].message.includes("?"),
+    // Nothing sends a meeting invite, so the agent must never promise one.
+    promisedInvite: agent.some((t) => /convite/iu.test(t.message)),
     // The time it booked must be one the agenda offered: once, the agent made one up.
     bookedOfferedSlot: (() => {
       const call = turns.flatMap((t) => t.tool_calls || []).find((c) => c.tool_name === "marcar_reuniao");
@@ -123,7 +125,7 @@ const result = await call("POST", `/v1/convai/agents/${agentId}/simulate-convers
     tool_mock_config: {
       consultar_agenda: { default_return_value: JSON.stringify({ opcoes: slots }) },
       marcar_reuniao: {
-        default_return_value: JSON.stringify({ marcada: true, mensagem: "Reunião marcada no horário escolhido. O convite vai para o e-mail informado." }),
+        default_return_value: JSON.stringify({ marcada: true, mensagem: "Reunião marcada no horário escolhido." }),
       },
     },
   },

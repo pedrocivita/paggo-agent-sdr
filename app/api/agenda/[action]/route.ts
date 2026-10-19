@@ -53,5 +53,5 @@ async function book(leadId: string, inicio: string, email?: string) {
   if (!result.ok) {
     return { marcada: false, mensagem: "Esse horário acabou de ser ocupado. Consulte a agenda de novo e ofereça o próximo." };
   }
-  return { marcada: true, inicio, mensagem: `Reunião marcada para ${spokenSlot(inicio)}. O convite vai para o e-mail informado.` };
+  return { marcada: true, inicio, mensagem: `Reunião marcada para ${spokenSlot(inicio)}.` };
 }

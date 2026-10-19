@@ -27,7 +27,7 @@
         },
         "email": {
           "type": "string",
-          "description": "Só se o lead pediu o convite em outro e-mail. Se não pediu, não envie este campo."
+          "description": "Só se o lead pediu para usar outro e-mail na reunião. Se não pediu, não envie este campo."
         }
       }
     }
