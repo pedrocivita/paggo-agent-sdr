@@ -122,6 +122,8 @@ Diagrams, contracts and the file map: `docs/architecture.md`.
 - A voice prompt rule goes in the section where the action happens (Agenda, first question):
   `gemini-2.5-flash` skipped the decision question and hung up mid-call while the rules lived only
   under Objetivo (2026-10-17).
+- A good-reply example in the voice prompt beats a rule: the agent kept asking the role the form
+  already gave until the example "você cuida de qual parte do financeiro?" was made conditional (2026-10-19).
 
 ## Working with Pedro
 

@@ -302,7 +302,7 @@ Prova: screenshots no navegador do dev local, home, espera e Rastro de um lead d
 | Aceite obrigatório, com a data e hora guardadas, e aviso de IA e de pesquisa em dados públicos | Só o texto da home | A Paggo pede o mesmo aceite; a pesquisa trata dado de uma pessoa, e o lead precisa saber que fala com IA |
 | Campo escondido contra robôs | Captcha | Cada lead dispara uma pesquisa paga; o campo escondido não pede nada de quem é gente |
 
-Prova: um envio com o campo escondido preenchido voltou para a home sem criar lead; um envio normal gravou o cargo e a data do aceite, e a pesquisa recebeu o cargo.
+Prova: um envio com o campo escondido preenchido voltou para a home sem criar lead; um envio normal gravou o cargo e a data do aceite, e a pesquisa recebeu o cargo. O briefing tratou o cargo como dado do lead, não como fato provado ("não encontrado; o lead informou ser decisor financeiro"). Na voz, o agente continuou perguntando o cargo mesmo com a regra nova, porque um exemplo de fala boa no prompt era exatamente essa pergunta; com o exemplo dividido em "cargo informado" e "não informado", ele foi direto ao gancho ou à dor em 4 de 4 simulações contra o agente da Paggo, e todas marcaram reunião.
 
 ## Agenda
 
