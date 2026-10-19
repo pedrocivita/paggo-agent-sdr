@@ -57,6 +57,8 @@ Sonnet 5.5 contra Haiku 5.5, mesmo lead (Cyrela, pessoa fictícia), uma rodada d
 | Tokens entrada / saída | 31,9 mil / 2,0 mil | 67,4 mil / 4,8 mil |
 | Custo por briefing | ~US$ 0,056 | ~US$ 0,006 |
 
+Custo pela [tabela de preços da Anthropic](https://platform.claude.com/docs/en/about-claude/pricing): Sonnet 5.5 a US$ 2 e US$ 10 por milhão de tokens de entrada e de saída, Haiku 5.5 a US$ 0,10 e US$ 0,50, com o cache cobrado como em [research-cases.md](research-cases.md).
+
 Os dois acertaram CNPJ, razão social e regime e não inventaram nada. O Sonnet teve mais juízo: notou que o lead parecia de teste e organizou as perguntas pelo SPICED. O Haiku pesquisou mais, mas afirmou que o domínio do e-mail "confirma" a pessoa e citou um site terceiro de CNPJ tendo a Receita. Escolhido o Sonnet: o critério é briefing correto, e a diferença de custo é irrelevante no volume do case. Uma rodada só não prova velocidade; a rodada dos casos difíceis mede em 6 casos ([research-cases.md](research-cases.md)).
 
 ## Busca web
@@ -115,7 +117,7 @@ O que o deck muda em relação ao site: o posicionamento é mais focado em const
 
 **Plataforma:** ElevenLabs Agents, a sugestão do case: turnos, interrupção e latência já resolvidos. Montar fala-para-texto, LLM e texto-para-fala à mão gastaria o tempo em encanamento.
 
-**Conta:** os primeiros testes rodaram numa conta de teste do desenvolvedor, para não gastar minutos nem deixar agentes de teste na conta da Paggo. O plano grátis dá 15 minutos de chamada; os 10.000 créditos pagam o LLM, não os minutos, e a licença comercial só começa no plano Starter. A produção roda na conta da Paggo desde 19/10, publicada pelo mesmo script com a outra chave (ver "A chave da Paggo", mais abaixo).
+**Conta:** os primeiros testes rodaram numa conta de teste do desenvolvedor, para não gastar minutos nem deixar agentes de teste na conta da Paggo. O plano grátis dá 10.000 créditos. Nas conversas medidas abaixo, um minuto gastou cerca de 700 créditos, quase tudo de voz, o que dá os uns 15 minutos de chamada do plano; a licença comercial só começa no plano Starter. A produção roda na conta da Paggo desde 19/10, publicada pelo mesmo script com a outra chave (ver "A chave da Paggo", mais abaixo).
 
 **Publicação:**
 
@@ -131,7 +133,7 @@ O que o deck muda em relação ao site: o posicionamento é mais focado em const
 | Peça | Escolhido | Alternativas e por que não agora |
 | --- | --- | --- |
 | LLM | `gemini-2.5-flash`, sem raciocínio | Padrão rápido da plataforma. Gemini mais novos, `gpt-5-mini` e `claude-haiku-5-5` foram medidos depois com o prompt real (ver "Comparação de LLMs por texto", abaixo); a plataforma não ranqueia velocidade |
-| Voz | `eleven_v4_turbo` (~100 ms, fala português) | `eleven_flash_v2_5` (~75 ms, menor qualidade); `eleven_v3_conversational` (~280 ms); `eleven_multilingual_v2` (cita o Brasil explicitamente, mas é mais lento). `eleven_flash_v2` e `eleven_turbo_v2` só falam inglês |
+| Voz | `eleven_v4_turbo` (~100 ms, fala português) | `eleven_flash_v2_5` (~75 ms, menor qualidade); `eleven_v3_conversational` (~280 ms); `eleven_multilingual_v2` (cita o Brasil explicitamente, mas é mais lento). `eleven_flash_v2` e `eleven_turbo_v2` só falam inglês. Latências de modelo, sem rede, da [página de modelos do ElevenLabs](https://elevenlabs.io/docs/overview/models) |
 
 **Persona:** "assistente virtual da Paggo", sem nome humano, e diz que é IA já na abertura. Soa como alguém do time, que conhece a rotina financeira de uma incorporadora, sem fingir ser pessoa: a banca vai testar isso, e mentir quebraria a confiança na primeira pergunta.
 
@@ -149,7 +151,7 @@ O que o deck muda em relação ao site: o posicionamento é mais focado em const
 | Demora até a voz (do silêncio do lead ao áudio) | 1,0 a 1,25 s na maioria das falas; 2,35 s na primeira, com o LLM frio (1,72 s até o primeiro token) |
 | Ferramentas | `consultar_agenda` (0,53 s) e `marcar_reuniao` (0,23 s), as duas no Rastro com o id da conversa e o lead certo |
 | Transcrição | "Sienge" ouvido como "Sunkia"; o LLM corrigiu sozinho |
-| Custo | 2.452 créditos: 2.280 de voz e 172 de LLM (US$ 0,017). Na prática, crédito equivale a minuto |
+| Custo | 2.452 créditos: 2.280 de voz e 172 de LLM (US$ 0,017). Na prática, cerca de 700 créditos por minuto de conversa |
 
 O que errou e foi corrigido no prompt e na coleta: pulou da frase "não conheço, quero conhecer" direto para a reunião, sem dor nem decisão (agora oferece duas dores comuns para o lead escolher e pergunta quem decide antes de marcar); disse "entender como a Paggo pode se integrar com o Sienge", o que insinua uma integração que ninguém confirmou (agora ERP citado vira dúvida para o time); gravou o cargo do lead no campo `decisao` (descrições dos campos reescritas); as tags de emoção do modelo de voz (`[happy]`) apareciam na transcrição (agora são removidas antes de gravar).
 
@@ -186,7 +188,7 @@ Sobra: o `gemini-2.5-flash` ainda escorrega no estilo (disse "Ótimo!", que est�
 
 | Opção | Por que sim | Por que não |
 | --- | --- | --- |
-| **`POST /v1/convai/agents/{id}/simulate-conversation` (escolhido)** | Uma chamada por conversa; não cria nada na conta; devolve transcrição, coleta e a demora do LLM em cada fala | Descontinuado, sai em 31/10/2026; não troca o LLM na chamada, então o script troca o LLM do agente antes de rodar |
+| **`POST /v1/convai/agents/{id}/simulate-conversation` (escolhido)** | Uma chamada por conversa; não cria nada na conta; devolve transcrição, coleta e a demora do LLM em cada fala | Descontinuado, sai em 31/10/2026 ([referência da API](https://elevenlabs.io/docs/api-reference/agents/simulate-conversation)); não troca o LLM na chamada, então o script troca o LLM do agente antes de rodar |
 | `/v1/convai/agent-testing/create` e `/run-tests` | Substituto oficial; aceita `agent_config_override` | Cria testes guardados na conta, um passo a mais por persona |
 | Conversa de voz de verdade | Mede tudo, inclusive o áudio | Cerca de 700 créditos por minuto, e sobram uns 3 minutos |
 
@@ -203,7 +205,7 @@ Rodada 1, com o prompt do terceiro teste de voz:
 | `claude-haiku-5-5`, sem raciocínio (3) | 24 a 27 | 12 de 25 | 0 | 0 de 3 | 2 de 3 | 3 de 3 | 1,27 a 1,97 s | 8 de 25 |
 | `gpt-5-mini`, raciocínio mínimo (2) | 30 a 34 | 11 de 16 | 1 ("perfeito") | 1 de 2 | 2 de 2 | 0 de 2 (marcou sem o lead confirmar e desligou mudo) | 0,81 a 0,89 s | 0 de 16 |
 
-O "Gemini mais novo" foi o `gemini-3.5-flash` porque é o substituto que a plataforma indica para o `gemini-2.5-flash` (descontinuado em 30/11/2026) e o único Gemini novo com raciocínio "mínimo"; o `gemini-3.8-flash` não desce de "baixo".
+O "Gemini mais novo" foi o `gemini-3.5-flash` porque é o substituto que a plataforma indica para o `gemini-2.5-flash` (descontinuado em 30/11/2026, segundo o campo `deprecation_info` do `GET /v1/convai/llm/list` do ElevenLabs) e o único Gemini novo com raciocínio "mínimo"; o `gemini-3.8-flash` não desce de "baixo".
 
 O que a rodada mostrou: dois modelos chamaram `marcar_reuniao` e logo `end_call`, sem falar nada. A causa era a frase do prompt "logo depois dessa fala, use `end_call`", que um modelo mais obediente a ferramentas lê como "logo depois de marcar". Foi corrigida antes de decidir, para comparar modelos e não a frase: a despedida é falada primeiro, `end_call` nunca vem sem ela, e o exemplo de despedida perdeu a exclamação (os 3 "!" do Gemini e do Haiku eram cópia do exemplo). O `gpt-5-mini` saiu aqui: marcar sem o lead confirmar é o pior erro possível na agenda.
 
@@ -223,7 +225,7 @@ Escolhido: **manter o `gemini-2.5-flash` sem raciocínio**. Nenhuma das 55 falas
 - `gemini-3.5-flash`: rápido, mas não fechou certo em nenhuma das 4 rodadas, e custa 5 vezes mais por minuto.
 - `gpt-5-mini`: fora na rodada 1.
 
-O que continua errado no `gemini-2.5-flash` e vai para as personas: 40% das falas passam de 25 palavras (o "dê antes de pedir" vira duas frases longas, com picos de 72), ainda listou módulos em 1 de 4, e disse "conheço o Sienge sim", que não está nos fatos. Cuidados: a demora medida é só a do LLM (a voz soma fala-para-texto e texto-para-fala, uns 0,3 a 0,5 s); o lead simulado às vezes vaza o raciocínio dele ("THOUGHT:") ou responde duas coisas de uma vez; e o `gemini-2.5-flash` sai em 30/11/2026, com a plataforma começando a desviar parte das chamadas para o `gemini-3.5-flash` perto de 1/11. Para a Paggo usar depois disso, o mesmo script roda a comparação de novo.
+O que continua errado no `gemini-2.5-flash` e vai para as personas: 40% das falas passam de 25 palavras (o "dê antes de pedir" vira duas frases longas, com picos de 72), ainda listou módulos em 1 de 4, e disse "conheço o Sienge sim", que não está nos fatos. Cuidados: a demora medida é só a do LLM (a voz soma fala-para-texto e texto-para-fala, uns 0,3 a 0,5 s); o lead simulado às vezes vaza o raciocínio dele ("THOUGHT:") ou responde duas coisas de uma vez; e o `gemini-2.5-flash` sai em 30/11/2026, com a plataforma começando a desviar parte das chamadas para o `gemini-3.5-flash` perto de 1/11 (o mesmo `deprecation_info`: o desvio começa 29 dias antes da data do provedor). Para a Paggo usar depois disso, o mesmo script roda a comparação de novo.
 
 **Três personas por texto** (17/10, noite), todas no `gemini-2.5-flash`, com o mesmo script: 21 rodadas em quatro versões do prompt, 0 crédito.
 
@@ -360,6 +362,10 @@ Sobra conhecida, de antes desta mudança: numa rodada do cético o agente consul
 
 - [Preços do AI Gateway](https://vercel.com/docs/ai-gateway/pricing)
 - [Preços do ElevenAgents](https://elevenlabs.io/pricing/agents) e [preços do ElevenLabs](https://elevenlabs.io/pricing)
+- [Preços da Anthropic](https://platform.claude.com/docs/en/about-claude/pricing)
+- [Modelos de voz do ElevenLabs](https://elevenlabs.io/docs/overview/models), com as latências de cada um
+- [Simulate conversation](https://elevenlabs.io/docs/api-reference/agents/simulate-conversation), com a data de saída, e o [changelog de 6/7/2026](https://elevenlabs.io/docs/changelog/2026/7/6), que aponta o substituto
+- `GET /v1/convai/llm/list` da API do ElevenLabs, lido em 19/10/2026: a data de saída e o substituto de cada LLM (`deprecation_info`)
 - Pacotes conferidos no npm: `@elevenlabs/agents-cli` 0.6.1, `@elevenlabs/cli` 1.6.1 (OpenAPI embutido), `@elevenlabs/react` 1.18.0, `@elevenlabs/client` 1.28.0, `@elevenlabs/elevenlabs-js` 2.73.0
 - Documentação do eve em `node_modules/eve/docs` (0.80.1)
 - Tempo de resposta a lead: [Exact Sales](https://exactsales.com.br/tempo-de-resposta/), [RD Station](https://www.rdstation.com/blog/vendas/primeiro-contato-com-lead/), [Rework](https://resources.rework.com/pt/libraries/lead-management/lead-response-time)
