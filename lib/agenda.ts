@@ -1,6 +1,6 @@
-// The meeting calendar served by Paggo. Without AGENDA_URL it falls back to a
-// fake calendar with the same contract, so the whole flow runs before the
-// real credentials arrive.
+// The meeting calendar served by Paggo. AGENDA_URL is the base Paggo gives
+// (".../agenda"), with /disponibilidade and /reunioes under it. Without it the
+// fake calendar answers with the same contract.
 
 export type Slot = { inicio: string; fim: string };
 export type Booking = { inicio: string; nome: string; email: string };
@@ -15,14 +15,14 @@ function realAgenda(baseUrl: string, token: string): Agenda {
   const headers = { authorization: `Bearer ${token}`, "content-type": "application/json" };
   return {
     async available(from, to) {
-      const url = `${baseUrl}/agenda/disponibilidade?de=${encodeURIComponent(from)}&ate=${encodeURIComponent(to)}`;
+      const url = `${baseUrl}/disponibilidade?de=${encodeURIComponent(from)}&ate=${encodeURIComponent(to)}`;
       const res = await fetch(url, { headers, signal: AbortSignal.timeout(8000) });
       if (!res.ok) throw new Error(`Agenda respondeu HTTP ${res.status}`);
       const data = (await res.json()) as { livres?: Slot[] };
       return data.livres ?? [];
     },
     async book(booking) {
-      const res = await fetch(`${baseUrl}/agenda/reunioes`, {
+      const res = await fetch(`${baseUrl}/reunioes`, {
         method: "POST",
         headers,
         body: JSON.stringify(booking),
