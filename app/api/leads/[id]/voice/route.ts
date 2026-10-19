@@ -1,4 +1,5 @@
 import { getLead } from "@/lib/leads";
+import { describeRole } from "@/lib/roles";
 
 // Opens a voice conversation for one lead: the ElevenLabs key stays here, the
 // browser gets a short-lived token and the briefing as dynamic variables.
@@ -31,6 +32,7 @@ export async function POST(_req: Request, { params }: RouteContext<"/api/leads/[
     dynamicVariables: {
       lead_id: lead.id,
       lead_name: lead.form.name.split(" ")[0],
+      lead_role: describeRole(lead.form.role),
       company_name: found ? legalName : lead.form.company,
       briefing: lead.briefing?.forAgent ?? NO_BRIEFING,
     },

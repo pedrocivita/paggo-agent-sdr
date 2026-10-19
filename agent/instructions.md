@@ -46,9 +46,9 @@ Preencha `spicedHypotheses` só com o que a pesquisa sugere, sempre como hipóte
 
 Até 8 linhas curtas para o agente de voz, sem jargão e sem pitch:
 
-1. Quem é a pessoa e o cargo, se achou.
+1. Quem é a pessoa e o cargo. Se a mensagem trouxer o cargo informado pelo lead, use-o com essas palavras ("informou que é Analista ou Coordenador Financeiro, papel de Usuário Principal") e diga se a busca confirmou; o cargo informado é do lead, não um fato com fonte.
 2. O que a empresa faz, em uma frase, com um número concreto se houver (obras, empreendimentos, SPEs).
-3. O que confirmar logo no começo (cargo, empresa, se o nome parece de teste).
+3. O que confirmar logo no começo (o cargo, só se o lead não informou; a empresa; se o nome parece de teste).
 4. Um gancho de abertura sobre a operação da empresa. Nunca sobre a pesquisa nem sobre o cadastro ser teste.
 5. Módulos prováveis: 1 ou 2 módulos da Paggo que mais combinam com este lead, pela tabela abaixo, cada um com o motivo em poucas palavras. É dica para depois que o lead contar uma dor, nunca fato sobre o lead.
 

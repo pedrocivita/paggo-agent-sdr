@@ -4,6 +4,7 @@ import { Client } from "eve/client";
 import { getVercelOidcToken } from "@vercel/oidc";
 import { BriefingSchema, type Briefing } from "./briefing";
 import { getLead, markFailed, saveBriefing, setResearchRun, type LeadForm } from "./leads";
+import { describeRole } from "./roles";
 import { linkRunToLead } from "./trace";
 
 function eveClient(): Client {
@@ -25,6 +26,8 @@ export function researchMessage(form: LeadForm): string {
     `E-mail: ${form.email}`,
     `Telefone: ${form.phone}`,
     `Empresa: ${form.company}`,
+    // Leads from before the role field (and the eval cases) keep the same message.
+    ...(form.role ? [`Cargo informado pelo lead: ${describeRole(form.role)}`] : []),
     `Informação extra do lead: ${form.extra || "nenhuma"}`,
   ].join("\n");
 }

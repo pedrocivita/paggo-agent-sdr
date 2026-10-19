@@ -38,6 +38,7 @@ Fonte: Outfit em tudo, carregada por `next/font` em `app/layout.tsx`. Em `app/ap
 | `.rows` / `.row`, `.tablewrap` | Listas de pares e tabelas |
 | `.note` (`.ok`, `.warn`, `.err`, `.info`) | Avisos |
 | `.form`, `.field`, `.status`, `.facts`, `.event` | Só deste app (`app/app.css`): formulário, indicador de pesquisa, fatos com fonte, linha do rastro |
+| `.consent`, `.trap` | Só deste app: aceite dos dados no formulário e o campo escondido contra robôs |
 | `.masthead .brand` com `PaggoLogo` | Logo da Paggo no cabeçalho: o mesmo SVG do paggo.com.br (`app/logo.tsx`), que usa a cor do texto e fica claro no escuro e escuro no claro |
 | `.theme-toggle` | Interruptor de tema do cabeçalho, já desenhado em `app/paggo.css` |
 | `.band` | Só deste app: o bloco grafite do último slide do deck, usado como chamada para a voz na tela de espera |

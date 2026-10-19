@@ -8,6 +8,7 @@ export const PERSONAS = {
   interessado: {
     lead: {
       lead_name: "Marina",
+      lead_role: "Analista ou Coordenador Financeiro; papel na compra: Usuário Principal",
       company_name: "Vértice Incorporadora Ltda",
       briefing: [
         "Marina Couto, e-mail da Vértice; cargo não encontrado, confirme no começo.",
@@ -38,6 +39,7 @@ ${CALL_STYLE}`,
   cetico: {
     lead: {
       lead_name: "Roberto",
+      lead_role: "Responsável pela área financeira (CFO, Diretor, Sócio); papel na compra: Decisor Financeiro",
       company_name: "Alicerce Construções Ltda",
       briefing: [
         "Roberto Paiva, e-mail da Alicerce; cargo não encontrado, confirme no começo.",
@@ -66,6 +68,7 @@ ${CALL_STYLE}`,
   "pessoa-errada": {
     lead: {
       lead_name: "Juliana",
+      lead_role: "Outro",
       company_name: "Vértice Incorporadora Ltda",
       briefing: [
         "Juliana Reis, e-mail da Vértice; cargo não encontrado, confirme no começo.",

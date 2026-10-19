@@ -4,6 +4,7 @@ Entregável do case. Conferidas em 17/10/2026 com o deck institucional da Paggo,
 
 ## Índice
 
+- [Formulário](#formulário)
 - [Qualificação](#qualificação)
 - [Fit da empresa](#fit-da-empresa)
 - [Pesquisa](#pesquisa)
@@ -12,6 +13,13 @@ Entregável do case. Conferidas em 17/10/2026 com o deck institucional da Paggo,
 - [Agenda](#agenda)
 - [Conversa](#conversa)
 - [Dados pessoais](#dados-pessoais)
+
+## Formulário
+
+- Pede nome, e-mail de trabalho, telefone, **cargo**, empresa e um campo livre opcional. O cargo usa as opções do formulário da própria Paggo, e cada uma vira o papel na compra que o time comercial dela usa: Decisor Financeiro, Influenciador Técnico, Usuário Principal ou Decisor Não-Financeiro ([paggo.md](paggo.md#como-a-paggo-capta-leads-hoje)). A pesquisa recebe o cargo, a voz não pergunta de novo, e o painel mostra a persona.
+- Segmento e desafio principal ficam de fora, de propósito: a pesquisa descobre o segmento pelo CNAE, e a conversa descobre a dor. Formulário curto é menos atrito.
+- Aceite obrigatório para guardar e processar os dados, com aviso de que a pesquisa usa dados públicos da empresa e de que a conversa é com IA. A data e hora do aceite ficam no lead.
+- Um campo escondido que só robôs preenchem: envio com ele preenchido volta para a home sem criar lead, porque cada lead dispara uma pesquisa paga.
 
 ## Qualificação
 
@@ -74,6 +82,7 @@ Um por lead:
 
 ## Dados pessoais
 
+- O lead aceita o uso dos dados no formulário (consentimento, LGPD art. 7º, I), com data e hora guardadas.
 - Só informação pública da empresa. Nada de CPF, idade ou dado pessoal de sócios; o CPF que aparece na razão social de MEI é removido antes de salvar.
 - Dado de sócio serve para entender a decisão e nunca é falado na conversa.
 - O que o lead corrige vale mais que o briefing e fica marcado como corrigido pelo lead.

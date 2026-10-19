@@ -4,7 +4,17 @@
 import { sql } from "./db";
 import type { Briefing } from "./briefing";
 
-export type LeadForm = { name: string; email: string; phone: string; company: string; extra: string };
+// `role` is a key of ROLES (lib/roles.ts); `consentAt` is when the lead accepted the data use.
+// Both are optional because leads from before these fields exist.
+export type LeadForm = {
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  extra: string;
+  role?: string;
+  consentAt?: string;
+};
 export type LeadStatus = "researching" | "ready" | "failed" | "talked";
 
 export type Conversation = {

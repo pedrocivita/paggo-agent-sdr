@@ -293,6 +293,17 @@ Base: os tokens que vieram com o case (`app/paggo.css`) e o deck institucional, 
 
 Prova: screenshots no navegador do dev local, home, espera e Rastro de um lead da Even, no desktop e a 375 px.
 
+**Formulário** (19/10), depois de ler o formulário de contato da própria Paggo ([paggo.md](paggo.md#como-a-paggo-capta-leads-hoje)), que pede cargo, segmento, desafio principal e origem, e registra o aceite de dados.
+
+| Decisão | Alternativa | Por que esta |
+| --- | --- | --- |
+| Cargo como lista, com as opções e o mapeamento de persona da Paggo (Decisor Financeiro, Influenciador Técnico, Usuário Principal, Decisor Não-Financeiro) | Cargo livre, descoberto pela busca e pela conversa | A voz deixa de gastar a primeira pergunta e já sabe se fala com quem decide; o painel usa o mesmo vocabulário do CRM da Paggo. A busca pela pessoa continua, para confirmar |
+| Sem segmento nem desafio principal | Copiar o formulário inteiro da Paggo | Segmento sai do CNAE, e a dor é o que a conversa descobre; o case é justamente pesquisar em vez de perguntar |
+| Aceite obrigatório, com a data e hora guardadas, e aviso de IA e de pesquisa em dados públicos | Só o texto da home | A Paggo pede o mesmo aceite; a pesquisa trata dado de uma pessoa, e o lead precisa saber que fala com IA |
+| Campo escondido contra robôs | Captcha | Cada lead dispara uma pesquisa paga; o campo escondido não pede nada de quem é gente |
+
+Prova: um envio com o campo escondido preenchido voltou para a home sem criar lead; um envio normal gravou o cargo e a data do aceite, e a pesquisa recebeu o cargo.
+
 ## Agenda
 
 Enquanto o endpoint real não existia, uma agenda falsa atendeu pela mesma interface (`lib/agenda.ts`), e a troca é feita por duas variáveis de ambiente, `AGENDA_URL` e `AGENDA_TOKEN`. Regras nossas: próximos 5 dias úteis, nada começando na próxima hora, até 4 opções, das quais o agente oferece duas.

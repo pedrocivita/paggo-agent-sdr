@@ -3,6 +3,7 @@
 import { useState, type ReactNode } from "react";
 import type { FactValue } from "@/lib/briefing";
 import type { Lead, TrailEvent } from "@/lib/leads";
+import { describeRole } from "@/lib/roles";
 
 const TABS = ["Formulário", "Pesquisa", "Conversa estruturada", "Transcrição", "Rastro"] as const;
 type Tab = (typeof TABS)[number];
@@ -30,8 +31,17 @@ function Empty({ children }: { children: ReactNode }) {
 }
 
 function FormTab({ lead }: { lead: Lead }) {
-  const { name, email, phone, company, extra } = lead.form;
-  const rows: [string, string][] = [["Nome", name], ["E-mail", email], ["Telefone", phone], ["Empresa", company], ["Extra", extra || "·"]];
+  const { name, email, phone, company, extra, role, consentAt } = lead.form;
+  const consent = consentAt ? new Date(consentAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }) : "·";
+  const rows: [string, string][] = [
+    ["Nome", name],
+    ["E-mail", email],
+    ["Telefone", phone],
+    ["Cargo", describeRole(role)],
+    ["Empresa", company],
+    ["Extra", extra || "·"],
+    ["Aceite dos dados", consent],
+  ];
   return (
     <dl className="facts">
       {rows.map(([label, value]) => (
