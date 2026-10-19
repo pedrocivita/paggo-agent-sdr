@@ -327,9 +327,21 @@ O endpoint real chegou em 19/10: base `https://sales.paggo.io/api/case/agenda`, 
 | Mandar o convite nós mesmos (.ics por e-mail, pelo Resend) | O lead recebe o convite | Para chegar a qualquer caixa, o Resend exige domínio verificado: conta e DNS novos na véspera da entrega, com risco de spam, para algo que nenhum critério avalia |
 | Perguntar à Paggo | Confirma na fonte | O enunciado e o teste já respondem |
 
-A despedida agora diz dia, hora e "com o time da Paggo". Se o lead pedir o convite, vale a regra do material: o time manda, fica anotado. Com mais tempo, o convite sairia pela integração com o CRM da Paggo, que é quem manda convite de verdade.
+A despedida agora diz dia, hora e "com o time da Paggo". Com mais tempo, o convite sairia pela integração com o CRM da Paggo, que é quem manda convite de verdade.
 
-Prova: depois do deploy e da publicação na conta da Paggo, 3 simulações por texto, com a checagem nova `promisedInvite` no `voice-simulate.mjs`. Nenhuma fala teve "convite". As duas da interessada marcaram um horário da lista e fecharam numa fala só com `end_call`: "Pronto, ficou marcado quinta-feira, dia vinte e dois, às duas e meia da tarde, com o time da Paggo. Obrigado, Marina, até mais." O cético recusou a reunião, pediu material duas vezes e saiu como "retornar depois".
+Prova: depois do deploy e da publicação na conta da Paggo, 3 simulações por texto, com a checagem nova `promisedInvite` no `voice-simulate.mjs` (hoje `promisedSending`, ver abaixo). Nenhuma fala teve "convite". As duas da interessada marcaram um horário da lista e fecharam numa fala só com `end_call`: "Pronto, ficou marcado quinta-feira, dia vinte e dois, às duas e meia da tarde, com o time da Paggo. Obrigado, Marina, até mais." O cético recusou a reunião, pediu material duas vezes e saiu como "retornar depois".
+
+**Promessa de ação do time** (19/10, depois de uma revisão dos documentos com olho de banca). O mesmo erro do convite estava em mais três lugares: ao pedido de material ("o time manda"), à pessoa errada ("passo o contato pro time") e à falha da agenda ("o time confirma o horário por e-mail"). Nada avisa o time: o pedido só fica em `duvidas`, no painel.
+
+| Opção | Por que sim | Por que não |
+| --- | --- | --- |
+| **"Deixo anotado para o time" (escolhido)** | É o que o sistema faz; a mesma frase em todos os casos | Soa menos prestativo que "o time te manda" |
+| Manter "o time manda" | Numa operação real o SDR leria o painel | Promessa que nada garante; a banca vai pedir material e esperar |
+| Avisar o time por e-mail a cada pedido | A promessa vira verdade | A mesma barreira do convite: conta e domínio de e-mail na véspera |
+
+Prova, por texto contra o agente da Paggo depois do deploy e da publicação, com a checagem `promisedSending` no `voice-simulate.mjs` (convite, ou "enviar" e "mandar" com "e-mail" ou "material" na mesma frase). Só a regra não bastou: em 1 de 5 rodadas do cético o modelo completou "deixo anotado para o time te enviar o material por e-mail". Com um exemplo de fala ruim e de fala boa na mesma linha, 0 de 3. Uma dessas três mostrou outro erro: o lead recusou a reunião quatro vezes e ouviu os mesmos dois horários três vezes. A regra das duas tentativas só existia na seção de objeções e foi para a linha do pedido de material. Na versão final, nenhuma promessa de envio em 5 rodadas: cético 3 (duas encerraram na segunda recusa, com um "deixo anotado" por pedido; uma marcou reunião), interessada 1 (marcou) e pessoa errada 1, rodada antes do último ajuste, que não muda a linha dela ("deixo o contato do Paulo anotado para o time").
+
+Sobra conhecida, de antes desta mudança: numa rodada do cético o agente consultou a agenda sem perguntar quem decide, e em outra desligou sem falar logo depois de o lead contar a dor, o mesmo `end_call` mudo da segunda volta das personas.
 
 ## O que ainda não sabemos
 

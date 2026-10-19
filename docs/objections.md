@@ -16,7 +16,7 @@ Regra geral: entender antes de responder. Uma pergunta curta sobre a objeção, 
 | "Quem usa?" | Quer prova | Incorporadoras como BP, ATR e Hype, entre outras; mais de 300 empreendimentos usam a Paggo | Oferece a reunião |
 | "Vocês são novos" | Medo de apostar numa startup | Mais de R$ 10 bilhões transacionados até janeiro de 2026; apoiada por Kaszek, Monashees, ONEVC e Picus | Registra a preocupação |
 | "Migrar dá muito trabalho" | Implantação anterior foi ruim | Implementação gratuita e acompanhada; contas abertas em poucos minutos | Pergunta o que deu errado da última vez |
-| "Me manda por e-mail" | Saída educada | Diz que o time manda o material (o agente não manda e-mail; o pedido vai para `duvidas`), faz uma pergunta para ele ser útil e oferece 30 minutos | "Retornar depois" |
+| "Me manda por e-mail" | Saída educada | Diz que deixa o pedido anotado para o time (o agente não manda e-mail, e nada avisa o time sozinho: o pedido fica em `duvidas`, no painel), faz uma pergunta para o material ser útil e oferece 30 minutos | "Retornar depois" |
 | "Não tenho tempo" | Agenda cheia | São 30 minutos; oferece dois horários, inclusive na semana seguinte | "Qualificado sem reunião" |
 | "Você é um robô?" | Curiosidade ou desconfiança | Confirma que é o assistente virtual da Paggo e pergunta se pode seguir ou se prefere falar com uma pessoa do time | Marca direto com o time |
 
