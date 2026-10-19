@@ -77,7 +77,7 @@ Primeira rodada: nenhum CNPJ errado e nenhum fato fora do Rastro. Os erros foram
 | Receita como única fonte do cadastro | Aceitar agregadores de CNPJ | Os dados batiam, mas sem a Receita o regime tributário sumia, e ele mexe no fit |
 | Busca de SPE no formato "<grupo> SPE Empreendimentos Imobiliários Ltda CNPJ" | "<razão social> SPE" | Testado direto na Exa: o primeiro traz SPEs pelo nome, o segundo só páginas genéricas |
 | Cada passo novo explica o motivo ("a voz usa as SPEs para abrir a conversa") | Ordem seca | Sem o motivo, o Sonnet pulou a busca de SPEs numa rodada da Even porque o fit já era alto |
-| Lead @paggo.com.br: pesquisa normal, fit "desconhecido", voz conduz como lead normal | Fit baixo (antes); não pesquisar (testado: Rastro vazio) | A banca deve usar o próprio e-mail fazendo papel de cliente; fit baixo encerraria a conversa |
+| Lead @paggo.com.br: pesquisa normal, fit "desconhecido", voz conduz como lead normal | Fit baixo (antes); não pesquisar (testado: Rastro vazio) | A banca deve usar o próprio e-mail fazendo papel de cliente; fit baixo a marcaria como fora do perfil no painel |
 | `forAgent` com 1 ou 2 módulos prováveis | A voz escolher no meio da conversa | A pesquisa sabe se o grupo tem SPEs ou vende na planta; a voz cita um módulo só depois da dor |
 | `lib/search.ts` sem mudança, skill `build-with-exa` não instalada | Ajustar a busca da Exa (categoria de pessoa) | O formato da consulta resolveu as SPEs, e a busca pela pessoa já trouxe perfis do LinkedIn |
 | Nada de otimização de velocidade | Briefing mais curto, paralelismo no código | Máximo de 33 s, abaixo da meta de 45 s. As referências de tempo de resposta falam em 5 minutos até o contato; a pesquisa não é o gargalo |
@@ -342,6 +342,13 @@ Prova: depois do deploy e da publicação na conta da Paggo, 3 simulações por 
 Prova, por texto contra o agente da Paggo depois do deploy e da publicação, com a checagem `promisedSending` no `voice-simulate.mjs` (convite, ou "enviar" e "mandar" com "e-mail" ou "material" na mesma frase). Só a regra não bastou: em 1 de 5 rodadas do cético o modelo completou "deixo anotado para o time te enviar o material por e-mail". Com um exemplo de fala ruim e de fala boa na mesma linha, 0 de 3. Uma dessas três mostrou outro erro: o lead recusou a reunião quatro vezes e ouviu os mesmos dois horários três vezes. A regra das duas tentativas só existia na seção de objeções e foi para a linha do pedido de material. Na versão final, nenhuma promessa de envio em 5 rodadas: cético 3 (duas encerraram na segunda recusa, com um "deixo anotado" por pedido; uma marcou reunião), interessada 1 (marcou) e pessoa errada 1, rodada antes do último ajuste, que não muda a linha dela ("deixo o contato do Paulo anotado para o time").
 
 Sobra conhecida, de antes desta mudança: numa rodada do cético o agente consultou a agenda sem perguntar quem decide, e em outra desligou sem falar logo depois de o lead contar a dor, o mesmo `end_call` mudo da segunda volta das personas.
+
+**Fit na voz** (19/10, da mesma revisão). As regras de negócio diziam que a voz só oferecia reunião a quem estava qualificado, mas o código nunca passou o fit para a voz: ela recebe só o resumo `forAgent`, e o prompt não tem regra de fit. O erro era do documento.
+
+| Opção | Por que sim | Por que não |
+| --- | --- | --- |
+| **O documento diz o que o código faz: a voz não recebe o fit, e o time filtra no painel (escolhido)** | Nenhuma mudança de comportamento na véspera; um fit errado da pesquisa não encerra uma conversa boa | Uma empresa fora do perfil pode sair com reunião marcada |
+| Passar o fit para a voz, com uma regra no prompt | A regra antiga passaria a valer | Cerca de 1 hora de código, prompt e simulações na véspera, e o agente poderia encerrar a conversa com a banca por um fit errado |
 
 ## O que ainda não sabemos
 

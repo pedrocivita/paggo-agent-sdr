@@ -25,6 +25,8 @@ Entregável do case. Conferidas em 17/10/2026 com o deck institucional da Paggo,
 
 Qualificado = fit diferente de baixo, dor clara e sabe-se quem decide. Impacto e evento crítico sobem a prioridade, mas não são obrigatórios para marcar a reunião.
 
+A voz não recebe o fit. Ela oferece a reunião a quem passou pela descoberta (ou pediu a reunião antes) e disse quem decide. O fit fica no briefing e no painel, para o time decidir se mantém a reunião, e o resultado da conversa marca "não qualificado" quando a conversa mostra que a empresa não tem o perfil. Levar o fit para a voz fica para depois: um fit errado da pesquisa (homônimo, CNPJ de outra empresa) encerraria uma conversa boa.
+
 ## Fit da empresa
 
 Calculado pela pesquisa, antes da conversa, e mostrado no briefing com os motivos.
@@ -64,7 +66,7 @@ Um por lead:
 
 ## Agenda
 
-- Só oferece reunião a quem está qualificado ou pediu.
+- Oferece a reunião depois da descoberta, ou antes se o lead pedir. Antes de consultar a agenda, precisa saber quem decide. O fit não barra a reunião (ver [Qualificação](#qualificação)).
 - Consulta os próximos 5 dias úteis e oferece dois horários, nunca a lista inteira.
 - Repete dia e hora antes de marcar; usa nome e e-mail do formulário (ou os corrigidos pelo lead).
 - No 409 (horário ocupado), consulta de novo e oferece o próximo.
