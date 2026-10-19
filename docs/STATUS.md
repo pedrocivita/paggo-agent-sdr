@@ -34,7 +34,7 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 | `voice-sync.mjs` criando e achando o webhook | Provado na conta de teste | Criou o webhook com `WEBHOOK_SECRET_FILE` (segredo em arquivo, só o tamanho impresso) e, rerodado, achou o mesmo pela URL. Adicionar a voz da biblioteca só roda na conta da Paggo |
 | Webhook pós-chamada, abas Conversa estruturada e Transcrição | Provado na conta de teste | Na conversa `conv_6601...` o pós-chamada assinado chegou à produção e gravou resultado, SPICED, horário, resumo e transcrição; as ferramentas da agenda aparecem no Rastro com o id da conversa. Na conta da Paggo, refazer com o segredo dela |
 | Conversa por voz em produção | Não provado | Depende da chave da Paggo |
-| Agenda real | Consulta provada em produção; marcação não | Token no Vercel (produção e desenvolvimento); a rota `/api/agenda/consultar` de produção devolveu horários reais do dia, no formato que o cliente já lia, e ficou no Rastro. Falta uma marcação real, que deve sair da conversa de prova |
+| Agenda real | Provado em produção | Token no Vercel; pelas rotas de produção que a voz chama: consulta com horários reais, marcação aceita, a mesma marcação recusada com o 409 da Paggo e o horário fora da disponibilidade depois. As 4 chamadas estão no Rastro. Uma reunião de teste ficou marcada em 19/10 às 12h na agenda da Paggo |
 
 ## Próximos passos
 
@@ -69,7 +69,7 @@ A chave precisa de: Agents (leitura e escrita), Voices (leitura e escrita, para 
 
 ### 3. Agenda real (Alto)
 
-- [x] Endpoint real ligado em 19/10 (`AGENDA_URL` e `AGENDA_TOKEN` no Vercel). Falta ver uma marcação real (`POST /reunioes`) numa conversa de prova.
+- [x] Endpoint real ligado e provado em 19/10 (consulta, marcação e conflito). Falta só ver uma marcação feita pela voz em produção, que sai da prova do passo 1.
 
 ### 4. Acabamento e entrega
 
