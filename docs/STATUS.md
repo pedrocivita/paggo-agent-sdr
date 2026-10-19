@@ -14,7 +14,7 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 
 ## Onde estamos
 
-- **Em produção:** formulário, pesquisa, voz na conta da Paggo, agenda real da Paggo e painel com Rastro. A voz usa a Samuel, uma voz brasileira que já estava na conta da Paggo (a Eduardo, usada nos testes, é da biblioteca e pede permissão de escrita de vozes).
+- **Em produção:** formulário, pesquisa, voz na conta da Paggo, agenda real da Paggo e painel com Rastro. A voz é a Samuel, uma voz brasileira que já estava na conta da Paggo, aprovada ouvindo a conversa de produção.
 - **Pós-chamada na conta da Paggo ligado (19/10):** com a escrita de webhooks liberada, o webhook foi criado, ligado ao agente, o segredo foi para o Vercel e a produção foi redeployada. **Provado em produção (19/10):** uma conversa na conta da Paggo (`conv_4701...`) passou por formulário, pesquisa, voz, agenda real e pós-chamada, com o painel cheio. Dois erros dela foram corrigidos e provados por simulação: o agente inventou um horário quando o lead pediu outro dia, e ficou 13 s em silêncio antes de consultar a agenda.
 - **Hoje (19/10):** agenda real ligada e provada; agente publicado na conta da Paggo; formulário com cargo no formato da Paggo (persona do comitê de compra), aceite de dados e campo antirrobô; prompt com os fatos do FAQ da Paggo e a Reforma Tributária como evento crítico. Detalhes e provas em [reasoning.md](reasoning.md).
 
@@ -78,7 +78,7 @@ Se a permissão não vier a tempo: buscar a conversa do nosso lado. Quando a lig
 
 ## Pendências que dependem da Paggo
 
-- `voices_write` na chave do ElevenLabs, só se quiserem a voz Eduardo. A escrita de webhooks foi liberada em 19/10.
+- Nada de permissão pendente: a escrita de webhooks foi liberada em 19/10, e a escrita de vozes não é mais necessária com a Samuel.
 - Preço ou faixa que o agente pode falar; quais ERPs têm integração pronta.
 - O estudo de caso, que aparece no menu do deck sem conteúdo.
 
