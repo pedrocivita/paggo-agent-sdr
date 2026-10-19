@@ -1,6 +1,6 @@
 # Status
 
-Memória viva do projeto: onde estamos, o que está provado, o que falta e as armadilhas. Toda sessão lê este arquivo no começo e o reescreve antes do push (substituir, não acrescentar). Atualizado em 17/10/2026, noite.
+Memória viva do projeto: onde estamos, o que está provado, o que falta e as armadilhas. Toda sessão lê este arquivo no começo e o reescreve antes do push (substituir, não acrescentar). Atualizado em 19/10/2026.
 
 ## Índice
 
@@ -14,68 +14,54 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 
 ## Onde estamos
 
-- **Marcos 1 e 2** (no ar, pesquisa boa) fechados. **Marco 3** (voz) funciona de ponta a ponta na conta de teste do ElevenLabs. **Marco 4** (agenda e pós-chamada): agenda provada em produção com a agenda falsa; o webhook pós-chamada nunca recebeu uma chamada real.
-- Nesta sessão: o LLM da voz foi escolhido por número (fica o `gemini-2.5-flash`, entre 4 modelos em 20 simulações por texto), o prompt foi corrigido com 3 personas, a UI ganhou a cara do deck (frase na home, bloco escuro na espera, tema escuro, uma fonte só), o Rastro parou de quebrar no celular, o README foi reescrito, o `voice-sync.mjs` passou a adicionar a voz e criar o webhook sozinho, e o agente passou a falar no masculino, como a voz. Detalhes e provas em [reasoning.md](reasoning.md).
-- **Voz na conta da Paggo (19/10):** a chave foi liberada para agentes, ferramentas, segredos e leitura de vozes e webhooks. O agente está publicado lá, com a voz Samuel (uma das vozes brasileiras da própria conta), e a produção usa esse agente: o token da conversa sai em produção. **Falta:** permissão de escrita de webhooks (`webhooks_write`) para criar o pós-chamada na conta da Paggo; sem ela, as abas Conversa estruturada e Transcrição não recebem conversas de produção. Escrita de vozes (`voices_write`) só seria preciso para voltar à voz Eduardo, que é da biblioteca.
+- **Em produção:** formulário, pesquisa, voz na conta da Paggo, agenda real da Paggo e painel com Rastro. A voz usa a Samuel, uma voz brasileira que já estava na conta da Paggo (a Eduardo, usada nos testes, é da biblioteca e pede permissão de escrita de vozes).
+- **Falta para o mínimo do case:** o pós-chamada em produção. A chave da Paggo não tem escrita de webhooks (`webhooks_write`), então conversas de produção não enchem as abas Conversa estruturada e Transcrição. O mesmo fluxo está provado na conta de teste.
+- **Hoje (19/10):** agenda real ligada e provada; agente publicado na conta da Paggo; formulário com cargo no formato da Paggo (persona do comitê de compra), aceite de dados e campo antirrobô; prompt com os fatos do FAQ da Paggo e a Reforma Tributária como evento crítico. Detalhes e provas em [reasoning.md](reasoning.md).
 
 ## Provado e não provado
 
 | Item | Estado | Como foi provado |
 | --- | --- | --- |
-| Portões | Provado | `npm test` (16), `npm run typecheck`, `npm run lint`, `npm run build` |
-| App, banco e pesquisa em produção | Provado | Leads `f68b9483` e `4ba706aa` em https://paggo-agent-sdr.vercel.app, com as 3 ferramentas no Rastro |
-| Pesquisa nos casos difíceis | Provado | `npm run eval` 6/6, 57/57 checagens ([research-cases.md](research-cases.md)) |
-| LLM da voz | Provado por texto | 4 LLMs, 20 simulações: `gemini-2.5-flash` é o único sem fala acima de 2 s até a primeira frase; Haiku 5.5 deixou 31% acima de 2 s; 3.5-flash e `gpt-5-mini` desligaram sem despedida ([reasoning.md](reasoning.md#agente-de-voz)) |
-| Prompt contra 3 personas | Provado por texto | Versão no masculino, 9 rodadas: interessada e cético marcam reunião (4 de 4), pessoa errada indica o gerente em 3 falas, só "obrigado" e "o assistente" nas falas, nenhuma promessa de envio, preço ou integração. Sobra: o fechamento esperou o "tchau" em 1 de 9, o cético ainda tem falas de até 60 palavras quando junta objeções, e o evento crítico não é perguntado quando o lead pede a reunião cedo |
-| Agente de voz publicado | Provado na conta de teste | `voice-sync.mjs` rerodado depois de cada mudança; conferido pela API: `gemini-2.5-flash`, raciocínio desligado, prompt igual ao do repo (12.031 caracteres) |
-| Conversa por voz no site | Provado em dev, com o prompt de agora | 4 conversas com microfone; a última (`conv_6601...`, 4,5 min) já com o prompt no masculino: SPICED completo, reunião marcada, despedida e `end_call` na mesma fala, demora até o áudio com mediana de 1,32 s e máximo de 2,1 s ([reasoning.md](reasoning.md#agente-de-voz)) |
-| UI com a cara do deck | Provado no dev local | Screenshots da home, da espera e do Rastro de um lead da Even, no desktop e a 375 px, tema escuro |
-| Ferramentas da agenda em produção | Provado | Chamadas pelo agente nas conversas, no Rastro com o id da conversa e o lead certo |
-| `voice-sync.mjs` criando e achando o webhook | Provado na conta de teste | Criou o webhook com `WEBHOOK_SECRET_FILE` (segredo em arquivo, só o tamanho impresso) e, rerodado, achou o mesmo pela URL. Adicionar a voz da biblioteca só roda na conta da Paggo |
-| Webhook pós-chamada, abas Conversa estruturada e Transcrição | Provado na conta de teste; na da Paggo, falta permissão | Na conversa `conv_6601...` (conta de teste) o pós-chamada gravou tudo no painel. Na conta da Paggo a chave não tem `webhooks_write`. O segredo no Vercel ainda é o da conta de teste, então conversas da conta de teste (dev local) continuam sendo gravadas |
-| Conversa por voz em produção | Pronto, falta a conversa com microfone | Agente na conta da Paggo (voz Samuel, `gemini-2.5-flash`), `ELEVENLABS_AGENT_ID` no Vercel e redeploy; a rota `/api/leads/[id]/voice` de produção devolveu token; simulação por texto contra o agente da Paggo marcou e fechou certo |
-| Agenda real | Provado em produção | Token no Vercel; pelas rotas de produção que a voz chama: consulta com horários reais, marcação aceita, a mesma marcação recusada com o 409 da Paggo e o horário fora da disponibilidade depois. As 4 chamadas estão no Rastro. Uma reunião de teste ficou marcada em 19/10 às 12h na agenda da Paggo |
+| Portões | Provado | `npm test` (19), `npm run typecheck`, `npm run lint`, `npm run build` |
+| Pesquisa em produção e nos casos difíceis | Provado | Leads em produção com as 3 ferramentas no Rastro; `npm run eval` 6/6, 57/57 checagens ([research-cases.md](research-cases.md)) |
+| Formulário novo | Provado no dev local e no ar | Envio com o campo escondido preenchido voltou para a home sem criar lead; envio normal gravou cargo e data do aceite; a pesquisa recebeu o cargo e o tratou como dado do lead; o painel mostra cargo, papel na compra e aceite. O HTML de produção tem os três campos |
+| LLM e prompt da voz | Provado por texto | `gemini-2.5-flash` escolhido entre 4 LLMs em 20 simulações; personas corrigidas; contra o agente da Paggo, com o cargo vindo do formulário, 4 de 4 foram direto ao gancho e marcaram reunião |
+| Conversa por voz | Provado no dev, conta de teste | 4 conversas com microfone; a última com o prompt no masculino: SPICED completo, reunião marcada, despedida e `end_call` juntos, demora até o áudio com mediana de 1,32 s |
+| Voz em produção | Pronto, falta a conversa com microfone | Agente na conta da Paggo, `ELEVENLABS_AGENT_ID` no Vercel, token da conversa sai pela rota de produção |
+| Agenda real | Provado em produção | Consulta com horários reais, marcação aceita, a mesma marcação recusada com o 409 da Paggo, horário fora da disponibilidade depois; 4 chamadas no Rastro. Uma reunião de teste ficou na agenda da Paggo em 19/10 às 12h |
+| Pós-chamada (abas Conversa estruturada e Transcrição) | Provado na conta de teste; na da Paggo falta permissão | Conversa `conv_6601...` gravou tudo no painel. O segredo no Vercel ainda é o da conta de teste |
+| UI | Provado no dev local | Screenshots de home, espera, Rastro e formulário, claro e escuro, desktop e 375 px |
 
 ## Próximos passos
 
-### 1. Voz na conta da Paggo (Crítico; passos 3, 4 e 5 feitos em 19/10 sem o webhook)
+### 1. Pós-chamada na conta da Paggo (Alto)
 
-A chave precisa de: Agents (leitura e escrita), Voices (leitura e escrita, para adicionar a voz da biblioteca), Webhooks (escrita) e, opcional, User (leitura, só para o script mostrar créditos). Comandos no Git Bash, na raiz do repo, sem imprimir segredo. Os arquivos de chave ficam fora do repo: `$TEST_ENV` é o da conta de teste, que já existe; `$F` é um novo, para a Paggo.
+Com `webhooks_write` liberada na mesma chave (pedido feito à Paggo em 19/10), cerca de 5 minutos. No Git Bash, na raiz do repo; `$F` é o arquivo de chave da Paggo, fora do repo, que já tem `WEBHOOK_SECRET_FILE`:
 
-1. O dono do projeto cria `$F` com uma linha só, `ELEVENLABS_API_KEY=<chave da Paggo>`. Nunca pelo chat.
-2. Completar o arquivo. O `VOICE_TOOL_SECRET` é o mesmo que já está no Vercel e em `$TEST_ENV`; o dono da voz é público, da biblioteca:
-   ```bash
-   grep -E '^(VOICE_TOOL_SECRET|ELEVENLABS_VOICE_ID)=' $TEST_ENV >> $F
-   echo 'ELEVENLABS_VOICE_OWNER=127506543377b34b7f80ddd08b6603c9202136585fd1bdc547dccfc61dd6d910' >> $F
-   echo "WEBHOOK_SECRET_FILE=$HOME/.paggo-webhook-secret" >> $F
-   ```
-3. Publicar: `node --env-file=$F scripts/voice-sync.mjs`. Adiciona a voz, cria o webhook pós-chamada (segredo vai para o arquivo, só o tamanho aparece), cria segredo, ferramentas e agente, e imprime `ELEVENLABS_AGENT_ID`. Um 401 aqui quer dizer permissão faltando: ler a mensagem, que diz qual.
-4. Vercel (a chave da Paggo e o `VOICE_TOOL_SECRET` já estão lá):
-   ```bash
-   vercel env add ELEVENLABS_WEBHOOK_SECRET production --force < ~/.paggo-webhook-secret && rm ~/.paggo-webhook-secret
-   vercel env add ELEVENLABS_AGENT_ID production --value <id impresso> --yes
-   vercel env add ELEVENLABS_AGENT_ID development --value <id impresso> --yes
-   ```
-5. Redeploy da produção: `vercel ls --prod` mostra a URL do último deploy; `vercel redeploy <url> --target production --scope <time do projeto>` (sem `--scope` o CLI pode estar em outro time e recusar).
-6. Local: apagar o `.env.development.local` (aponta para a conta de teste) e rodar `vercel env pull .env.local`.
-7. Prova por texto, grátis na conta de teste (conferir na da Paggo): `node --env-file=$F scripts/voice-simulate.mjs interessado`.
-8. Prova ao vivo: lead novo pelo formulário em produção, conversa com microfone, e as abas Conversa estruturada, Transcrição e Rastro preenchidas no painel. Se o webhook não chegar, ver no ElevenLabs se ele está ligado ao agente e se o segredo no Vercel é o do arquivo.
+```bash
+node --env-file=$F scripts/voice-sync.mjs
+vercel env add ELEVENLABS_WEBHOOK_SECRET production --force < ~/.paggo-webhook-secret && rm ~/.paggo-webhook-secret
+```
 
-### 2. Qualidade da conversa (Alto)
+Depois, redeploy: `vercel ls --prod` mostra a URL do último deploy, e `vercel redeploy <url> --target production --scope <time do projeto> --non-interactive`. A partir daí, conversas da conta de teste deixam de ser gravadas, porque o segredo passa a ser o da Paggo.
 
-- [x] Conversa de voz com o prompt novo e o webhook ligado (17/10). Sobram uns 1.300 créditos na conta de teste, menos de 2 minutos: guardar para uma emergência.
-- [ ] Decidir se vale perguntar o evento crítico mesmo quando o lead pede a reunião cedo (hoje o prompt prioriza a decisão).
-- [ ] O `simulate-conversation` sai do ar em 31/10/2026; se a Paggo for usar depois, trocar por `/v1/convai/agent-testing/create` e `run-tests` no `voice-simulate.mjs`.
+Se a permissão não vier a tempo: buscar a conversa do nosso lado. Quando a ligação termina, o site avisa o servidor, que lê a conversa pela API (a chave da Paggo já lê conversas) e grava no lead do mesmo jeito que o webhook. Cerca de 1 hora de código e teste.
 
-### 3. Agenda real (Alto)
+### 2. Prova em produção (Crítico)
 
-- [x] Endpoint real ligado e provado em 19/10 (consulta, marcação e conflito). Falta só ver uma marcação feita pela voz em produção, que sai da prova do passo 1.
-
-### 4. Acabamento e entrega
-
-- [ ] Limpar os leads de teste ("Ana Teste", os dos casos difíceis e o da conversa de prova de 17/10, que tem dados reais do desenvolvedor) e os eventos `teste-manual`, com ok do dono do projeto. Fazer depois da prova em produção.
-- [ ] Revisão final de [reasoning.md](reasoning.md), [business-rules.md](business-rules.md) e [objections.md](objections.md). O repo é lido como público: a auditoria de 17/10 tirou nomes, caminhos locais e ids reais e atualizou `architecture.md`; o histórico do git não foi reescrito (duas mensagens de commit citam a conta de teste).
+- [ ] Conversa com microfone no Chrome em https://paggo-agent-sdr.vercel.app (o Browser pane do app bloqueia o microfone): ouvir a voz Samuel, ver a marcação real pela voz e o Rastro. Com o passo 1 feito, conferir as abas Conversa estruturada e Transcrição.
 - [ ] Ver o painel de produção com senha na tela.
+
+### 3. Entrega (terça, 20/10)
+
+- [ ] Limpar os leads de teste, com ok do dono do projeto: "Ana Teste", os dos casos difíceis, "Carla Mendes" (teste do formulário de 19/10), a conversa de prova de 17/10, que tem dados reais do desenvolvedor, e os eventos `teste-manual`. Avisar a Paggo da reunião de teste de 19/10 às 12h.
+- [ ] Revisão final de [reasoning.md](reasoning.md), [business-rules.md](business-rules.md) e [objections.md](objections.md).
+- [ ] Se sobrar tempo: o documento curto de visão de GTM (funil, custo por lead, passagem para o CRM, LGPD) e o raciocínio enxuto com uma fonte por decisão.
+
+### Depois do case
+
+- [ ] O `simulate-conversation` sai do ar em 31/10/2026: trocar por `/v1/convai/agent-testing/create` e `run-tests` no `voice-simulate.mjs`.
+- [ ] O `gemini-2.5-flash` sai em 30/11/2026: rodar a comparação de LLMs de novo.
 
 ## Calendário até a entrega
 
@@ -83,34 +69,31 @@ A chave precisa de: Agents (leitura e escrita), Voices (leitura e escrita, para 
 | --- | --- |
 | Sex 16/10 | Esqueleto, repo, primeiro deploy (feito) |
 | Sáb 17/10 | Pesquisa, voz na conta de teste, LLM, personas, UI, README (feito) |
-| Dom 18/10 | Folga para o que a conversa de prova mostrar (nada urgente); limpeza dos leads de teste fica para depois da prova em produção |
-| Seg 19/10 | Agenda real ligada (feito). Chave da Paggo: passo 1 inteiro e prova em produção; plano B às 15h |
-| Ter 20/10 | Revisar documentos e enviar |
+| Dom 18/10 | Conversa de prova com o webhook na conta de teste (feito) |
+| Seg 19/10 | Agenda real, voz na conta da Paggo, formulário no formato da Paggo (feito); pós-chamada na Paggo e prova em produção |
+| Ter 20/10 | Limpeza, revisão e envio |
 
 ## Pendências que dependem da Paggo
 
-- **Permissões da chave do ElevenLabs:** liberadas em 19/10 para agentes, ferramentas e segredos. Faltam `webhooks_write` (necessária, para o pós-chamada) e `voices_write` (só para a voz Eduardo).
-- Endpoint da agenda: recebido e ligado em 19/10.
+- **`webhooks_write` na chave do ElevenLabs**, para o pós-chamada em produção. `voices_write` só se quiserem a voz Eduardo.
 - Preço ou faixa que o agente pode falar; quais ERPs têm integração pronta.
 - O estudo de caso, que aparece no menu do deck sem conteúdo.
 
 ## Armadilhas
 
-- A chave da Paggo não lê a assinatura da conta (`user_read`): o `voice-simulate.mjs` mostra créditos como `null` nela. No Vercel a chave está marcada como sensível, então o `vercel env pull` traz o valor vazio; para scripts, usar o arquivo de chave fora do repo.
-- Voz com moderação ao vivo (`sharing.live_moderation_enabled`) não pode ser usada em agente: a Matheus, da conta da Paggo, foi recusada por isso. A Samuel não tem. A voz Eduardo é da biblioteca e só entra na conta da Paggo com `voices_write`. O prompt fala no masculino; trocar para voz feminina pede trocar o gênero do prompt também.
-- Simulação por texto não gasta crédito na conta grátis (51 rodadas, 0 crédito). A demora que ela mede é só a do LLM; a voz soma uns 0,3 a 0,5 s.
-- O `gemini-2.5-flash` sai em 30/11/2026, e a plataforma começa a desviar parte das chamadas para o `gemini-3.5-flash` perto de 1/11. Na comparação, o 3.5 desligou sem despedida.
-- O `gemini-2.5-flash` segue melhor a regra que está perto do momento de usar: regra nova vai na seção onde a ação acontece, não só em "Objetivo".
-- A transcrição simulada junta pedaços com espaço duplo; regex de checagem usa `\s+`.
-- O `.env.development.local` aponta o dev local para a conta de teste e tem prioridade sobre o `.env.local`. Cada worktree precisa dos dois arquivos (copiados de outro worktree, nunca commitados).
+- No Vercel a chave do ElevenLabs está marcada como sensível: o `vercel env pull` traz o valor vazio. Para scripts, usar o arquivo de chave fora do repo. A chave da Paggo também não lê a assinatura da conta: o `voice-simulate.mjs` mostra créditos como `null` nela.
+- `vercel env add` sem ambiente, ou sem `--non-interactive`, para numa pergunta e trava em scripts.
+- Voz com moderação ao vivo (`sharing.live_moderation_enabled`) não pode ser usada em agente: a Matheus, da conta da Paggo, foi recusada por isso. O prompt fala no masculino; trocar para voz feminina pede trocar o gênero do prompt.
+- O dev local continua na conta de teste do ElevenLabs (`.env.development.local`, que tem prioridade sobre o `.env.local`). Cada worktree precisa dos dois arquivos, copiados de outro worktree e nunca commitados.
 - Dev e produção usam o mesmo banco Neon: leads e eventos de teste aparecem no painel de produção.
-- O ElevenLabs só alcança a produção: ferramentas e webhook apontam para `paggo-agent-sdr.vercel.app`. Mudou rota, precisa de push antes de testar a voz.
-- O `vercel env pull` acrescenta `.env*.local` ao `.gitignore` toda vez; a linha é redundante e não deve ser commitada.
-- O tema é escuro por padrão, com um interruptor no cabeçalho (`app/theme-toggle.tsx`); a escolha fica no `localStorage` do navegador, e um `next/script` `beforeInteractive` a aplica antes da primeira pintura. Um `<script>` cru no layout funciona, mas faz o React reclamar no console em dev.
+- O ElevenLabs só alcança a produção: ferramentas e webhook apontam para `paggo-agent-sdr.vercel.app`. Mudou rota, precisa de push antes de testar a voz. Mudou uma variável que o prompt usa: primeiro o deploy do código que manda a variável, depois a publicação do agente.
+- Alguns arquivos do repo têm quebra de linha CRLF; scripts que editam texto devem normalizar antes de comparar.
+- Simulação por texto não gastou crédito na conta grátis. A demora que ela mede é só a do LLM; a voz soma uns 0,3 a 0,5 s.
+- O tema é escuro por padrão, com um interruptor no cabeçalho; a escolha fica no `localStorage` e um `next/script` `beforeInteractive` a aplica antes da primeira pintura.
 - Mais armadilhas do código em `AGENTS.md`, seção Gotchas.
 
 ## Linha de corte
 
-Se atrasar, sai nesta ordem: acabamento da UI além do que está; objeções além das que o case cita; troca do `simulate-conversation`. Nunca sai: rastro, briefing com fonte, voz funcionando em produção e agenda.
+Se atrasar, sai nesta ordem: documento de GTM e raciocínio enxuto; acabamento da UI; objeções além das que o case cita. Nunca sai: rastro, briefing com fonte, voz funcionando em produção, agenda e a saída estruturada da conversa.
 
 Agent: Claude Code (claude-opus-5-5).
