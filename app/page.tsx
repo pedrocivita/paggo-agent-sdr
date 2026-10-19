@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { submitLead } from "./actions";
+import { OriginFields } from "./origin-fields";
 import { ROLES } from "@/lib/roles";
 
 // The research runs inside this page's server action, so it needs room to finish.
@@ -62,6 +63,7 @@ export default function Home({ searchParams }: PageProps<"/">) {
           <textarea id="extra" name="extra" rows={3} placeholder="Ex.: quantas empresas ou SPEs, tamanho do time financeiro" />
           <small>Opcional</small>
         </div>
+        <OriginFields />
         <div className="trap" aria-hidden="true">
           <label htmlFor="website">Não preencha este campo</label>
           <input id="website" name="website" tabIndex={-1} autoComplete="off" />

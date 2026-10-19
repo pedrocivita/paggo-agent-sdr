@@ -3,6 +3,7 @@
 import { useState, type ReactNode } from "react";
 import type { FactValue } from "@/lib/briefing";
 import type { Lead, TrailEvent } from "@/lib/leads";
+import { describeOrigin } from "@/lib/origin";
 import { describeRole } from "@/lib/roles";
 
 const TABS = ["Formulário", "Pesquisa", "Conversa estruturada", "Transcrição", "Rastro"] as const;
@@ -31,7 +32,7 @@ function Empty({ children }: { children: ReactNode }) {
 }
 
 function FormTab({ lead }: { lead: Lead }) {
-  const { name, email, phone, company, extra, role, consentAt } = lead.form;
+  const { name, email, phone, company, extra, role, consentAt, origin } = lead.form;
   const consent = consentAt ? new Date(consentAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }) : "·";
   const rows: [string, string][] = [
     ["Nome", name],
@@ -41,6 +42,7 @@ function FormTab({ lead }: { lead: Lead }) {
     ["Empresa", company],
     ["Extra", extra || "·"],
     ["Aceite dos dados", consent],
+    ["Origem", describeOrigin(origin)],
   ];
   return (
     <dl className="facts">

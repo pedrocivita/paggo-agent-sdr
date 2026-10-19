@@ -3,6 +3,7 @@
 import { after } from "next/server";
 import { redirect } from "next/navigation";
 import { createLead, type LeadForm } from "@/lib/leads";
+import { readOrigin } from "@/lib/origin";
 import { runResearch } from "@/lib/research";
 import { isRole } from "@/lib/roles";
 
@@ -21,6 +22,7 @@ export async function submitLead(data: FormData): Promise<void> {
     extra: field(data, "extra"),
     role,
     consentAt: data.get("consent") ? new Date().toISOString() : undefined,
+    origin: readOrigin((key) => field(data, key)),
   };
   const valid = form.name && form.company && form.phone && isRole(role) && form.consentAt;
   if (!valid || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email)) {

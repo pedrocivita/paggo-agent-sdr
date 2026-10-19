@@ -3,9 +3,11 @@
 
 import { sql } from "./db";
 import type { Briefing } from "./briefing";
+import type { LeadOrigin } from "./origin";
 
-// `role` is a key of ROLES (lib/roles.ts); `consentAt` is when the lead accepted the data use.
-// Both are optional because leads from before these fields exist.
+// `role` is a key of ROLES (lib/roles.ts); `consentAt` is when the lead accepted the data use;
+// `origin` is where the lead came from (lib/origin.ts). All optional because leads from before
+// these fields exist, and most visits carry no origin.
 export type LeadForm = {
   name: string;
   email: string;
@@ -14,6 +16,7 @@ export type LeadForm = {
   extra: string;
   role?: string;
   consentAt?: string;
+  origin?: LeadOrigin;
 };
 export type LeadStatus = "researching" | "ready" | "failed" | "talked";
 
