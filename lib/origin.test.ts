@@ -21,7 +21,7 @@ describe("origin", () => {
   });
 
   it("reads as one line in the panel", () => {
-    expect(describeOrigin({ utm_source: "linkedin", referrer: "https://www.linkedin.com/" })).toBe(
+    expect(describeOrigin({ referrer: "https://www.linkedin.com/", utm_source: "linkedin" })).toBe(
       "utm_source: linkedin, referrer: https://www.linkedin.com/",
     );
     expect(describeOrigin(undefined)).toBe("·");

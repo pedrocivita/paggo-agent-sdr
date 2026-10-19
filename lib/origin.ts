@@ -10,8 +10,8 @@ export function readOrigin(get: (key: string) => string): LeadOrigin | undefined
   return filled.length ? Object.fromEntries(filled) : undefined;
 }
 
-/** One line for the panel: "utm_source: linkedin, referrer: https://www.linkedin.com/". */
+/** One line for the panel, in the fixed order (Postgres reorders jsonb keys): "utm_source: linkedin, referrer: ...". */
 export function describeOrigin(origin?: LeadOrigin): string {
-  const parts = Object.entries(origin ?? {}).map(([key, value]) => `${key}: ${value}`);
+  const parts = ORIGIN_KEYS.filter((key) => origin?.[key]).map((key) => `${key}: ${origin?.[key]}`);
   return parts.length ? parts.join(", ") : "·";
 }
