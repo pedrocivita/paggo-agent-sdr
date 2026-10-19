@@ -24,7 +24,7 @@
           "end_call": {
             "type": "system",
             "name": "end_call",
-            "description": "Encerra a conversa. Use só depois de você dizer \"até mais\" em voz alta, sem esperar o lead responder. Nunca no meio da conversa, nem logo depois de outra ferramenta sem falar antes, nem logo depois de uma fala do lead que você ainda não respondeu: responda primeiro.",
+            "description": "Encerra a conversa. Use só depois de você dizer \"até mais\" em voz alta, sem esperar o lead responder. Nunca no meio da conversa, nem logo depois de outra ferramenta sem falar antes, nem logo depois de uma fala do lead que você ainda não respondeu: responda primeiro. Nunca por achar que a empresa não tem o perfil: quem decide isso é o time.",
             "params": {
               "system_tool_type": "end_call"
             }
