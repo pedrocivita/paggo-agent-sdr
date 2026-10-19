@@ -1,6 +1,6 @@
 # Raciocínio
 
-O que foi pesquisado em cada parte, as opções, o que foi escolhido e por que não as outras, com a prova (medição, fonte ou teste ao vivo). É escrito enquanto o trabalho acontece; [DECISIONS.md](../DECISIONS.md) guarda a versão de uma linha de cada decisão. Atualizado em 17/10/2026.
+O que foi pesquisado em cada parte, as opções, o que foi escolhido e por que não as outras, com a prova (medição, fonte ou teste ao vivo). É escrito enquanto o trabalho acontece; [DECISIONS.md](../DECISIONS.md) guarda a versão de uma linha de cada decisão. Atualizado em 19/10/2026.
 
 ## Índice
 
@@ -318,6 +318,18 @@ Prova: um envio com o campo escondido preenchido voltou para a home sem criar le
 Enquanto o endpoint real não existia, uma agenda falsa atendeu pela mesma interface (`lib/agenda.ts`), e a troca é feita por duas variáveis de ambiente, `AGENDA_URL` e `AGENDA_TOKEN`. Regras nossas: próximos 5 dias úteis, nada começando na próxima hora, até 4 opções, das quais o agente oferece duas.
 
 O endpoint real chegou em 19/10: base `https://sales.paggo.io/api/case/agenda`, com `GET /disponibilidade?de=&ate=` e `POST /reunioes` (`inicio`, `nome`, `email`; 409 se o horário foi ocupado), autenticado com `Authorization: Bearer`. A única mudança no código foi usar a base exatamente como a Paggo a entrega. Prova: sem token as rotas respondem 401 e 405 (existem); com o token, a disponibilidade respondeu `{ fuso, livres: [{ inicio, fim }] }`, o formato que o cliente já lia, aceitou as datas ISO com fuso que mandamos e trouxe 81 horários nos próximos 7 dias; depois do deploy, a rota de produção que o agente de voz chama devolveu horários do mesmo dia, que a agenda falsa nunca daria, e a chamada ficou no Rastro do lead de teste. Marcação provada no mesmo dia, pelas rotas de produção, com o lead da conversa de prova: `marcar_reuniao` reservou o primeiro horário oferecido; a segunda tentativa no mesmo horário recebeu o 409 da Paggo e virou a frase "esse horário acabou de ser ocupado", que faz o agente oferecer outro; e o horário saiu da disponibilidade. As 4 chamadas estão no Rastro do lead.
+
+**Convite da reunião** (19/10). O agente fechava com "o convite vai pro seu e-mail", e nada mandava convite: o case chama a agenda de fictícia, com só as rotas de consultar e marcar, e as duas reuniões de teste marcadas com o e-mail do desenvolvedor não geraram e-mail nenhum.
+
+| Opção | Por que sim | Por que não |
+| --- | --- | --- |
+| **Tirar a promessa (escolhido)** | Muda uma frase no prompt, na resposta da rota e na descrição da ferramenta; nada novo pode falhar | O lead fica sem convite no calendário |
+| Mandar o convite nós mesmos (.ics por e-mail, pelo Resend) | O lead recebe o convite | Para chegar a qualquer caixa, o Resend exige domínio verificado: conta e DNS novos na véspera da entrega, com risco de spam, para algo que nenhum critério avalia |
+| Perguntar à Paggo | Confirma na fonte | O enunciado e o teste já respondem |
+
+A despedida agora diz dia, hora e "com o time da Paggo". Se o lead pedir o convite, vale a regra do material: o time manda, fica anotado. Com mais tempo, o convite sairia pela integração com o CRM da Paggo, que é quem manda convite de verdade.
+
+Prova: depois do deploy e da publicação na conta da Paggo, 3 simulações por texto, com a checagem nova `promisedInvite` no `voice-simulate.mjs`. Nenhuma fala teve "convite". As duas da interessada marcaram um horário da lista e fecharam numa fala só com `end_call`: "Pronto, ficou marcado quinta-feira, dia vinte e dois, às duas e meia da tarde, com o time da Paggo. Obrigado, Marina, até mais." O cético recusou a reunião, pediu material duas vezes e saiu como "retornar depois".
 
 ## O que ainda não sabemos
 
