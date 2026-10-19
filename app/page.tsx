@@ -7,7 +7,7 @@ export const maxDuration = 120;
 
 async function FormError({ searchParams }: { searchParams: Promise<{ erro?: string }> }) {
   const { erro } = await searchParams;
-  return erro ? <p className="note err">Preencha nome, e-mail, telefone, cargo e empresa, e marque o aceite.</p> : null;
+  return erro ? <p className="note err">Preencha nome completo, e-mail, telefone, cargo e empresa, e marque o aceite.</p> : null;
 }
 
 export default function Home({ searchParams }: PageProps<"/">) {
@@ -29,7 +29,7 @@ export default function Home({ searchParams }: PageProps<"/">) {
           <FormError searchParams={searchParams as Promise<{ erro?: string }>} />
         </Suspense>
         <div className="field">
-          <label htmlFor="name">Nome</label>
+          <label htmlFor="name">Nome completo</label>
           <input id="name" name="name" autoComplete="name" required />
         </div>
         <div className="field">
