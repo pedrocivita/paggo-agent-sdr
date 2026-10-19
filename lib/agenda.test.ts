@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { pickOptions, searchWindow, spokenSlot } from "./agenda";
+import { isFreeSlot, pickOptions, searchWindow, spokenSlot } from "./agenda";
 
 describe("agenda", () => {
   it("says a slot the way a person would", () => {
@@ -23,6 +23,15 @@ describe("agenda", () => {
       "10-20T09:30", "10-20T10:00", "10-20T13:00", "10-20T13:30",
       "10-21T09:00", "10-21T09:30", "10-21T13:00", "10-21T13:30",
     ]);
+  });
+
+  it("books only a free slot, whatever the offset format", () => {
+    const free = [{ inicio: "2026-10-20T14:00:00-03:00", fim: "2026-10-20T14:30:00-03:00" }];
+    expect(isFreeSlot(free, "2026-10-20T14:00:00-03:00")).toBe(true);
+    expect(isFreeSlot(free, "2026-10-20T17:00:00Z")).toBe(true);
+    expect(isFreeSlot(free, "2026-10-27T14:00:00-03:00")).toBe(false); // made up, outside the window
+    expect(isFreeSlot(free, "2026-10-20T14:17:00-03:00")).toBe(false); // not a slot
+    expect(isFreeSlot(free, "amanhã às duas")).toBe(false);
   });
 
   it("uses São Paulo's date late at night, not UTC's", () => {

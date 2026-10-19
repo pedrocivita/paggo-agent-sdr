@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { agenda, pickOptions, searchWindow, spokenSlot } from "@/lib/agenda";
+import { agenda, isFreeSlot, pickOptions, searchWindow, spokenSlot } from "@/lib/agenda";
 import { getLead } from "@/lib/leads";
 import { traced, type Run } from "@/lib/trace";
 
@@ -49,6 +49,10 @@ async function consult() {
 async function book(leadId: string, inicio: string, email?: string) {
   const lead = await getLead(leadId);
   if (!lead) throw new Error("Lead não encontrado");
+  const { from, to } = searchWindow(new Date());
+  if (!isFreeSlot(await agenda().available(from, to), inicio)) {
+    return { marcada: false, mensagem: "Esse horário não está livre na agenda. Consulte a agenda e ofereça dois horários da lista." };
+  }
   const result = await agenda().book({ inicio, nome: lead.form.name, email: email ?? lead.form.email });
   if (!result.ok) {
     return { marcada: false, mensagem: "Esse horário acabou de ser ocupado. Consulte a agenda de novo e ofereça o próximo." };

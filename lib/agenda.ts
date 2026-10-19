@@ -97,6 +97,15 @@ export function pickOptions(slots: Slot[], earliest: number, perPeriod = 2): Slo
     });
 }
 
+/**
+ * Whether `inicio` is one of the free slots. The booking route checks it so the agent can only book a
+ * real, free slot of the window, never one it made up (it did, once in production and once in a run).
+ */
+export function isFreeSlot(free: Slot[], inicio: string): boolean {
+  const at = Date.parse(inicio);
+  return !Number.isNaN(at) && free.some((s) => Date.parse(s.inicio) === at);
+}
+
 /** A slot as the agent says it out loud: "terça-feira, dia 20, às 10h". */
 export function spokenSlot(inicio: string): string {
   const parts = new Intl.DateTimeFormat("pt-BR", {
