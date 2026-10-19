@@ -100,6 +100,12 @@ function measure(turns, slots) {
         : !/até\s+mais|tchau/iu.test(turns.slice(0, endIndex + 1).findLast((t) => t.role === "agent" && t.message?.trim())?.message ?? ""),
     tools: turns.flatMap(toolNames),
     closedInOneTurn: endIndex >= 0 && closing.length === 1 && !closing[0].message.includes("?"),
+    // The first question must not read the form back ("vi aqui que você atua como <cargo>").
+    openingReadsForm: (() => {
+      const first = (agent[0]?.message ?? "").toLowerCase();
+      const role = persona.lead.lead_role.split(";")[0].toLowerCase();
+      return /vi aqui|atua como/u.test(first) || (role !== "outro" && first.includes(role));
+    })(),
     // Nothing sends invites, material or e-mail, so the agent must never promise one.
     promisedSending: agent.some((t) => /convite|\b(envi|mand)\w*\b[^.?]*\b(e-?mail|material)/iu.test(t.message)),
     // The time it booked must be one the agenda offered: once, the agent made one up.

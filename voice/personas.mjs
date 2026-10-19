@@ -65,6 +65,34 @@ Como agir:
 ${CALL_STYLE}`,
   },
 
+  // The production call of 19/10: the role on the form and the one the search found disagree, the
+  // briefing asks to confirm it, and the lead just says "pode falar" and lets the agent lead.
+  direto: {
+    lead: {
+      lead_name: "Felipe",
+      lead_role: "Analista ou Coordenador Financeiro; papel na compra: Usuário Principal",
+      company_name: "Vértice Incorporadora Ltda",
+      briefing: [
+        "1) Felipe Andrade informou que é Analista ou Coordenador Financeiro, papel de Usuário Principal. A busca indica Analista de Sistemas na Vértice, então confirme o cargo com ele.",
+        "2) A Vértice é uma incorporadora de São Paulo com pelo menos 3 SPEs achadas na busca e Lucro Real.",
+        "3) Gancho: perguntar como o financeiro acompanha o caixa de cada SPE.",
+        "4) Módulos prováveis, só depois de ele contar uma dor: Tesouraria (conta por empreendimento) e Controladoria (DRE por SPE).",
+      ].join("\n"),
+    },
+    user: `Você é Felipe Andrade, analista de sistemas da Vértice Incorporadora, em São Paulo. Você cuida dos sistemas do financeiro (o ERP é o Sienge) e participa da escolha de ferramentas, mas quem decide é a diretora financeira, a Carla.
+
+O que é verdade (conte só quando perguntarem):
+- A dor: os extratos de quatro bancos são baixados e importados à mão no Sienge todo dia.
+- O impacto: uma pessoa gasta a manhã inteira nisso, e o fechamento atrasa.
+
+Como agir:
+- Na primeira fala, diga só "tenho sim, pode falar" e deixe o agente conduzir.
+- Se o agente perguntar o seu cargo ou área, diga que é de TI e cuida dos sistemas do financeiro.
+- Se o agente oferecer uma conversa com o time, aceite e escolha o primeiro horário oferecido.
+
+${CALL_STYLE}`,
+  },
+
   "pessoa-errada": {
     lead: {
       lead_name: "Juliana",
