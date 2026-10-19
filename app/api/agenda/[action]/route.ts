@@ -34,7 +34,7 @@ export async function POST(req: Request, { params }: RouteContext<"/api/agenda/[
     }
     return Response.json({ error: "unknown_action" }, { status: 404 });
   } catch {
-    return Response.json({ erro: "A agenda não respondeu agora. Diga que o time confirma o horário por e-mail." });
+    return Response.json({ erro: "A agenda não respondeu agora. Diga que não conseguiu marcar e que deixa o horário pedido anotado para o time." });
   }
 }
 
