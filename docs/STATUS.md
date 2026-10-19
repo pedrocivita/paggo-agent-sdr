@@ -16,7 +16,7 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 
 - **Marcos 1 e 2** (no ar, pesquisa boa) fechados. **Marco 3** (voz) funciona de ponta a ponta na conta de teste do ElevenLabs. **Marco 4** (agenda e pós-chamada): agenda provada em produção com a agenda falsa; o webhook pós-chamada nunca recebeu uma chamada real.
 - Nesta sessão: o LLM da voz foi escolhido por número (fica o `gemini-2.5-flash`, entre 4 modelos em 20 simulações por texto), o prompt foi corrigido com 3 personas, a UI ganhou a cara do deck (frase na home, bloco escuro na espera, tema escuro, uma fonte só), o Rastro parou de quebrar no celular, o README foi reescrito, o `voice-sync.mjs` passou a adicionar a voz e criar o webhook sozinho, e o agente passou a falar no masculino, como a voz. Detalhes e provas em [reasoning.md](reasoning.md).
-- **Bloqueio:** a chave do ElevenLabs da Paggo não tem permissão de Agents nem de Voices. A liberação foi pedida à Paggo, com resposta esperada na segunda, 19/10. Até lá não há voz em produção. Plano B: se a chave não chegar até segunda às 15h, a produção passa a usar a conta de teste, num plano pago que permite uso comercial (a troca é o mesmo passo 1, com a chave da conta de teste).
+- **Voz na conta da Paggo (19/10):** a chave foi liberada para agentes, ferramentas, segredos e leitura de vozes e webhooks. O agente está publicado lá, com a voz Samuel (uma das vozes brasileiras da própria conta), e a produção usa esse agente: o token da conversa sai em produção. **Falta:** permissão de escrita de webhooks (`webhooks_write`) para criar o pós-chamada na conta da Paggo; sem ela, as abas Conversa estruturada e Transcrição não recebem conversas de produção. Escrita de vozes (`voices_write`) só seria preciso para voltar à voz Eduardo, que é da biblioteca.
 
 ## Provado e não provado
 
@@ -32,13 +32,13 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 | UI com a cara do deck | Provado no dev local | Screenshots da home, da espera e do Rastro de um lead da Even, no desktop e a 375 px, tema escuro |
 | Ferramentas da agenda em produção | Provado | Chamadas pelo agente nas conversas, no Rastro com o id da conversa e o lead certo |
 | `voice-sync.mjs` criando e achando o webhook | Provado na conta de teste | Criou o webhook com `WEBHOOK_SECRET_FILE` (segredo em arquivo, só o tamanho impresso) e, rerodado, achou o mesmo pela URL. Adicionar a voz da biblioteca só roda na conta da Paggo |
-| Webhook pós-chamada, abas Conversa estruturada e Transcrição | Provado na conta de teste | Na conversa `conv_6601...` o pós-chamada assinado chegou à produção e gravou resultado, SPICED, horário, resumo e transcrição; as ferramentas da agenda aparecem no Rastro com o id da conversa. Na conta da Paggo, refazer com o segredo dela |
-| Conversa por voz em produção | Não provado | Depende da chave da Paggo |
+| Webhook pós-chamada, abas Conversa estruturada e Transcrição | Provado na conta de teste; na da Paggo, falta permissão | Na conversa `conv_6601...` (conta de teste) o pós-chamada gravou tudo no painel. Na conta da Paggo a chave não tem `webhooks_write`. O segredo no Vercel ainda é o da conta de teste, então conversas da conta de teste (dev local) continuam sendo gravadas |
+| Conversa por voz em produção | Pronto, falta a conversa com microfone | Agente na conta da Paggo (voz Samuel, `gemini-2.5-flash`), `ELEVENLABS_AGENT_ID` no Vercel e redeploy; a rota `/api/leads/[id]/voice` de produção devolveu token; simulação por texto contra o agente da Paggo marcou e fechou certo |
 | Agenda real | Provado em produção | Token no Vercel; pelas rotas de produção que a voz chama: consulta com horários reais, marcação aceita, a mesma marcação recusada com o 409 da Paggo e o horário fora da disponibilidade depois. As 4 chamadas estão no Rastro. Uma reunião de teste ficou marcada em 19/10 às 12h na agenda da Paggo |
 
 ## Próximos passos
 
-### 1. Voz na conta da Paggo (Crítico, uns 20 minutos quando a chave chegar)
+### 1. Voz na conta da Paggo (Crítico; passos 3, 4 e 5 feitos em 19/10 sem o webhook)
 
 A chave precisa de: Agents (leitura e escrita), Voices (leitura e escrita, para adicionar a voz da biblioteca), Webhooks (escrita) e, opcional, User (leitura, só para o script mostrar créditos). Comandos no Git Bash, na raiz do repo, sem imprimir segredo. Os arquivos de chave ficam fora do repo: `$TEST_ENV` é o da conta de teste, que já existe; `$F` é um novo, para a Paggo.
 
@@ -89,15 +89,15 @@ A chave precisa de: Agents (leitura e escrita), Voices (leitura e escrita, para 
 
 ## Pendências que dependem da Paggo
 
-- **Permissões da chave do ElevenLabs** (Agents, Voices, Webhooks), pedidas no sábado, 17/10. Basta editar as permissões da mesma chave.
+- **Permissões da chave do ElevenLabs:** liberadas em 19/10 para agentes, ferramentas e segredos. Faltam `webhooks_write` (necessária, para o pós-chamada) e `voices_write` (só para a voz Eduardo).
 - Endpoint da agenda: recebido e ligado em 19/10.
 - Preço ou faixa que o agente pode falar; quais ERPs têm integração pronta.
 - O estudo de caso, que aparece no menu do deck sem conteúdo.
 
 ## Armadilhas
 
-- A chave da Paggo é restrita: lê webhooks, mas não agentes, ferramentas, segredos nem vozes. O token da conversa em produção (`/api/leads/[id]/voice`) também usa essa chave.
-- A voz escolhida é da biblioteca e masculina: não existe na conta da Paggo até ser adicionada (o `voice-sync.mjs` faz isso com `ELEVENLABS_VOICE_OWNER`), e o prompt fala no masculino. Trocar a voz pede trocar o gênero do prompt também.
+- A chave da Paggo não lê a assinatura da conta (`user_read`): o `voice-simulate.mjs` mostra créditos como `null` nela. No Vercel a chave está marcada como sensível, então o `vercel env pull` traz o valor vazio; para scripts, usar o arquivo de chave fora do repo.
+- Voz com moderação ao vivo (`sharing.live_moderation_enabled`) não pode ser usada em agente: a Matheus, da conta da Paggo, foi recusada por isso. A Samuel não tem. A voz Eduardo é da biblioteca e só entra na conta da Paggo com `voices_write`. O prompt fala no masculino; trocar para voz feminina pede trocar o gênero do prompt também.
 - Simulação por texto não gasta crédito na conta grátis (51 rodadas, 0 crédito). A demora que ela mede é só a do LLM; a voz soma uns 0,3 a 0,5 s.
 - O `gemini-2.5-flash` sai em 30/11/2026, e a plataforma começa a desviar parte das chamadas para o `gemini-3.5-flash` perto de 1/11. Na comparação, o 3.5 desligou sem despedida.
 - O `gemini-2.5-flash` segue melhor a regra que está perto do momento de usar: regra nova vai na seção onde a ação acontece, não só em "Objetivo".
