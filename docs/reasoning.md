@@ -290,6 +290,27 @@ Prova: em produção a consulta passou a trazer 22 opções em 6 dias úteis, se
 
 O aviso `error reading from signal stream` no console vem do `livekit-client`, a camada WebRTC do SDK, quando a conexão fecha; o overlay do Next em desenvolvimento mostra qualquer `console.error` como erro.
 
+**Segunda conversa em produção** (19/10, noite, conversa `conv_6301...`, 5,4 min, conta da Paggo), depois de todas as mudanças do dia (convite, "deixo anotado", decisão e desligamento nas ferramentas, fit, trava da marcação, origem do lead). O lead foi de novo o próprio desenvolvedor, no papel de alguém de tecnologia de uma consultoria que atende incorporadoras, entrando por um link com UTM.
+
+| O que | Resultado |
+| --- | --- |
+| Ponta a ponta | Origem gravada (as 3 UTM do link), pesquisa com 4 ferramentas, `consultar_agenda` com 20 horários, `marcar_reuniao` aprovado pela trava (horário livre da janela), pós-chamada com SPICED, resultado e o pedido de material em `duvidas` |
+| Pedido de material | "Deixo anotado para o time", sem prometer envio |
+| Quem decide | Perguntado antes de consultar a agenda |
+| Agenda | Dois horários da lista; repetiu dia e hora e marcou só depois do "isso" |
+| Fechamento | "Pronto, ficou marcado quarta-feira, dia vinte e um, às treze horas, com o time da Paggo", sem convite, e `end_call` |
+| Demora até o áudio (`convai_ttf_audio_since_silence`) | Mediana de 1,25 s em 14 falas; acima de 2 s só depois das ferramentas e do pedido de material (2,2 a 3,6 s) |
+| Custo | 2.557 créditos em 5,4 min, cerca de 470 por minuto no plano da Paggo |
+
+Erros lidos na transcrição, ainda sem correção:
+
+| Erro | Causa provável |
+| --- | --- |
+| Abriu lendo o cargo do formulário e dizendo "vi aqui que você atua como..." | O `forAgent` traz o cargo com as palavras do formulário, e o prompt não tem exemplo de abertura para quando o cargo já veio |
+| Uma fala de 4 frases e umas 60 palavras, listando o que a Paggo faz | O mesmo excesso de palavras do `gemini-2.5-flash` registrado nas personas |
+| O lead pediu "outro dia, à tarde", e o agente ofereceu a tarde do mesmo dia; ao pedido das 18h, chamou 13h de "final da tarde" | Leitura errada do pedido; os horários continuaram sendo da lista |
+| Não perguntou o evento crítico | A pergunta de decisão tem prioridade no prompt, como nas simulações |
+
 ## Interface
 
 Base: os tokens que vieram com o case (`app/paggo.css`) e o deck institucional, lido nas páginas 1 e 18.
