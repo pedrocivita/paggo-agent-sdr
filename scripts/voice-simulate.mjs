@@ -70,7 +70,8 @@ const toolNames = (turn) => (turn.tool_calls || []).map((c) => c.tool_name);
 function measure(turns, slots) {
   const agent = turns.filter((t) => t.role === "agent" && t.message?.trim()).slice(1); // the first one is the fixed first_message
   const counts = agent.map((t) => words(t.message));
-  const firstBooking = turns.findIndex((t) => toolNames(t).includes("consultar_agenda"));
+  // The decision question must come before the booking; checking the calendar first is fine.
+  const firstBooking = turns.findIndex((t) => toolNames(t).includes("marcar_reuniao"));
   const before = firstBooking < 0 ? turns : turns.slice(0, firstBooking);
   const endIndex = turns.findIndex((t) => toolNames(t).includes("end_call"));
   const lastUser = turns.findLastIndex((t, i) => t.role === "user" && (endIndex < 0 || i < endIndex));

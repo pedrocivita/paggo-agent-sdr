@@ -273,6 +273,15 @@ Nenhuma fala passou de 2 s nessas 7 rodadas, e nenhuma teve preço, integração
 
 Sobra só um detalhe: as horas saem em formatos diferentes ("dez da manhã" e "quatorze horas").
 
+**Primeira conversa em produção, na conta da Paggo** (19/10, conversa `conv_4701...`, 4 min, voz Samuel). De ponta a ponta: formulário em produção, pesquisa, voz, agenda real, e o pós-chamada assinado gravou resultado, SPICED, horário, resumo e transcrição no lead. O lead foi o próprio desenvolvedor. Demora até o áudio com mediana de 1,46 s. Dois erros, os dois lidos no Rastro:
+
+| Erro | Causa | Correção |
+| --- | --- | --- |
+| O lead pediu "quarta à tarde"; o agente ofereceu e marcou quarta às 14h30, que nenhuma consulta tinha devolvido (deu certo por sorte: o horário estava livre) | A consulta devolvia só os 4 primeiros horários livres, todos do mesmo dia; o agente consultou de novo, recebeu os mesmos e inventou | A consulta devolve, por dia útil, até dois horários de manhã e dois de tarde (`pickOptions` em `lib/agenda.ts`, com teste), e o prompt proíbe oferecer ou marcar horário fora da lista. Sem parâmetro de data, de propósito: o modelo erraria a conta de "quarta que vem" |
+| 13 s de silêncio depois de "deixa eu ver aqui os horários" | O modelo falou o aviso e só chamou a ferramenta no turno seguinte (as chamadas levaram de 114 a 181 ms) | O agente chama a ferramenta direto, sem anunciar; a plataforma fala enquanto ela roda |
+
+Prova: em produção a consulta passou a trazer 22 opções em 6 dias úteis, sem o horário já marcado; duas simulações contra o agente da Paggo, com a persona pedindo "o último dia útil, à tarde", marcaram a quinta às 14h30, que estava na lista (`bookedOfferedSlot` no `voice-simulate.mjs`), e consultaram a agenda sem pausa.
+
 O aviso `error reading from signal stream` no console vem do `livekit-client`, a camada WebRTC do SDK, quando a conexão fecha; o overlay do Next em desenvolvimento mostra qualquer `console.error` como erro.
 
 **A chave da Paggo.** Ao publicar na conta da Paggo, a chave que ela mandou respondeu 401 `missing_permissions` em agentes, ferramentas, segredos, vozes, modelos e no token da conversa; só lista webhooks. Para não confundir com uma chave restrita da conta de teste, foram três provas: o hash é diferente; as permissões são outras (a de teste acessa tudo); e um webhook temporário criado na conta de teste não apareceu para a chave da Paggo (apagado em seguida). Opções pesadas: pedir à Paggo que libere as permissões (sem custo); usar a conta de teste em produção, num plano pago que permite uso comercial; ou esperar. Escolhido: pedir a liberação e seguir no que não depende da voz em produção, com a conta de teste como plano B e prazo para decidir.

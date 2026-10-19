@@ -15,7 +15,7 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 ## Onde estamos
 
 - **Em produção:** formulário, pesquisa, voz na conta da Paggo, agenda real da Paggo e painel com Rastro. A voz usa a Samuel, uma voz brasileira que já estava na conta da Paggo (a Eduardo, usada nos testes, é da biblioteca e pede permissão de escrita de vozes).
-- **Pós-chamada na conta da Paggo ligado (19/10):** com a escrita de webhooks liberada, o webhook foi criado, ligado ao agente, o segredo foi para o Vercel e a produção foi redeployada. **Falta para o mínimo do case:** uma conversa de prova em produção para ver as abas Conversa estruturada e Transcrição cheias.
+- **Pós-chamada na conta da Paggo ligado (19/10):** com a escrita de webhooks liberada, o webhook foi criado, ligado ao agente, o segredo foi para o Vercel e a produção foi redeployada. **Provado em produção (19/10):** uma conversa na conta da Paggo (`conv_4701...`) passou por formulário, pesquisa, voz, agenda real e pós-chamada, com o painel cheio. Dois erros dela foram corrigidos e provados por simulação: o agente inventou um horário quando o lead pediu outro dia, e ficou 13 s em silêncio antes de consultar a agenda.
 - **Hoje (19/10):** agenda real ligada e provada; agente publicado na conta da Paggo; formulário com cargo no formato da Paggo (persona do comitê de compra), aceite de dados e campo antirrobô; prompt com os fatos do FAQ da Paggo e a Reforma Tributária como evento crítico. Detalhes e provas em [reasoning.md](reasoning.md).
 
 ## Provado e não provado
@@ -27,9 +27,9 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 | Formulário novo | Provado no dev local e no ar | Envio com o campo escondido preenchido voltou para a home sem criar lead; envio normal gravou cargo e data do aceite; a pesquisa recebeu o cargo e o tratou como dado do lead; o painel mostra cargo, papel na compra e aceite. O HTML de produção tem os três campos |
 | LLM e prompt da voz | Provado por texto | `gemini-2.5-flash` escolhido entre 4 LLMs em 20 simulações; personas corrigidas; contra o agente da Paggo, com o cargo vindo do formulário, 4 de 4 foram direto ao gancho e marcaram reunião |
 | Conversa por voz | Provado no dev, conta de teste | 4 conversas com microfone; a última com o prompt no masculino: SPICED completo, reunião marcada, despedida e `end_call` juntos, demora até o áudio com mediana de 1,32 s |
-| Voz em produção | Pronto, falta a conversa com microfone | Agente na conta da Paggo, `ELEVENLABS_AGENT_ID` no Vercel, token da conversa sai pela rota de produção |
-| Agenda real | Provado em produção | Consulta com horários reais, marcação aceita, a mesma marcação recusada com o 409 da Paggo, horário fora da disponibilidade depois; 4 chamadas no Rastro. Uma reunião de teste ficou na agenda da Paggo em 19/10 às 12h |
-| Pós-chamada (abas Conversa estruturada e Transcrição) | Provado na conta de teste; ligado na da Paggo, falta a conversa | Conversa `conv_6601...` (conta de teste) gravou tudo no painel. Na conta da Paggo: um webhook HMAC só, ligado ao agente, segredo no Vercel de produção, rota recusando chamada sem assinatura. Conversas da conta de teste deixaram de ser gravadas |
+| Voz em produção | Provado | Conversa `conv_4701...` com microfone, 4 min, mediana de 1,46 s até o áudio, reunião marcada na agenda real, lead gravado com conversa, resumo e SPICED |
+| Agenda real | Provado em produção | Consulta, marcação e 409 pelas rotas de produção; marcação pela voz na conversa `conv_4701...`. A consulta devolve dois horários de manhã e dois de tarde por dia útil (22 opções em 6 dias), e o agente só marca horário da lista (2 de 2 simulações). Reuniões de teste na agenda da Paggo: 19/10 às 12h e 21/10 às 14h30 |
+| Pós-chamada (abas Conversa estruturada e Transcrição) | Provado nas duas contas | Conversa `conv_6601...` (conta de teste) gravou tudo no painel. Na conta da Paggo: um webhook HMAC só, ligado ao agente, segredo no Vercel de produção, rota recusando chamada sem assinatura. Conversas da conta de teste deixaram de ser gravadas |
 | UI | Provado no dev local | Screenshots de home, espera, Rastro e formulário, claro e escuro, desktop e 375 px |
 
 ## Próximos passos
@@ -51,12 +51,13 @@ Se a permissão não vier a tempo: buscar a conversa do nosso lado. Quando a lig
 
 ### 2. Prova em produção (Crítico)
 
-- [ ] Conversa com microfone no Chrome em https://paggo-agent-sdr.vercel.app (o Browser pane do app bloqueia o microfone): ouvir a voz Samuel, ver a marcação real pela voz e o Rastro. Com o passo 1 feito, conferir as abas Conversa estruturada e Transcrição.
+- [x] Conversa com microfone em produção (19/10): ponta a ponta, com o painel cheio.
+- [ ] Uma segunda conversa curta em produção depois da correção da agenda, pedindo outro dia, para ouvir a escolha na lista e a consulta sem pausa.
 - [ ] Ver o painel de produção com senha na tela.
 
 ### 3. Entrega (terça, 20/10)
 
-- [ ] Limpar os leads de teste, com ok do dono do projeto: "Ana Teste", os dos casos difíceis, "Carla Mendes" (teste do formulário de 19/10), a conversa de prova de 17/10, que tem dados reais do desenvolvedor, e os eventos `teste-manual`. Avisar a Paggo da reunião de teste de 19/10 às 12h.
+- [ ] Limpar os leads de teste, com ok do dono do projeto: "Ana Teste", os dos casos difíceis, "Carla Mendes" (teste do formulário de 19/10), as conversas de prova de 17/10 e 19/10, que têm dados reais do desenvolvedor, e os eventos `teste-manual` e `smoke-*`. Avisar a Paggo das reuniões de teste de 19/10 às 12h e 21/10 às 14h30.
 - [ ] Revisão final de [reasoning.md](reasoning.md), [business-rules.md](business-rules.md) e [objections.md](objections.md).
 - [ ] Se sobrar tempo: o documento curto de visão de GTM (funil, custo por lead, passagem para o CRM, LGPD) e o raciocínio enxuto com uma fonte por decisão.
 
