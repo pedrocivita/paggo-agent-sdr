@@ -365,6 +365,18 @@ Prova: duas checagens novas no `voice-simulate.mjs`, conferidas antes nas transc
 
 Uma dessas 5 rodadas achou um erro pior: o lead simulado disse "pode ser às duas da tarde" antes de ouvir horários, e o agente marcou terça, 27/10, às 14h, sem consultar a agenda e sem repetir para o lead confirmar. É o mesmo erro do horário inventado da primeira conversa em produção.
 
+**Trava na marcação** (19/10). Na simulação a marcação é falsa e sempre responde "marcada"; em produção, a rota mandaria o horário inventado direto para a agenda da Paggo, mesmo fora da janela.
+
+| Opção | Por que sim | Por que não |
+| --- | --- | --- |
+| **A rota só marca horário livre da janela (escolhido)** | Não depende do modelo: antes de marcar, lê os horários livres da mesma janela da consulta e recusa o resto com uma frase que manda o agente consultar de novo; a recusa fica no Rastro | Uma consulta a mais à Paggo por marcação (0,3 s em produção) |
+| Mais uma frase na descrição de `marcar_reuniao` | Só texto | O prompt já proíbe, e o modelo desobedeceu |
+| Só registrar | Nenhum risco | O lead da banca poderia sair com reunião num horário que a agenda nunca ofereceu |
+
+A comparação é com todos os horários livres da janela, e não só com os quatro por dia que o agente recebe: um horário oferecido antes continua valendo se outra reunião mexer na lista no meio da conversa. Um horário inventado que esteja livre dentro da janela passa, porque é real e está livre.
+
+Prova: teste unitário de `isFreeSlot` em `lib/agenda.ts` (o mesmo instante com outro fuso, fora da janela, fora da grade); depois do deploy, a rota de produção recusou terça 27/10 às 14h (o horário da simulação) e 20/10 às 14h17, as duas no Rastro do lead de teste, sem reunião criada. O caminho certo, com uma reunião de verdade, fica para a próxima conversa real, para não criar outra reunião de teste na agenda da Paggo.
+
 ## O que ainda não sabemos
 
 - Preço e ERPs integrados: perguntado à Paggo.

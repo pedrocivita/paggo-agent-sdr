@@ -70,6 +70,7 @@ Um por lead:
 - Consulta de agora até o fim do 5º dia útil, sem horário começando na próxima hora, e recebe até dois horários de manhã e dois de tarde por dia útil. Oferece dois, nunca a lista inteira; se o lead pedir outro dia ou período, escolhe na mesma lista. Só oferece e só marca horário que veio da consulta.
 - Repete dia e hora e só marca depois do sim. Marca com o nome e o e-mail do formulário, ou com outro e-mail se o lead pedir.
 - No 409 (horário ocupado), consulta de novo e oferece o próximo.
+- A rota de marcação só aceita um horário livre da janela; qualquer outro é recusado antes de chegar à agenda, e o agente consulta de novo.
 - Sem horário bom, registra a preferência como "retornar depois".
 
 ## Conversa
