@@ -1,6 +1,6 @@
 # Regras de negócio
 
-Entregável do case. Conferidas em 17/10/2026 com o deck institucional da Paggo, que confirma o foco em construtoras e incorporadoras ([paggo.md](paggo.md)). As regras de fit estão em uso nas instruções do agente de pesquisa (`agent/instructions.md`); as de conversa e agenda, no prompt da voz (`voice/prompt.md`).
+Entregável do case. Conferidas em 17/10/2026 com o deck institucional da Paggo e em 19/10/2026 com o código, que confirma o foco em construtoras e incorporadoras ([paggo.md](paggo.md)). As regras de fit estão em uso nas instruções do agente de pesquisa (`agent/instructions.md`); as de conversa e agenda, no prompt da voz (`voice/prompt.md`).
 
 ## Índice
 
@@ -67,8 +67,8 @@ Um por lead:
 ## Agenda
 
 - Oferece a reunião depois da descoberta, ou antes se o lead pedir. Antes de consultar a agenda, precisa saber quem decide. O fit não barra a reunião (ver [Qualificação](#qualificação)).
-- Consulta os próximos 5 dias úteis e oferece dois horários, nunca a lista inteira.
-- Repete dia e hora antes de marcar; usa nome e e-mail do formulário (ou os corrigidos pelo lead).
+- Consulta de agora até o fim do 5º dia útil, sem horário começando na próxima hora, e recebe até dois horários de manhã e dois de tarde por dia útil. Oferece dois, nunca a lista inteira; se o lead pedir outro dia ou período, escolhe na mesma lista. Só oferece e só marca horário que veio da consulta.
+- Repete dia e hora e só marca depois do sim. Marca com o nome e o e-mail do formulário, ou com outro e-mail se o lead pedir.
 - No 409 (horário ocupado), consulta de novo e oferece o próximo.
 - Sem horário bom, registra a preferência como "retornar depois".
 
@@ -87,4 +87,4 @@ Um por lead:
 - O lead aceita o uso dos dados no formulário (consentimento, LGPD art. 7º, I), com data e hora guardadas.
 - Só informação pública da empresa. Nada de CPF, idade ou dado pessoal de sócios; o CPF que aparece na razão social de MEI é removido antes de salvar.
 - Dado de sócio serve para entender a decisão e nunca é falado na conversa.
-- O que o lead corrige vale mais que o briefing e fica marcado como corrigido pelo lead.
+- O que o lead corrige vale mais que o briefing: a correção fica em "Dados confirmados ou corrigidos", na aba Conversa estruturada, ao lado do briefing original, que não é sobrescrito.

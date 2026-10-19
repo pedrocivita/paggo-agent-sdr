@@ -1,6 +1,6 @@
 # Mapa de objeções
 
-Entregável do case. As respostas usam só fatos de [paggo.md](paggo.md) (deck institucional e site); o que nenhum dos dois diz o agente não afirma. O mesmo conteúdo entra no prompt do agente de voz (`voice/prompt.md`).
+Entregável do case. As respostas usam só fatos de [paggo.md](paggo.md) (deck institucional e site); o que nenhum dos dois diz o agente não afirma. Uma versão curta, com as objeções mais comuns, entra no prompt do agente de voz (`voice/prompt.md`).
 
 Regra geral: entender antes de responder. Uma pergunta curta sobre a objeção, um fato, e volta para a conversa. No máximo duas tentativas na mesma objeção; depois registra e segue.
 
@@ -18,6 +18,6 @@ Regra geral: entender antes de responder. Uma pergunta curta sobre a objeção, 
 | "Migrar dá muito trabalho" | Implantação anterior foi ruim | Implementação gratuita e acompanhada; contas abertas em poucos minutos | Pergunta o que deu errado da última vez |
 | "Me manda por e-mail" | Saída educada | Diz que deixa o pedido anotado para o time (o agente não manda e-mail, e nada avisa o time sozinho: o pedido fica em `duvidas`, no painel), faz uma pergunta para o material ser útil e oferece 30 minutos | "Retornar depois" |
 | "Não tenho tempo" | Agenda cheia | São 30 minutos; oferece dois horários, inclusive na semana seguinte | "Qualificado sem reunião" |
-| "Você é um robô?" | Curiosidade ou desconfiança | Confirma que é o assistente virtual da Paggo e pergunta se pode seguir ou se prefere falar com uma pessoa do time | Marca direto com o time |
+| "Você é um robô?" | Curiosidade ou desconfiança | Confirma que é o assistente virtual da Paggo e pergunta se pode seguir | Oferece marcar os 30 minutos com uma pessoa do time |
 
 Toda objeção levantada entra no campo `objecoes` da coleta de dados pós-chamada e aparece na aba Conversa estruturada do painel.

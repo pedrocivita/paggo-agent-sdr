@@ -33,7 +33,7 @@ O que foi pesquisado em cada parte, as opções, o que foi escolhido e por que n
 
 Prova: lead criado em produção ficou salvo e o build de produção rodou `db-setup: schema ready` (log do `vercel inspect --logs`).
 
-Armadilha: o `vercel env pull` do ambiente de desenvolvimento aponta para o mesmo banco da produção, então leads de teste locais aparecem no painel de produção. Ajuda nos testes (o agente de voz chama a produção com o id de um lead criado localmente), mas os leads de teste precisam ser limpos antes da entrega.
+Armadilha: o `vercel env pull` do ambiente de desenvolvimento aponta para o mesmo banco da produção, então leads de teste locais aparecem no painel de produção. Ajuda nos testes (o agente de voz chama a produção com o id de um lead criado localmente), e o preço é que os leads de teste ficam no mesmo painel da produção.
 
 ## Modelo do agente de pesquisa
 
@@ -57,17 +57,17 @@ Sonnet 5.5 contra Haiku 5.5, mesmo lead (Cyrela, pessoa fictícia), uma rodada d
 | Tokens entrada / saída | 31,9 mil / 2,0 mil | 67,4 mil / 4,8 mil |
 | Custo por briefing | ~US$ 0,056 | ~US$ 0,006 |
 
-Os dois acertaram CNPJ, razão social e regime e não inventaram nada. O Sonnet teve mais juízo: notou que o lead parecia de teste e organizou as perguntas pelo SPICED. O Haiku pesquisou mais, mas afirmou que o domínio do e-mail "confirma" a pessoa e citou um site terceiro de CNPJ tendo a Receita. Escolhido o Sonnet: o critério é briefing correto, e a diferença de custo é irrelevante no volume do case. Uma rodada só não prova velocidade; o Marco 2 mede em 5 casos ([research-cases.md](research-cases.md)).
+Os dois acertaram CNPJ, razão social e regime e não inventaram nada. O Sonnet teve mais juízo: notou que o lead parecia de teste e organizou as perguntas pelo SPICED. O Haiku pesquisou mais, mas afirmou que o domínio do e-mail "confirma" a pessoa e citou um site terceiro de CNPJ tendo a Receita. Escolhido o Sonnet: o critério é briefing correto, e a diferença de custo é irrelevante no volume do case. Uma rodada só não prova velocidade; a rodada dos casos difíceis mede em 6 casos ([research-cases.md](research-cases.md)).
 
 ## Busca web
 
-Exa como ferramenta explícita (`web_search`), e não a busca embutida do modelo: cada busca vira uma linha no Rastro com a consulta e os resultados, e a busca embutida esconde isso. O Rastro é critério Crítico. A Exa oferece uma skill de integração (`build-with-exa`) para busca de pessoa e empresa; fica para quando a busca for ajustada no Marco 2, porque o código atual já funciona.
+Exa como ferramenta explícita (`web_search`), e não a busca embutida do modelo: cada busca vira uma linha no Rastro com a consulta e os resultados, e a busca embutida esconde isso. O Rastro é critério Crítico. A Exa oferece uma skill de integração (`build-with-exa`) para busca de pessoa e empresa; não foi instalada, porque o formato da consulta resolveu os casos difíceis (ver abaixo).
 
 Prova: `web_search` ok em produção no lead `4ba706aa` (e-mail pessoal, CNPJ achado pela busca e confirmado na Receita).
 
 ## Pesquisa nos casos difíceis
 
-Marco 2: os 5 casos difíceis do plano (incorporadora com SPEs, homônimo, e-mail pessoal, site sem CNPJ, estrangeira) mais a própria Paggo, empresas reais com pessoas fictícias, enviados pelo formulário, lidos contra o Rastro, corrigidos e rodados de novo. O detalhe de cada caso, com o CNPJ escolhido e o descartado, está em [research-cases.md](research-cases.md).
+A rodada dos casos difíceis: os 5 do plano (incorporadora com SPEs, homônimo, e-mail pessoal, site sem CNPJ, estrangeira) mais a própria Paggo, empresas reais com pessoas fictícias, enviados pelo formulário, lidos contra o Rastro, corrigidos e rodados de novo. O detalhe de cada caso, com o CNPJ escolhido e o descartado, está em [research-cases.md](research-cases.md).
 
 Primeira rodada: nenhum CNPJ errado e nenhum fato fora do Rastro. Os erros foram ferramenta pulada (cargo e SPEs nunca buscados, Receita pulada no caso do Gmail), dedução apresentada como fato (estados tirados de um menu, cidade tirada do DDD do lead) e um `forAgent` com CNPJ e notas que não ajudavam a voz. E um bug: `lib/site.ts` procurava o CNPJ só nos primeiros 6.000 caracteres, e o rodapé da Cyrela e o da Paggo ficavam de fora.
 
@@ -96,7 +96,7 @@ Prova: rodada 2 com os 6 casos certos (CNPJ, fit, fontes) e a primeira execuçã
 
 Risco previsto: o servidor chama o agente pela URL do próprio deploy (`VERCEL_URL`), e essa URL responde 302 a navegadores por causa da proteção de deploy do Vercel. O plano B era trocar o eve pelo `ToolLoopAgent` do AI SDK com as mesmas ferramentas.
 
-Resultado: não foi preciso. A auth `vercelOidc()` aceita o token OIDC do projeto mesmo com a proteção ligada. Prova: lead `f68b9483` ficou `ready` em produção, sessão `wrun_41M53W3W4D0GHYAFK2AZDMFN7E`.
+Resultado: não foi preciso. A auth `vercelOidc()` aceita o token OIDC do projeto mesmo com a proteção ligada. Prova: lead `f68b9483` ficou `ready` em produção, sessão `wrun_41M5...`.
 
 ## Conhecimento da Paggo
 
@@ -115,7 +115,7 @@ O que o deck muda em relação ao site: o posicionamento é mais focado em const
 
 **Plataforma:** ElevenLabs Agents, a sugestão do case: turnos, interrupção e latência já resolvidos. Montar fala-para-texto, LLM e texto-para-fala à mão gastaria o tempo em encanamento.
 
-**Conta:** o primeiro teste roda numa conta de teste do desenvolvedor, para não gastar minutos nem deixar agentes de teste na conta da Paggo. O plano grátis dá 15 minutos de chamada; os 10.000 créditos pagam o LLM, não os minutos, e a licença comercial só começa no plano Starter. A versão final vai para a conta da Paggo rodando o mesmo script com a outra chave.
+**Conta:** os primeiros testes rodaram numa conta de teste do desenvolvedor, para não gastar minutos nem deixar agentes de teste na conta da Paggo. O plano grátis dá 15 minutos de chamada; os 10.000 créditos pagam o LLM, não os minutos, e a licença comercial só começa no plano Starter. A produção roda na conta da Paggo desde 19/10, publicada pelo mesmo script com a outra chave (ver "A chave da Paggo", mais abaixo).
 
 **Publicação:**
 
@@ -130,7 +130,7 @@ O que o deck muda em relação ao site: o posicionamento é mais focado em const
 
 | Peça | Escolhido | Alternativas e por que não agora |
 | --- | --- | --- |
-| LLM | `gemini-2.5-flash`, sem raciocínio | Padrão rápido da plataforma. Gemini mais novos, `gpt-5-mini`, `claude-haiku-5-5` ficam para medir com o prompt real; a plataforma não ranqueia velocidade |
+| LLM | `gemini-2.5-flash`, sem raciocínio | Padrão rápido da plataforma. Gemini mais novos, `gpt-5-mini` e `claude-haiku-5-5` foram medidos depois com o prompt real (ver "Comparação de LLMs por texto", abaixo); a plataforma não ranqueia velocidade |
 | Voz | `eleven_v4_turbo` (~100 ms, fala português) | `eleven_flash_v2_5` (~75 ms, menor qualidade); `eleven_v3_conversational` (~280 ms); `eleven_multilingual_v2` (cita o Brasil explicitamente, mas é mais lento). `eleven_flash_v2` e `eleven_turbo_v2` só falam inglês |
 
 **Persona:** "assistente virtual da Paggo", sem nome humano, e diz que é IA já na abertura. Soa como alguém do time, que conhece a rotina financeira de uma incorporadora, sem fingir ser pessoa: a banca vai testar isso, e mentir quebraria a confiança na primeira pergunta.
@@ -177,7 +177,7 @@ Depois do teste, a voz pareceu lenta e alegre demais. Ajustes: `speed` 1,1 (o m�
 | A lead pediu duas vezes para conhecer a Paggo e não recebeu nada | "Dê antes de pedir": cada dor contada recebe uma frase de como a Paggo resolve antes da próxima pergunta; ao segundo pedido ou a uma reclamação, para a descoberta e oferece a reunião |
 | A conciliação foi a dor escolhida, e o mapa de dores não tinha resposta para ela | Item novo no mapa, do deck: pagamentos e recebimentos passam pela conta Paggo e caem conciliados no extrato, integrado ao ERP |
 | Um riso ("Rá!") fez ela parar e recomeçar a mesma frase duas vezes, pedindo desculpa | `turn.interruption_ignore_terms` com interjeições em português (aham, uhum, tá, rá, haha) e regra de não recomeçar a frase |
-| Silêncio constrangedor no fim: 11,4 s depois do "não" para a pergunta "tem mais alguma dúvida?" e 5,9 s depois do "tchau" | Fecha numa fala só (dia, hora, convite por e-mail, "até mais") e chama `end_call` logo em seguida, sem perguntar nem esperar |
+| Silêncio constrangedor no fim: 11,4 s depois do "não" para a pergunta "tem mais alguma dúvida?" e 5,9 s depois do "tchau" | Fecha numa fala só (dia, hora, convite por e-mail, "até mais") e chama `end_call` logo em seguida, sem perguntar nem esperar. O convite saiu da fala em 19/10 (ver "Convite da reunião", em Agenda) |
 | Demora ainda perceptível (0,8 a 1,9 s; a fala já está na velocidade máxima, 1,2) | `turn.speculative_turn` ligado: o LLM começa a responder durante o silêncio, antes da certeza de fim de turno. A ansiedade do turno continua `normal`, porque o lead fala com pausas ("ééé") e `eager` cortaria a fala dele |
 
 Sobra: o `gemini-2.5-flash` ainda escorrega no estilo (disse "Ótimo!", que está proibido, e voltou a listar módulos ao pedir desculpa). O próximo passo é medir 2 ou 3 LLMs mais fortes com o mesmo prompt, por texto, sem gastar os poucos minutos de voz da conta de teste.
@@ -258,7 +258,7 @@ A segunda volta trouxe duas falhas graves que não existiam: um `end_call` mudo 
 
 Nenhuma fala passou de 2 s nessas 7 rodadas, e nenhuma teve preço, integração ou envio prometido. O resto conhecido é o fechamento: em 2 de 7 o modelo terminou a despedida sem chamar `end_call` na mesma resposta e esperou o "tchau", o que na voz vira a espera de alguns segundos do terceiro teste. A simulação exagera um pouco (o lead simulado sempre ganha a vez depois de uma fala sem ferramenta), então isso se confere na próxima conversa de voz.
 
-**Gênero da voz.** A voz escolhida ("Eduardo S. - Brazilian Clear & Pro", da biblioteca) é masculina, e o prompt falava no feminino ("a assistente virtual", "obrigada"). Opções: trocar por uma voz feminina ou passar o prompt para o masculino. Escolhido: o masculino, porque a voz já passou por 3 conversas reais e trocar pediria um teste de voz novo com poucos créditos. Mudaram o prompt, a primeira fala, o texto da home, o README e as objeções. Prova: as 3 personas, duas vezes cada, com 6 "obrigado" e nenhum feminino nas falas do agente; reunião marcada nas 4 de interessada e cético; fechamento numa fala só em 6 de 6. Numa rodada da pessoa errada a coleta marcou "não qualificado" em vez de "indicou outra pessoa"; a descrição do campo `resultado` passou a dizer quando usar cada valor, e mais 3 rodadas deram "indicou outra pessoa" nas 3.
+**Gênero da voz.** A voz da época ("Eduardo S. - Brazilian Clear & Pro", da biblioteca, trocada depois pela voz Samuel na conta da Paggo) é masculina, e o prompt falava no feminino ("a assistente virtual", "obrigada"). Opções: trocar por uma voz feminina ou passar o prompt para o masculino. Escolhido: o masculino, porque a voz já passou por 3 conversas reais e trocar pediria um teste de voz novo com poucos créditos. Mudaram o prompt, a primeira fala, o texto da home, o README e as objeções. Prova: as 3 personas, duas vezes cada, com 6 "obrigado" e nenhum feminino nas falas do agente; reunião marcada nas 4 de interessada e cético; fechamento numa fala só em 6 de 6. Numa rodada da pessoa errada a coleta marcou "não qualificado" em vez de "indicou outra pessoa"; a descrição do campo `resultado` passou a dizer quando usar cada valor, e mais 3 rodadas deram "indicou outra pessoa" nas 3.
 
 **Quarto teste, com o prompt de agora e o webhook ligado** (17/10, noite, conversa `conv_6601...`, 4,5 min, 3.199 créditos). Primeira chamada de ponta a ponta: formulário, pesquisa com 4 ferramentas, conversa, `consultar_agenda` e `marcar_reuniao` no Rastro com o id da conversa, e o pós-chamada assinado gravando resultado, SPICED, horário, resumo e transcrição no painel. O lead foi o próprio desenvolvedor, no papel de responsável de tecnologia (não do financeiro) de uma consultoria que atende construtoras.
 
@@ -273,6 +273,10 @@ Nenhuma fala passou de 2 s nessas 7 rodadas, e nenhuma teve preço, integração
 
 Sobra só um detalhe: as horas saem em formatos diferentes ("dez da manhã" e "quatorze horas").
 
+**A chave da Paggo.** Ao publicar na conta da Paggo, a chave que ela mandou respondeu 401 `missing_permissions` em agentes, ferramentas, segredos, vozes, modelos e no token da conversa; só lista webhooks. Para não confundir com uma chave restrita da conta de teste, foram três provas: o hash é diferente; as permissões são outras (a de teste acessa tudo); e um webhook temporário criado na conta de teste não apareceu para a chave da Paggo (apagado em seguida). Opções avaliadas: pedir à Paggo que libere as permissões (sem custo); usar a conta de teste em produção, num plano pago que permite uso comercial; ou esperar. Escolhido: pedir a liberação e seguir no que não depende da voz em produção, com a conta de teste como plano B e prazo para decidir.
+
+**Na conta da Paggo, depois da liberação** (19/10). Leituras primeiro: a chave passou a abrir agentes, ferramentas, segredos, vozes e webhooks, mas o `voice-sync.mjs` mostrou duas permissões de escrita faltando, `voices_write` (para trazer a voz Eduardo da biblioteca) e `webhooks_write` (para criar o pós-chamada). A conta da Paggo já tem 10 vozes profissionais brasileiras. Opções para a voz: pedir mais uma permissão e manter a voz Eduardo, já ouvida em 4 conversas; ou usar uma voz da própria conta. A voz Matheus, a mais calma e feita para conversa, foi recusada pelo ElevenLabs porque tem moderação ao vivo, que agentes não aceitam; a voz Samuel, também de conversa, foi aceita. Escolhido: publicar agora com a voz Samuel e sem o webhook, para a voz funcionar em produção, e rerodar o mesmo script quando a escrita de webhooks chegar. Prova: o token da conversa sai pela rota de produção com a chave e o agente da Paggo, e uma simulação por texto contra esse agente perguntou quem decide, marcou e fechou numa fala só. A escrita de webhooks foi liberada no mesmo dia: o mesmo script criou o webhook pós-chamada na conta da Paggo, o segredo foi para o Vercel, e as conversas da conta de teste deixaram de ser gravadas.
+
 **Primeira conversa em produção, na conta da Paggo** (19/10, conversa `conv_4701...`, 4 min, voz Samuel). De ponta a ponta: formulário em produção, pesquisa, voz, agenda real, e o pós-chamada assinado gravou resultado, SPICED, horário, resumo e transcrição no lead. O lead foi o próprio desenvolvedor. Demora até o áudio com mediana de 1,46 s. Dois erros, os dois lidos no Rastro:
 
 | Erro | Causa | Correção |
@@ -283,10 +287,6 @@ Sobra só um detalhe: as horas saem em formatos diferentes ("dez da manhã" e "q
 Prova: em produção a consulta passou a trazer 22 opções em 6 dias úteis, sem o horário já marcado; duas simulações contra o agente da Paggo, com a persona pedindo "o último dia útil, à tarde", marcaram a quinta às 14h30, que estava na lista (`bookedOfferedSlot` no `voice-simulate.mjs`), e consultaram a agenda sem pausa.
 
 O aviso `error reading from signal stream` no console vem do `livekit-client`, a camada WebRTC do SDK, quando a conexão fecha; o overlay do Next em desenvolvimento mostra qualquer `console.error` como erro.
-
-**A chave da Paggo.** Ao publicar na conta da Paggo, a chave que ela mandou respondeu 401 `missing_permissions` em agentes, ferramentas, segredos, vozes, modelos e no token da conversa; só lista webhooks. Para não confundir com uma chave restrita da conta de teste, foram três provas: o hash é diferente; as permissões são outras (a de teste acessa tudo); e um webhook temporário criado na conta de teste não apareceu para a chave da Paggo (apagado em seguida). Opções pesadas: pedir à Paggo que libere as permissões (sem custo); usar a conta de teste em produção, num plano pago que permite uso comercial; ou esperar. Escolhido: pedir a liberação e seguir no que não depende da voz em produção, com a conta de teste como plano B e prazo para decidir.
-
-**Na conta da Paggo, depois da liberação** (19/10). Leituras primeiro: a chave passou a abrir agentes, ferramentas, segredos, vozes e webhooks, mas o `voice-sync.mjs` mostrou duas permissões de escrita faltando, `voices_write` (para trazer a voz Eduardo da biblioteca) e `webhooks_write` (para criar o pós-chamada). A conta da Paggo já tem 10 vozes profissionais brasileiras. Opções para a voz: pedir mais uma permissão e manter a Eduardo, já ouvida em 4 conversas; ou usar uma voz da própria conta. A Matheus, a mais calma e feita para conversa, foi recusada pelo ElevenLabs porque tem moderação ao vivo, que agentes não aceitam; a Samuel, também de conversa, foi aceita. Escolhido: publicar agora com a Samuel e sem o webhook, para a voz funcionar em produção, e rerodar o mesmo script quando a escrita de webhooks chegar. Prova: o token da conversa sai pela rota de produção com a chave e o agente da Paggo, e uma simulação por texto contra esse agente perguntou quem decide, marcou e fechou numa fala só.
 
 ## Interface
 
@@ -315,9 +315,9 @@ Prova: um envio com o campo escondido preenchido voltou para a home sem criar le
 
 ## Agenda
 
-Enquanto o endpoint real não existia, uma agenda falsa atendeu pela mesma interface (`lib/agenda.ts`), e a troca é feita por duas variáveis de ambiente, `AGENDA_URL` e `AGENDA_TOKEN`. Regras nossas: próximos 5 dias úteis, nada começando na próxima hora, até 4 opções, das quais o agente oferece duas.
+Enquanto o endpoint real não existia, uma agenda falsa atendeu pela mesma interface (`lib/agenda.ts`), e a troca é feita por duas variáveis de ambiente, `AGENDA_URL` e `AGENDA_TOKEN`. Regras nossas na época: próximos 5 dias úteis, nada começando na próxima hora, até 4 opções, das quais o agente oferece duas. Hoje a consulta devolve até dois horários de manhã e dois de tarde por dia útil (ver "Primeira conversa em produção", em Agente de voz).
 
-O endpoint real chegou em 19/10: base `https://sales.paggo.io/api/case/agenda`, com `GET /disponibilidade?de=&ate=` e `POST /reunioes` (`inicio`, `nome`, `email`; 409 se o horário foi ocupado), autenticado com `Authorization: Bearer`. A única mudança no código foi usar a base exatamente como a Paggo a entrega. Prova: sem token as rotas respondem 401 e 405 (existem); com o token, a disponibilidade respondeu `{ fuso, livres: [{ inicio, fim }] }`, o formato que o cliente já lia, aceitou as datas ISO com fuso que mandamos e trouxe 81 horários nos próximos 7 dias; depois do deploy, a rota de produção que o agente de voz chama devolveu horários do mesmo dia, que a agenda falsa nunca daria, e a chamada ficou no Rastro do lead de teste. Marcação provada no mesmo dia, pelas rotas de produção, com o lead da conversa de prova: `marcar_reuniao` reservou o primeiro horário oferecido; a segunda tentativa no mesmo horário recebeu o 409 da Paggo e virou a frase "esse horário acabou de ser ocupado", que faz o agente oferecer outro; e o horário saiu da disponibilidade. As 4 chamadas estão no Rastro do lead.
+O endpoint real chegou em 19/10: a base que a Paggo entregou, com `GET /disponibilidade?de=&ate=` e `POST /reunioes` (`inicio`, `nome`, `email`; 409 se o horário foi ocupado), autenticado com `Authorization: Bearer`. A única mudança no código foi usar a base exatamente como a Paggo a entrega. Prova: sem token as rotas respondem 401 e 405 (existem); com o token, a disponibilidade respondeu `{ fuso, livres: [{ inicio, fim }] }`, o formato que o cliente já lia, aceitou as datas ISO com fuso que mandamos e trouxe 81 horários nos próximos 7 dias; depois do deploy, a rota de produção que o agente de voz chama devolveu horários do mesmo dia, que a agenda falsa nunca daria, e a chamada ficou no Rastro do lead de teste. Marcação provada no mesmo dia, pelas rotas de produção, com o lead da conversa de prova: `marcar_reuniao` reservou o primeiro horário oferecido; a segunda tentativa no mesmo horário recebeu o 409 da Paggo e virou a frase "esse horário acabou de ser ocupado", que faz o agente oferecer outro; e o horário saiu da disponibilidade. As 4 chamadas estão no Rastro do lead.
 
 **Convite da reunião** (19/10). O agente fechava com "o convite vai pro seu e-mail", e nada mandava convite: o case chama a agenda de fictícia, com só as rotas de consultar e marcar, e as duas reuniões de teste marcadas com o e-mail do desenvolvedor não geraram e-mail nenhum.
 
@@ -353,9 +353,7 @@ Sobra conhecida, de antes desta mudança: numa rodada do cético o agente consul
 ## O que ainda não sabemos
 
 - Preço e ERPs integrados: perguntado à Paggo.
-- Formato exato do endpoint da agenda (cabeçalho de auth, `de`/`ate`).
 - Onde o id do lead chega no pós-chamada (`data.user_id` ou `data.metadata.user_id`): o código lê os dois.
-- Sotaque e latência reais da voz: só se sabe falando com o agente.
 - Se a busca pela pessoa acha o cargo de alguém real: só foi testada com nomes fictícios (o agente rejeitou os homônimos e não inventou).
 
 ## Fontes

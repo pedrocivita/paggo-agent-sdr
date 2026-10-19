@@ -49,7 +49,7 @@ O deck cita também empresas de capital aberto e empresas listadas no ranking 10
 
 - Clientes no deck: Vetter, Hype, BP Incorporadora, ATR, HAPP Incorporações e Treele Construtora (p. 6).
 - Depoimentos (p. 18):
-  - Aline, sócia diretora da ATR Incorporadora: abriram contas em poucos minutos e configuraram limites e acessos como quiseram.
+  - Sócia diretora da ATR Incorporadora: abriram contas em poucos minutos e configuraram limites e acessos como quiseram.
   - Miguel, sócio fundador da BP Incorporadora: monitoram os pagamentos em tempo real, com menos atraso, multas e juros.
   - Daniel, sócio fundador da ArtHaus Incorporadora: o time da Paggo atua como extensão do time dele, sempre pronto para ajudar.
 - Time com passagem por McKinsey, Nubank, C6 Bank, Itaú, BTG Pactual, Rappi, Stone, PicPay, QuintoAndar, Morgan Stanley, VTEX, OLX, QI Tech e Maya Capital (p. 6).

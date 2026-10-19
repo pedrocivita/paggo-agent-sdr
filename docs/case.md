@@ -88,7 +88,7 @@ Corpo do POST de reuniões:
 { "inicio": "2026-10-20T10:00:00-03:00", "nome": "Ana Souza", "email": "ana@exemplo.com.br" }
 ```
 
-O enunciado não diz o formato do cabeçalho de autenticação nem o formato exato de `de` e `ate`. O código assume `Authorization: Bearer <token>` e datas ISO (ver [STATUS.md](STATUS.md)).
+O enunciado não diz o formato do cabeçalho de autenticação nem o formato exato de `de` e `ate`. O código usa `Authorization: Bearer <token>` e datas ISO com fuso, confirmados contra o endpoint real em 19/10 ([reasoning.md](reasoning.md#agenda)).
 
 ## O que recebemos
 
