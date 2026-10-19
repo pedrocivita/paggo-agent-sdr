@@ -9,6 +9,7 @@ O que o agente de voz pode dizer sobre a Paggo, e de onde vem cada fato. Fonte p
 - [Módulos](#módulos)
 - [Prova social](#prova-social)
 - [O que vem só do site](#o-que-vem-só-do-site)
+- [Como a Paggo capta leads hoje](#como-a-paggo-capta-leads-hoje)
 - [O que o agente não sabe](#o-que-o-agente-não-sabe)
 - [Tom e vocabulário](#tom-e-vocabulário)
 
@@ -60,10 +61,24 @@ O deck cita também empresas de capital aberto e empresas listadas no ranking 10
 | Pergunta | Resposta |
 | --- | --- |
 | É banco? | Não. É tecnologia; as contas ficam numa Instituição de Pagamento regulada e auditada pelo Banco Central |
-| O dinheiro está seguro? | Recursos segregados, monitoramento de fraude com IA, autenticação em duas etapas, limites por horário e tipo de pagamento |
+| O dinheiro está seguro? | Recursos segregados, que continuam protegidos mesmo se a Instituição de Pagamento quebrar; liquidez imediata (a IP não pode emprestar nem captar depósitos); monitoramento de fraude com IA e um time dedicado; autenticação em duas etapas nas ações críticas, como aprovar pagamento ou mudar permissões; limites por horário e tipo de pagamento (recorrente ou primeira transação) ([FAQ](https://www.paggo.com.br/#faq)) |
 | Meios de pagamento | Pix (agendado e em lote), boleto, TED, transferência interna e cobrança recorrente, no mesmo fluxo de aprovação |
-| Implementação | Gratuita, com acompanhamento sem custo; o time do cliente gasta de 1 a 2 horas e tudo fica centralizado em cerca de uma semana |
+| Implementação | Gratuita, com acompanhamento sem custo; o time do cliente gasta de 1 a 2 horas em três passos (abrir as contas PJ, configurar políticas e controles, treinar os usuários) e tudo fica centralizado em cerca de uma semana ([FAQ](https://www.paggo.com.br/#faq)) |
+| Rendimento | 100% do CDI automático, sem carência e sem tirar o dinheiro da conta ([FAQ](https://www.paggo.com.br/#faq)) |
+| Reforma Tributária | Especialistas contábeis e engenheiros de IA revisam processos e simulam o impacto; IBS e CBS numa tela só, insights com IA e notas fiscais emitidas automaticamente ([página](https://www.paggo.com.br/reforma-tributaria)). Um evento crítico natural para o SPICED |
 | Fundação | Fintech brasileira de 2022, com escritórios em São Paulo e Curitiba |
+
+## Como a Paggo capta leads hoje
+
+Lido em 19/10/2026 em [paggo.com.br/contato](https://www.paggo.com.br/contato), no código público do formulário, sem preencher nem enviar nada.
+
+| Etapa | Campos | O que diz sobre o processo deles |
+| --- | --- | --- |
+| Você | Nome completo, e-mail corporativo, telefone/WhatsApp, cargo | O cargo vira papel no comitê de compra: "Responsável pela área financeira" vira Decisor Financeiro; "Controller ou Gestor de Contratos", Influenciador Técnico; "Analista ou Coordenador Financeiro", Usuário Principal; "CEO ou Responsável Geral", Decisor Não-Financeiro |
+| Empresa | Nome da empresa, segmento (Incorporadora, Construtora, Loteadora, Imobiliária, Parceiro, Outro), desafio principal (Contas a Receber, Contas a Pagar, Conciliação Bancária, Visão Consolidada multi-CNPJ, Integração com ERP, Outro), mensagem, como conheceu (IA como ChatGPT, Claude ou Perplexity; Redes Sociais; Google; Indicação; Entidades de Classe como Sinduscon e ABRAINC; Eventos; Notícias) | Qualificam por segmento e dor já no formulário; a origem inclui buscadores de IA |
+| Envio | Aceite "Concordo que a Paggo armazene e processe meus dados"; um campo escondido contra robôs | Consentimento explícito (LGPD) e proteção contra spam |
+
+O código tem duas versões do formulário, uma página só ou duas etapas, o que indica teste A/B de layout. O chat do site diz que o time responde em até 1 dia útil: é o tempo que a voz do case troca por uma conversa na hora.
 
 ## O que o agente não sabe
 
