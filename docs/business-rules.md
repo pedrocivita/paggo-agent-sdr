@@ -67,7 +67,7 @@ Um por lead:
 
 ## Agenda
 
-- Oferece a reunião depois da descoberta, ou antes se o lead pedir. Antes de consultar a agenda, precisa saber quem decide. O fit não barra a reunião (ver [Qualificação](#qualificação)).
+- Oferece a reunião depois da descoberta, ou antes se o lead pedir. Antes de consultar a agenda, pergunta o que deixa isso urgente agora (evento crítico), se ainda não apareceu, e precisa saber quem decide, uma pergunta por fala. O fit não barra a reunião (ver [Qualificação](#qualificação)).
 - Consulta de agora até o fim do 5º dia útil, sem horário começando na próxima hora, e recebe até dois horários de manhã e dois de tarde por dia útil. Oferece dois, nunca a lista inteira; se o lead pedir outro dia ou período, escolhe na mesma lista. Só oferece e só marca horário que veio da consulta.
 - Repete dia e hora e só marca depois do sim. Marca com o nome e o e-mail do formulário, ou com outro e-mail se o lead pedir.
 - No 409 (horário ocupado), consulta de novo e oferece o próximo.

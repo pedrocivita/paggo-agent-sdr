@@ -145,7 +145,7 @@ O que o deck muda em relação ao site: o posicionamento é mais focado em const
 | LLM | `gemini-2.5-flash`, sem raciocínio | Padrão rápido da plataforma. Gemini mais novos, `gpt-5-mini` e `claude-haiku-5-5` foram medidos depois com o prompt real (ver "Comparação de LLMs por texto", abaixo); a plataforma não ranqueia velocidade |
 | Voz | `eleven_v4_turbo` (~100 ms, fala português) | `eleven_flash_v2_5` (~75 ms, menor qualidade); `eleven_v3_conversational` (~280 ms); `eleven_multilingual_v2` (cita o Brasil explicitamente, mas é mais lento). `eleven_flash_v2` e `eleven_turbo_v2` só falam inglês. Latências de modelo, sem rede, da [página de modelos do ElevenLabs](https://elevenlabs.io/docs/overview/models) |
 
-**Persona:** "assistente virtual da Paggo", sem nome humano, e diz que é IA já na abertura. Soa como alguém do time, que conhece a rotina financeira de uma incorporadora, sem fingir ser pessoa: a banca vai testar isso, e mentir quebraria a confiança na primeira pergunta.
+**Persona:** "assistente virtual da Paggo", sem nome humano; o formulário avisa que a conversa é com IA, e o agente confirma se perguntarem. Soa como alguém do time, que conhece a rotina financeira de uma incorporadora, sem fingir ser pessoa: a banca vai testar isso, e mentir quebraria a confiança na primeira pergunta.
 
 **Segurança e custo:** a auth do agente está ligada, então só abre sessão com o token que o nosso servidor gera, e o servidor só gera token para lead que existe e já tem a pesquisa terminada. As ferramentas da agenda só aceitam chamadas com o segredo compartilhado (`x-tool-secret`) e recusam tudo se ele não estiver configurado.
 
@@ -323,6 +323,16 @@ Erros lidos na transcrição, ainda sem correção:
 
 **Abertura sem ler o formulário** (19/10). O primeiro erro foi corrigido na mesma noite. O resumo da pesquisa pedia, com razão, para confirmar um cargo que a busca contradizia; o jeito de confirmar veio do próprio prompt, cujo exemplo era "vi que vocês têm alguns empreendimentos em andamento, é isso?". Mudou: o exemplo perdeu o "vi que", a regra passou a citar o cargo ("não confirme nome, cargo nem empresa lendo dados de volta"), e entrou um par de exemplos, ruim ("Vi aqui que você é Analista ou Coordenador Financeiro na Cyrela. Confirma?") e bom ("Você cuida mais do financeiro ou de outra área aí?"). Para medir, uma persona nova, `direto`, reproduz a chamada: cargo do formulário diferente do da busca, resumo pedindo para confirmar, e o lead que só diz "pode falar"; a checagem `openingReadsForm` conta a primeira pergunta que lê o formulário. Antes: 2 de 5 aberturas leram ("Vi aqui que você é Analista ou Coordenador Financeiro na Vértice. Confirma?"). Depois: 0 de 5, todas direto ao gancho, e nas 5 o agente perguntou quem decide antes da agenda, marcou horário da lista, não prometeu envio e se despediu antes de desligar.
 
+**Evento crítico antes da agenda** (20/10). O agente quase nunca perguntava o C do SPICED: quando o lead pedia a reunião logo depois da dor, ele ia direto para quem decide e para a agenda. A ordem "impacto, evento crítico e decisão" estava em Objetivo, longe do momento; a regra de quem decide estava na seção Agenda e na descrição de `consultar_agenda`, onde o modelo a segue. Opções: mais ênfase em Objetivo; um campo obrigatório na ferramenta (mudaria a marcação no dia da entrega); ou a pergunta no mesmo ponto da regra de decisão. Escolhido: o mesmo ponto, numerada junto com a pergunta de quem decide. Medido com uma checagem nova, `askedCriticalEvent` (pergunta com "urgente", "lançamento", "troca de sistema" ou "Reforma Tributária" antes de consultar a agenda), na conta de teste:
+
+| Versão | Pergunta o evento crítico | Evento crítico na coleta (interessada) | Quem decide antes de marcar | Desligamento mudo |
+| --- | --- | --- | --- | --- |
+| Antes (6 rodadas) | 2 de 6 | 1 de 3 | 6 de 6 | 0 de 6 |
+| Primeira redação: uma frase antes da regra de decisão (8 rodadas) | 4 de 6 | 2 de 3 | 6 de 7 | 0 de 8 |
+| Final: as duas perguntas numeradas, "uma não substitui a outra" (12 rodadas) | 8 de 11 | 5 de 5 | 9 de 10 | 1 de 12 |
+
+Na primeira redação, a pergunta do evento crítico começava com "antes de marcar" e ocupou o lugar da pergunta de decisão: a interessada marcou sem dizer quem decide. Na final, as falhas que sobram são do cético, que não chega a pedir a reunião (o agente oferece, e ele aceita com condição): 0 de 2 com evento crítico, e 1 de 2 marcou sem perguntar quem decide. O desligamento mudo é o já registrado (cerca de 1 em 15), logo depois de o lead contar a dor; a mudança não mexe nas regras de desligamento. Publicado na conta da Paggo em 20/10.
+
 ## Interface
 
 Base: os tokens que vieram com o case (`app/paggo.css`) e o deck institucional, lido nas páginas 1 e 18.
@@ -349,6 +359,8 @@ Prova: screenshots no navegador do dev local, home, espera e Rastro de um lead d
 | Rótulo "Nome completo", num campo só (19/10) | Nome e sobrenome separados; exigir duas palavras | A pesquisa só busca a pessoa com nome e sobrenome (com uma palavra, pula a busca e perde o cargo); o formulário da Paggo pede "Nome completo"; um campo só aceita mais formatos de nome ([GOV.UK](https://design-system.service.gov.uk/patterns/names/)); exigir duas palavras daria erro a quem digitasse só o primeiro nome |
 
 Prova: um envio com o campo escondido preenchido voltou para a home sem criar lead; um envio normal gravou o cargo e a data do aceite, e a pesquisa recebeu o cargo. O briefing tratou o cargo como dado do lead, não como fato provado ("não encontrado; o lead informou ser decisor financeiro"). Na voz, o agente continuou perguntando o cargo mesmo com a regra nova, porque um exemplo de fala boa no prompt era exatamente essa pergunta; com o exemplo dividido em "cargo informado" e "não informado", ele foi direto ao gancho ou à dor em 4 de 4 simulações contra o agente da Paggo, e todas marcaram reunião.
+
+**Formulário no celular** (20/10, na passada visual antes da entrega). A 375 px, os campos tinham 407 px e a página rolava para o lado: o `<select>` de cargo mede pela opção mais longa ("Responsável pela área financeira (CFO, Diretor, Sócio)"), e a grade do formulário crescia até ele. Com `grid-template-columns: minmax(0, 1fr)` no formulário e em cada campo, as colunas encolhem e o select corta o texto. Prova: no dev local a 375 px, documento com 375 px e todos os campos com 343 px. Na mesma passada, o painel passou a mostrar "médio" e "média" com acento; o schema continua sem acento, porque o eval confere esses valores.
 
 ## Agenda
 

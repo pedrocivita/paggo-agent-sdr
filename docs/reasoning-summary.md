@@ -54,7 +54,7 @@ O documento curto que o case pede: para cada parte construída, o problema, a es
 
 ## Voz
 
-- **Escolha:** ElevenLabs Agents, conversa no próprio site, `gemini-2.5-flash` sem raciocínio, voz brasileira da conta da Paggo. O agente se apresenta como assistente virtual e diz que é IA. O prompt e a configuração ficam em `voice/` e são publicados por um script, para a banca ler o agente no repo.
+- **Escolha:** ElevenLabs Agents, conversa no próprio site, `gemini-2.5-flash` sem raciocínio, voz brasileira da conta da Paggo. O agente se apresenta como assistente virtual da Paggo, o formulário avisa que a conversa é com IA, e ele confirma se perguntarem. O prompt e a configuração ficam em `voice/` e são publicados por um script, para a banca ler o agente no repo.
 - **Por que não as outras:** montar fala-para-texto, LLM e voz à mão gastaria o tempo em encanamento; telefone ou WhatsApp pedem número e aprovação, e o case diz que o canal importa menos. Entre 4 LLMs em 20 simulações, o `claude-haiku-5-5` teve o melhor estilo, mas 31% das falas acima de 2 s; demora é critério Alto e não se corrige no prompt.
 - **Prova:** duas conversas em produção na conta da Paggo, de ponta a ponta; na última, mediana de 1,25 s do fim da fala do lead até o áudio.
 
@@ -72,9 +72,9 @@ O documento curto que o case pede: para cada parte construída, o problema, a es
 
 ## Qualificação e objeções
 
-- **Escolha:** o SPICED como checklist, não roteiro: começa pelo gancho do briefing, pergunta só o que falta, no máximo cinco perguntas, e sempre quem decide antes da agenda. O fit fica no painel para o time filtrar; a voz não encerra uma conversa por achar que a empresa não tem o perfil. O agente não promete o que o sistema não faz: nada de convite ou material, só "deixo anotado para o time". Regras em [business-rules.md](business-rules.md), objeções em [objections.md](objections.md).
+- **Escolha:** o SPICED como checklist, não roteiro: começa pelo gancho do briefing, pergunta só o que falta, no máximo cinco perguntas, e antes da agenda o que deixa isso urgente (evento crítico) e quem decide. O fit fica no painel para o time filtrar; a voz não encerra uma conversa por achar que a empresa não tem o perfil. O agente não promete o que o sistema não faz: nada de convite ou material, só "deixo anotado para o time". Regras em [business-rules.md](business-rules.md), objeções em [objections.md](objections.md).
 - **Por que não as outras:** passar o fit para a voz arriscaria encerrar uma conversa boa por um fit errado da pesquisa; prometer convite ou material seria falso, porque nada os envia.
-- **Prova:** as personas por texto (abaixo) e as conversas de produção.
+- **Prova:** as personas por texto (abaixo) e as conversas de produção. O evento crítico, que o agente quase nunca perguntava (2 de 6 simulações), passou a 8 de 11 quando a pergunta foi para o lado da de decisão, antes da agenda.
 
 ## Dados pessoais
 
@@ -106,7 +106,7 @@ O prompt foi tratado como uma página de conversão: muda, mede, decide.
 
 ## O que não está resolvido
 
-- O agente quase nunca pergunta o evento crítico, ainda escorrega em falas longas e, em cerca de 1 de cada 15 simulações, pula a pergunta de decisão ou desliga sem falar.
+- O agente ainda escorrega em falas longas. Com o lead cético, que não chega a pedir a reunião, pula o evento crítico e às vezes a pergunta de decisão; em cerca de 1 de cada 15 simulações, desliga sem falar.
 - A pesquisa oscila no caso de e-mail pessoal (às vezes pula a busca de SPEs); a busca pelo cargo só foi testada com nomes fictícios.
 - O `gemini-2.5-flash` sai em 30/11/2026: a comparação de LLMs precisa rodar de novo.
 

@@ -24,16 +24,16 @@ Dez seções em `voice/prompt.md`. Cada regra fica na seção onde a ação acon
 
 | Seção | O que diz |
 | --- | --- |
-| Quem você é | O assistente virtual da Paggo, voz masculina; diz que é IA e oferece alguém do time se perguntarem |
+| Quem você é | O assistente virtual da Paggo, voz masculina; confirma que é IA e oferece alguém do time se perguntarem |
 | Com quem você fala | O briefing como hipótese; o gancho do briefing é a primeira pergunta de descoberta |
-| Objetivo | Papel da pessoa, SPICED como checklist, quem decide antes da agenda, fechar e desligar |
+| Objetivo | Papel da pessoa, SPICED como checklist, evento crítico e quem decide antes da agenda, fechar e desligar |
 | Perguntas que rendem | Uma pergunta por letra do SPICED, impacto sempre com régua, dê antes de pedir |
 | Como falar | Duas frases curtas por fala, sem lista, sem exclamação, palavras proibidas, exemplos de fala ruim e boa |
 | Dor do lead e o que a Paggo faz | Uma frase de solução para cada dor, só depois de ouvir a dor |
 | Fatos da Paggo | O que o agente pode afirmar, do deck ([paggo.md](paggo.md)) |
 | Objeções | Resposta curta para cada uma, no máximo duas tentativas |
 | Limites | Não inventa preço nem integração, não manda e-mail, pessoa errada indica quem decide |
-| Agenda | Quem decide antes de consultar, dois horários, marcar só depois do sim, despedida e `end_call` |
+| Agenda | Evento crítico e quem decide antes de consultar (numerados, um não substitui o outro), dois horários, marcar só depois do sim, despedida e `end_call` |
 
 Regras de conversa e agenda: [business-rules.md](business-rules.md). Objeções: [objections.md](objections.md).
 
