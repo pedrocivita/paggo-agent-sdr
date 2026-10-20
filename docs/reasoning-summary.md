@@ -79,7 +79,7 @@ O documento curto que o case pede: para cada parte construída, o problema, a es
 ## Dados pessoais
 
 - **Escolha:** aceite obrigatório no formulário, com data e hora guardadas (consentimento, LGPD, art. 7º, I); só informação pública da empresa; nada de CPF, idade ou dado pessoal de sócios, nem no briefing nem na fala; o CPF que aparece na razão social de MEI é removido.
-- **Prova:** o eval confere que nenhum nome de sócio pessoa física aparece no briefing.
+- **Prova:** o eval confere que nenhum nome de sócio pessoa física aparece no briefing. A base legal de cada dado, e o que fica para a operação real (direitos do titular, retenção, transferência internacional), está em [business-rules.md](business-rules.md#dados-pessoais).
 
 ## Custo por lead e por reunião
 

@@ -86,7 +86,21 @@ Um por lead:
 
 ## Dados pessoais
 
-- O lead aceita o uso dos dados no formulário (consentimento, LGPD art. 7º, I), com data e hora guardadas.
-- Só informação pública da empresa. Nada de CPF, idade ou dado pessoal de sócios; o CPF que aparece na razão social de MEI é removido antes de salvar.
-- Dado de sócio serve para entender a decisão e nunca é falado na conversa.
+Base legal de cada dado pela LGPD ([Lei 13.709/2018](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm)):
+
+| Dado | Base legal | Como o sistema cumpre |
+| --- | --- | --- |
+| Formulário e conversa do lead | Consentimento (art. 7º, I), com a prova guardada por quem trata o dado (art. 8º, § 2º) | Aceite obrigatório no formulário, com data e hora no lead. O texto diz a finalidade (este contato), que a pesquisa usa dados públicos e que a conversa é com IA |
+| Dados da empresa (Receita, site) | Não são dado pessoal, salvo no MEI, em que a empresa é a própria pessoa | O CPF que aparece na razão social de MEI sai antes de salvar (`withoutCpf`, em `lib/cnpj.ts`) |
+| Cargo do lead em fonte pública (perfil profissional, site da empresa) | Dado de acesso público (art. 7º, §§ 3º e 4º), usado na finalidade do contato que o lead pediu | Só entra cargo de fonte que cite a pessoa e a mesma empresa; nada de idade, CPF ou vida pessoal |
+| Sócios da empresa (quadro de sócios da Receita) | Dado de acesso público (art. 7º, § 3º), usado só para saber se o lead é sócio e se uma SPE é do grupo | O briefing e a fala nunca citam sócio. O Rastro guarda a resposta da Receita como ela veio, com nome e qualificação dos sócios (sem CPF nem idade), porque é o registro do que a ferramenta consultou |
+
+- Necessidade (art. 6º, III): o formulário pede só o básico; segmento e dor ficam para a pesquisa e a conversa.
+- Decisão automatizada (art. 20): o fit não decide nada sozinho. A voz não recebe o fit, e quem decide manter a reunião é o time.
 - O que o lead corrige vale mais que o briefing: a correção fica em "Dados confirmados ou corrigidos", na aba Conversa estruturada, ao lado do briefing original, que não é sobrescrito.
+
+Fica para a operação real, fora do case:
+
+- Direitos do titular (art. 18): acesso, correção e eliminação pedem um canal da Paggo. Hoje o painel não apaga lead; a eliminação é pelo banco.
+- Retenção (arts. 15 e 16): o banco não apaga nada sozinho; falta um prazo ligado à finalidade.
+- Transferência internacional (art. 33): os dados passam por serviços fora do Brasil (Vercel e Neon na região iad1, nos EUA; Anthropic, Exa e ElevenLabs). Em produção, isso pede as cláusulas-padrão da ANPD nos contratos ([Resolução CD/ANPD nº 19/2024](https://lefosse.com/noticias/transferencia-internacional-de-dados-prazo-para-adocao-das-clausulas-padrao-da-anpd-se-encerra-em-23-de-agosto/), obrigatórias desde 23/8/2025) ou consentimento específico e em destaque (art. 33, VIII).
