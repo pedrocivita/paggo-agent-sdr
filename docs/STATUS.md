@@ -16,7 +16,7 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 ## Onde estamos
 
 - **Tudo em produção:** formulário, pesquisa, voz na conta da Paggo (voz Samuel, `gemini-2.5-flash`), agenda real com trava na marcação, pós-chamada com resumo próprio e painel com as 5 abas.
-- **Últimas provas ponta a ponta:** terceira conversa em produção (20/10, `conv_7501...`, 3,3 min), com o evento crítico; quarta (20/10, `conv_7301...`, 1,8 min), que provou o resumo próprio e mostrou o fit vazando para a voz, já corrigido. Detalhes em [reasoning.md](reasoning.md#agente-de-voz).
+- **Últimas provas ponta a ponta:** terceira conversa em produção (20/10, `conv_7501...`, 3,3 min), com o evento crítico; quarta (20/10, `conv_7301...`, 1,8 min), que provou o resumo próprio e mostrou o fit vazando para a voz; sexta (20/10, 15h53, `conv_5601...`, 3,2 min), que provou as correções da tarde. Detalhes em [reasoning.md](reasoning.md#agente-de-voz).
 - **O entregável está completo:** app no ar, repo com README de teste para a banca, regras de negócio com a base legal da LGPD, objeções e o raciocínio curto ([reasoning-summary.md](reasoning-summary.md)). Falta só o envio.
 
 ## O que mudou em 20/10
@@ -31,7 +31,7 @@ Cada item tem opções, escolha e prova em [reasoning.md](reasoning.md) e uma li
 | A página do lead no painel se atualiza a cada 5 s até a conversa chegar (o pós-chamada leva cerca de 80 s) | Dev local: 4 releituras em 20 s num lead sem conversa, nenhuma num lead que já conversou |
 | O botão "Enviar" trava durante o envio (um duplo clique criou dois leads) | Dev local, pelo caminho do campo contra robôs, sem criar lead |
 | Checagem de preço do eval corta frase também em "?" e "!" (falso positivo no caso Cury) | Os 7 briefings salvos: 79 de 79 |
-| Voz: quem é de tecnologia é lead; sem enchimento nem resumo do que o lead disse; despedida uma vez só (da quinta conversa em produção) | 12 simulações: nenhum enchimento (5 em 29 antes), 21% das falas acima de 25 palavras (28% antes), quem decide antes das 10 reuniões; sem prova ao vivo |
+| Voz: quem é de tecnologia é lead; sem enchimento nem resumo do que o lead disse; despedida uma vez só (da quinta conversa em produção) | 12 simulações: nenhum enchimento (5 em 29 antes), 21% das falas acima de 25 palavras (28% antes), quem decide antes das 10 reuniões; sexta conversa em produção (15h53): lead de tecnologia seguiu a descoberta, despedida uma vez só, cinco letras na coleta |
 | Formulário cabia fora da tela no celular (o select de cargo empurrava a grade) | Dev local a 375 px: documento com 375 px; CSS conferido em produção |
 | Painel mostra "médio" e "média" com acento | Dev local |
 | README abre com o teste de 5 minutos, o que cada aba mostra e os limites conhecidos | Commit |
@@ -45,7 +45,7 @@ Cada item tem opções, escolha e prova em [reasoning.md](reasoning.md) e uma li
 | --- | --- | --- |
 | Portões | Provado | `npm test` (25), `npm run typecheck`, `npm run lint`, `npm run build` |
 | Pesquisa | Provado | Eval de 7 casos em 20/10, com as instruções novas: 79 de 79 checagens com a checagem de preço corrigida. A Cury já oscilou (pulou a busca de SPEs); o CNPJ escolhido sempre foi o certo ([research-cases.md](research-cases.md)) |
-| Voz em produção | Provado, com ressalvas | Cinco conversas na conta da Paggo. A de 20/10 de manhã: evento crítico e quem decide antes da agenda, reunião marcada pela trava, pedido de e-mail sem promessa. A primeira da tarde encerrou por perfil, pelo fit no resumo; a segunda, depois da correção, marcou reunião sem falar em perfil, mas tratou o lead de tecnologia como pessoa errada, falou demais e repetiu a despedida, corrigidos no prompt às 14h52 sem prova ao vivo |
+| Voz em produção | Provado | Seis conversas na conta da Paggo. A de 20/10 de manhã: evento crítico e quem decide antes da agenda, reunião marcada pela trava, pedido de e-mail sem promessa. A primeira da tarde encerrou por perfil, pelo fit no resumo; a segunda, depois da correção, não falou em perfil, mas tratou o lead de tecnologia como pessoa errada, falou demais e repetiu a despedida. A sexta, às 15h53, depois da correção no prompt: lead de tecnologia na descoberta, despedida uma vez só, cinco letras na coleta, mediana de 1,38 s |
 | Demora | Provado, com uma ressalva | Mediana de 1,25 s em 19/10, à noite; 2,19 s em 20/10, no meio do dia, com o LLM uns 0,3 s mais lento. Nas simulações o prompt novo não mudou o tempo do LLM |
 | Agenda real | Provado | Consulta, marcação, 409 e recusa de horário fora da janela, todos pelas rotas de produção |
 | Pós-chamada | Provado | Webhook HMAC na conta da Paggo; rota recusa assinatura falsa (401). O campo `resumo` chegou ao painel na conversa de 20/10 à tarde, cerca de 80 s depois do fim |
@@ -53,7 +53,7 @@ Cada item tem opções, escolha e prova em [reasoning.md](reasoning.md) e uma li
 
 ## Próximos passos
 
-1. **16h, congelamento:** depois disso, só documentos.
+1. **Código congelado às 16h** (último commit de código: `4ba0d16`). Daqui em diante, só documentos.
 2. **Envio, até 18h:** tornar o repo público (decidido em 20/10; o histórico não tem segredo, varrido em 20/10), conferir que o link abre sem login e mandar a mensagem com o link do app, o do repo e a senha do painel. A senha vai só na mensagem.
 3. **Na mensagem**, avisar a Paggo das reuniões de teste na agenda do case (lista abaixo).
 
@@ -75,7 +75,7 @@ Cada item tem opções, escolha e prova em [reasoning.md](reasoning.md) e uma li
 
 ## Pendências que dependem da Paggo
 
-- Reuniões de teste na agenda do case, que a API não deixa desmarcar: 19/10 às 12h, 21/10 às 13h, 21/10 às 14h30 e 22/10 às 9h.
+- Reuniões de teste na agenda do case, que a API não deixa desmarcar: 19/10 às 12h, 21/10 às 13h, 21/10 às 14h30, 22/10 às 9h, 22/10 às 9h30 e 22/10 às 13h.
 - Preço ou faixa que o agente pode falar; quais ERPs têm integração pronta.
 - O estudo de caso, que aparece no menu do deck sem conteúdo.
 
