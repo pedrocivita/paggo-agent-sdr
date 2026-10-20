@@ -349,6 +349,19 @@ Mais 5 rodadas com a versão final (17 no total): evento crítico em 11 de 15 co
 
 **Resumo do pós-chamada** (20/10). O resumo dessa conversa, escrito pelo próprio ElevenLabs, dizia que "a confirmação será enviada por e-mail". O agente não prometeu, e nada envia. A config do agente não deixa orientar esse resumo: só escolhe o idioma e o LLM da análise. Opções: deixar como limite conhecido; ou um campo `resumo` nosso na coleta, com a regra de só dizer o que foi dito e nunca afirmar envio ou contato. Escolhido: o campo nosso, que o painel usa, com o resumo do ElevenLabs como reserva se vier vazio (`lib/voice.ts`, com teste). Prova: 5 simulações, nenhum resumo afirma envio, e o pedido de material do cético ficou em `duvidas`. Numa delas, a coleta escreveu que a própria lead decide, sem ela ter dito, e o resumo repetiu: a coleta ainda deduz quando a conversa pula a pergunta.
 
+**Quinta conversa em produção** (20/10, à tarde, `conv_2601...`, 4,4 min), depois da correção do fit, com o lead no papel de quem cuida da tecnologia de uma consultoria. Não encerrou por perfil e marcou a reunião, mas o dono do projeto sentiu a conversa lenta, verbosa e repetitiva. Medido:
+
+| O que | Resultado |
+| --- | --- |
+| Demora até o áudio | Mediana de 1,55 s em 19 falas, máximo de 2,51 s; o LLM levou de 0,7 a 1,3 s por fala. Pesaram mais as falas longas (29 a 32 palavras) e os turnos gastos à toa |
+| Papel | Quando o lead disse que é de tecnologia, o agente o tratou como pessoa errada e perguntou duas vezes quem seria a pessoa certa. Tecnologia é Influenciador Técnico na própria lista da Paggo |
+| Fala | Enchimentos ("para eu entender melhor", "para entender como a Paggo pode ajudar") e o resumo do que o lead acabou de dizer |
+| Agenda | Consultou a agenda sem oferecer a reunião e sem o evento crítico, porque a regra dele só dispara quando o lead pede a reunião |
+| Despedida | Despediu-se, esperou o "tchau" do lead e repetiu a despedida inteira; o lead reclamou |
+| Abertura | O lead falou por cima da saudação, e a primeira pergunta começou com "Perfeito", palavra proibida, que apareceu nas duas conversas do dia |
+
+Mudou, cada regra no ponto em que a ação acontece: na primeira pergunta, quem cuida de tecnologia, sistemas ou integrações do financeiro é lead e segue para o gancho, e "quem é a pessoa certa" vale no máximo uma vez; nas regras de fala, sem explicar a pergunta nem resumir o lead, com um par de exemplos ruim e bom tirado da conversa; na despedida e na descrição do `end_call`, a despedida é uma só, e o "tchau" do lead encerra sem fala. O evento crítico fora do pedido de reunião ficou como estava, por decisão do dono do projeto. Três checagens novas no simulador: `rightPersonQuestions`, `goodbyes` e `fillers`. Nas 29 simulações do dia com o prompt anterior: nenhuma pergunta repetida pela pessoa certa e nenhuma despedida repetida (a simulação não reproduz essas duas falhas), 5 enchimentos e 28% das falas acima de 25 palavras. Com o prompt novo, 12 simulações: nenhum enchimento, 21% das falas acima de 25 palavras, quem decide antes de todas as 10 reuniões, e nenhuma regressão nas outras checagens. Uma pessoa errada desligou sem se despedir, a falha antiga, que já tinha aparecido de manhã com o prompt anterior; mais 6 rodadas dessa persona se despediram nas 6. Publicado na conta da Paggo às 14h52; as correções de papel e de despedida não têm prova ao vivo.
+
 ## Interface
 
 Base: os tokens que vieram com o case (`app/paggo.css`) e o deck institucional, lido nas páginas 1 e 18.

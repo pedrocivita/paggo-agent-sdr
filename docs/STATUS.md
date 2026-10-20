@@ -31,6 +31,7 @@ Cada item tem opções, escolha e prova em [reasoning.md](reasoning.md) e uma li
 | A página do lead no painel se atualiza a cada 5 s até a conversa chegar (o pós-chamada leva cerca de 80 s) | Dev local: 4 releituras em 20 s num lead sem conversa, nenhuma num lead que já conversou |
 | O botão "Enviar" trava durante o envio (um duplo clique criou dois leads) | Dev local, pelo caminho do campo contra robôs, sem criar lead |
 | Checagem de preço do eval corta frase também em "?" e "!" (falso positivo no caso Cury) | Os 7 briefings salvos: 79 de 79 |
+| Voz: quem é de tecnologia é lead; sem enchimento nem resumo do que o lead disse; despedida uma vez só (da quinta conversa em produção) | 12 simulações: nenhum enchimento (5 em 29 antes), 21% das falas acima de 25 palavras (28% antes), quem decide antes das 10 reuniões; sem prova ao vivo |
 | Formulário cabia fora da tela no celular (o select de cargo empurrava a grade) | Dev local a 375 px: documento com 375 px; CSS conferido em produção |
 | Painel mostra "médio" e "média" com acento | Dev local |
 | README abre com o teste de 5 minutos, o que cada aba mostra e os limites conhecidos | Commit |
@@ -44,11 +45,11 @@ Cada item tem opções, escolha e prova em [reasoning.md](reasoning.md) e uma li
 | --- | --- | --- |
 | Portões | Provado | `npm test` (25), `npm run typecheck`, `npm run lint`, `npm run build` |
 | Pesquisa | Provado | Eval de 7 casos em 20/10, com as instruções novas: 79 de 79 checagens com a checagem de preço corrigida. A Cury já oscilou (pulou a busca de SPEs); o CNPJ escolhido sempre foi o certo ([research-cases.md](research-cases.md)) |
-| Voz em produção | Provado | Quatro conversas na conta da Paggo; a de 20/10 de manhã com evento crítico e quem decide antes da agenda, reunião marcada pela trava e pedido de e-mail anotado sem promessa. A de 20/10 à tarde encerrou por perfil, pelo fit no resumo; a correção (pesquisa e prompt) ainda não passou por uma conversa ao vivo |
+| Voz em produção | Provado, com ressalvas | Cinco conversas na conta da Paggo. A de 20/10 de manhã: evento crítico e quem decide antes da agenda, reunião marcada pela trava, pedido de e-mail sem promessa. A primeira da tarde encerrou por perfil, pelo fit no resumo; a segunda, depois da correção, marcou reunião sem falar em perfil, mas tratou o lead de tecnologia como pessoa errada, falou demais e repetiu a despedida, corrigidos no prompt às 14h52 sem prova ao vivo |
 | Demora | Provado, com uma ressalva | Mediana de 1,25 s em 19/10, à noite; 2,19 s em 20/10, no meio do dia, com o LLM uns 0,3 s mais lento. Nas simulações o prompt novo não mudou o tempo do LLM |
 | Agenda real | Provado | Consulta, marcação, 409 e recusa de horário fora da janela, todos pelas rotas de produção |
 | Pós-chamada | Provado | Webhook HMAC na conta da Paggo; rota recusa assinatura falsa (401). O campo `resumo` chegou ao painel na conversa de 20/10 à tarde, cerca de 80 s depois do fim |
-| Não provado | Aberto | Em 2 de 14 reuniões simuladas marcou sem perguntar quem decide (e a coleta deduz quem decide); desligamento mudo em cerca de 1 de 15 simulações; falas longas com o cético; a falha da agenda (timeout) nunca foi provocada ao vivo; a busca pelo cargo só foi testada com nomes fictícios |
+| Não provado | Aberto | O evento crítico só é perguntado quando o lead pede a reunião; quando o agente vai sozinho para a agenda, pula (decidido manter em 20/10). "Perfeito" ainda escapa no começo da resposta. Em 2 de 14 reuniões simuladas, antes das correções da tarde, marcou sem perguntar quem decide (e a coleta deduz quem decide); desligamento mudo em cerca de 1 de 15 simulações; falas longas com o cético; a falha da agenda (timeout) nunca foi provocada ao vivo; a busca pelo cargo só foi testada com nomes fictícios |
 
 ## Próximos passos
 
