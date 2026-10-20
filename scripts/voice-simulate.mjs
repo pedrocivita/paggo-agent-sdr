@@ -65,6 +65,8 @@ const FORBIDDEN = /(?<!\p{L})(ótim[oa]|perfeit[oa]|compreendo)(?!\p{L})/giu;
 // \s+ because the transcript joins streamed chunks with double spaces.
 const MODULES = /tesouraria|a\s+pagar|a\s+receber|cart(ão|ões)|orçamento|fluxo\s+de\s+caixa|controladoria|automaç/giu;
 const DECISION = /quem\s+(mais\s+)?(decide|participa|aprova|escolhe)|decis[ãa]o/iu;
+// The C of SPICED: what makes it urgent now (a launch, a new SPE, a system change, the tax reform).
+const CRITICAL_EVENT = /urgent|lançament|spe\s+nova|troca\s+de\s+(sistema|erp)|reforma\s+tribut|prazo|por\s+que\s+agora/iu;
 const toolNames = (turn) => (turn.tool_calls || []).map((c) => c.tool_name);
 
 function measure(turns, slots) {
@@ -92,6 +94,13 @@ function measure(turns, slots) {
       return turns
         .slice(0, firstAgenda)
         .some((t) => (t.role === "agent" ? DECISION : /decid|sozinh/iu).test(t.message || ""));
+    })(),
+    // The critical event must be asked before the calendar is checked (or at all, when it never is).
+    askedCriticalEvent: (() => {
+      const firstAgenda = turns.findIndex((t) => toolNames(t).includes("consultar_agenda"));
+      return (firstAgenda < 0 ? turns : turns.slice(0, firstAgenda)).some(
+        (t) => t.role === "agent" && t.message?.includes("?") && CRITICAL_EVENT.test(t.message),
+      );
     })(),
     // A hang-up is silent when the last thing the agent said before it was not a goodbye.
     endCallWithoutGoodbye:
