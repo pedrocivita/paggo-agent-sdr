@@ -81,7 +81,7 @@ Cada item tem opções, escolha e prova em [reasoning.md](reasoning.md) e uma li
 
 ## Dados de teste no banco
 
-Dev e produção usam o mesmo banco, e a banca abre o painel. Em 20/10 o dono do projeto decidiu não fazer varredura: ficam os leads fictícios dos casos difíceis, os testes do formulário e da origem, as conversas de prova do desenvolvedor (17/10, 19/10 e 20/10, inclusive o lead duplicado de 20/10 às 13h12, do duplo clique) e os eventos de teste e das rodadas do eval. O README avisa a banca que esses leads existem.
+Dev e produção usam o mesmo banco, e a banca abre o painel. Em 20/10 o dono do projeto decidiu não fazer varredura: ficam os leads fictícios dos casos difíceis, os testes do formulário e da origem, as conversas de prova do desenvolvedor (17/10, 19/10 e 20/10, inclusive o lead duplicado de 20/10 às 13h12, do duplo clique), o lead "Ana Teste" de 20/10 à noite (teste da chave da Paggo) e os eventos de teste e das rodadas do eval. O README avisa a banca que esses leads existem.
 
 ## Armadilhas
 
@@ -97,6 +97,7 @@ Dev e produção usam o mesmo banco, e a banca abre o painel. Em 20/10 o dono do
 - Uma falha que a simulação não reproduz (o encerramento por perfil) não tem antes e depois: corrigir a causa na fonte e dizer que o efeito na voz não tem número.
 - Cada rodada do eval grava eventos sem lead no banco compartilhado.
 - O dev local usa a conta de teste do ElevenLabs (`.env.development.local`, que tem prioridade sobre o `.env.local`). Cada worktree precisa dos dois arquivos, copiados de outro worktree e nunca commitados, e de `npm install`; desfazer a mudança que o install fizer no `package-lock.json`.
+- A pesquisa em produção usa a chave da Anthropic que a Paggo mandou, desde 20/10 à noite (variável de Production, seguida de redeploy; lead de teste com briefing em 21 s). Preview e Development seguem com a chave do desenvolvedor. Variável nova só vale depois de um deploy novo, e o `vercel redeploy` precisa de `--scope` do time do projeto.
 - Mais armadilhas do código em `AGENTS.md`, seção Gotchas.
 
 Agent: Claude Code (claude-opus-5-5).
