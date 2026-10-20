@@ -16,7 +16,7 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 ## Onde estamos
 
 - **Tudo em produção:** formulário, pesquisa, voz na conta da Paggo (voz Samuel, `gemini-2.5-flash`), agenda real com trava na marcação, pós-chamada com resumo próprio e painel com as 5 abas.
-- **Última prova ponta a ponta:** terceira conversa em produção (20/10, `conv_7501...`, 3,3 min), depois das mudanças do dia. Detalhes em [reasoning.md](reasoning.md#agente-de-voz).
+- **Últimas provas ponta a ponta:** terceira conversa em produção (20/10, `conv_7501...`, 3,3 min), com o evento crítico; quarta (20/10, `conv_7301...`, 1,8 min), que provou o resumo próprio e mostrou o fit vazando para a voz, já corrigido. Detalhes em [reasoning.md](reasoning.md#agente-de-voz).
 - **O entregável está completo:** app no ar, repo com README de teste para a banca, regras de negócio com a base legal da LGPD, objeções e o raciocínio curto ([reasoning-summary.md](reasoning-summary.md)). Falta só o envio.
 
 ## O que mudou em 20/10
@@ -26,7 +26,11 @@ Cada item tem opções, escolha e prova em [reasoning.md](reasoning.md) e uma li
 | Mudança | Prova |
 | --- | --- |
 | O agente pergunta o evento crítico antes da agenda, numerado com a pergunta de quem decide | Simulação: 2 de 6 antes, 11 de 15 depois; conversa em produção com as cinco letras na coleta |
-| Resumo do pós-chamada próprio (campo `resumo`), porque o do ElevenLabs afirmou um envio de e-mail que nada faz | Teste unitário; 5 simulações sem afirmar envio |
+| Resumo do pós-chamada próprio (campo `resumo`), porque o do ElevenLabs afirmou um envio de e-mail que nada faz | Teste unitário; 5 simulações sem afirmar envio; conversa em produção com o resumo novo no painel |
+| O fit não vai mais no resumo que a voz lê (instruções da pesquisa e checagem no eval), e a voz ignora fit ou perfil se ainda vier | Eval: nenhum dos 7 briefings com fit no resumo; 6 simulações da persona nova `fora-do-perfil` sem falar em perfil |
+| A página do lead no painel se atualiza a cada 5 s até a conversa chegar (o pós-chamada leva cerca de 80 s) | Dev local: 4 releituras em 20 s num lead sem conversa, nenhuma num lead que já conversou |
+| O botão "Enviar" trava durante o envio (um duplo clique criou dois leads) | Dev local, pelo caminho do campo contra robôs, sem criar lead |
+| Checagem de preço do eval corta frase também em "?" e "!" (falso positivo no caso Cury) | Os 7 briefings salvos: 79 de 79 |
 | Formulário cabia fora da tela no celular (o select de cargo empurrava a grade) | Dev local a 375 px: documento com 375 px; CSS conferido em produção |
 | Painel mostra "médio" e "média" com acento | Dev local |
 | README abre com o teste de 5 minutos, o que cada aba mostra e os limites conhecidos | Commit |
@@ -39,11 +43,11 @@ Cada item tem opções, escolha e prova em [reasoning.md](reasoning.md) e uma li
 | Item | Estado | Como foi provado |
 | --- | --- | --- |
 | Portões | Provado | `npm test` (25), `npm run typecheck`, `npm run lint`, `npm run build` |
-| Pesquisa | Provado, com uma oscilação | Eval de 7 casos em 19/10: 6 de 7, 71 de 72 checagens. A Cury oscila (pula a busca de SPEs); o CNPJ escolhido sempre foi o certo ([research-cases.md](research-cases.md)) |
-| Voz em produção | Provado | Três conversas na conta da Paggo; a de 20/10 com evento crítico e quem decide antes da agenda, reunião marcada pela trava e pedido de e-mail anotado sem promessa |
+| Pesquisa | Provado | Eval de 7 casos em 20/10, com as instruções novas: 79 de 79 checagens com a checagem de preço corrigida. A Cury já oscilou (pulou a busca de SPEs); o CNPJ escolhido sempre foi o certo ([research-cases.md](research-cases.md)) |
+| Voz em produção | Provado | Quatro conversas na conta da Paggo; a de 20/10 de manhã com evento crítico e quem decide antes da agenda, reunião marcada pela trava e pedido de e-mail anotado sem promessa. A de 20/10 à tarde encerrou por perfil, pelo fit no resumo; a correção (pesquisa e prompt) ainda não passou por uma conversa ao vivo |
 | Demora | Provado, com uma ressalva | Mediana de 1,25 s em 19/10, à noite; 2,19 s em 20/10, no meio do dia, com o LLM uns 0,3 s mais lento. Nas simulações o prompt novo não mudou o tempo do LLM |
 | Agenda real | Provado | Consulta, marcação, 409 e recusa de horário fora da janela, todos pelas rotas de produção |
-| Pós-chamada | Provado | Webhook HMAC na conta da Paggo; rota recusa assinatura falsa (401). O campo `resumo` foi provado em simulação; numa conversa ao vivo, ainda não |
+| Pós-chamada | Provado | Webhook HMAC na conta da Paggo; rota recusa assinatura falsa (401). O campo `resumo` chegou ao painel na conversa de 20/10 à tarde, cerca de 80 s depois do fim |
 | Não provado | Aberto | Em 2 de 14 reuniões simuladas marcou sem perguntar quem decide (e a coleta deduz quem decide); desligamento mudo em cerca de 1 de 15 simulações; falas longas com o cético; a falha da agenda (timeout) nunca foi provocada ao vivo; a busca pelo cargo só foi testada com nomes fictícios |
 
 ## Próximos passos
@@ -76,7 +80,7 @@ Cada item tem opções, escolha e prova em [reasoning.md](reasoning.md) e uma li
 
 ## Dados de teste no banco
 
-Dev e produção usam o mesmo banco, e a banca abre o painel. Em 20/10 o dono do projeto decidiu não fazer varredura: ficam os leads fictícios dos casos difíceis, os testes do formulário e da origem, as conversas de prova do desenvolvedor (17/10, 19/10 e 20/10) e os eventos de teste e das rodadas do eval. O README avisa a banca que esses leads existem.
+Dev e produção usam o mesmo banco, e a banca abre o painel. Em 20/10 o dono do projeto decidiu não fazer varredura: ficam os leads fictícios dos casos difíceis, os testes do formulário e da origem, as conversas de prova do desenvolvedor (17/10, 19/10 e 20/10, inclusive o lead duplicado de 20/10 às 13h12, do duplo clique) e os eventos de teste e das rodadas do eval. O README avisa a banca que esses leads existem.
 
 ## Armadilhas
 
@@ -87,6 +91,9 @@ Dev e produção usam o mesmo banco, e a banca abre o painel. Em 20/10 o dono do
 - Uma taxa de 1 em 15 não se prova com 15 rodadas; com 6 a 12 rodadas, diferença de uma ocorrência é ruído.
 - A demora da voz varia com a hora: comparar conversas no mesmo período do dia.
 - O resumo automático do ElevenLabs não tem prompt configurável; o painel usa o campo `resumo` da coleta.
+- O pós-chamada chega cerca de 80 s depois da conversa: olhar o painel antes disso mostra o lead sem conversa.
+- `npm run eval` recusa rodar com o dev server ligado (o agente eve já está no ar): desligar o preview antes.
+- Uma falha que a simulação não reproduz (o encerramento por perfil) não tem antes e depois: corrigir a causa na fonte e dizer que o efeito na voz não tem número.
 - Cada rodada do eval grava eventos sem lead no banco compartilhado.
 - O dev local usa a conta de teste do ElevenLabs (`.env.development.local`, que tem prioridade sobre o `.env.local`). Cada worktree precisa dos dois arquivos, copiados de outro worktree e nunca commitados, e de `npm install`; desfazer a mudança que o install fizer no `package-lock.json`.
 - Mais armadilhas do código em `AGENTS.md`, seção Gotchas.
