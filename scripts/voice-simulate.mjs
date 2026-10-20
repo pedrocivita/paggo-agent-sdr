@@ -102,6 +102,12 @@ function measure(turns, slots) {
         (t) => t.role === "agent" && t.message?.includes("?") && CRITICAL_EVENT.test(t.message),
       );
     })(),
+    // A tech lead was asked twice who the right person was (20/10); once is the most a lead should hear.
+    rightPersonQuestions: agent.filter((t) => /pessoa (mais )?(indicada|certa|respons[áa]vel)|quem (seria|é) (a pessoa|o respons[áa]vel)/iu.test(t.message)).length,
+    // The goodbye came twice when the lead answered it with "tchau" (20/10).
+    goodbyes: agent.filter((t) => /até mais/iu.test(t.message)).length,
+    // Fillers that explain the question instead of asking it.
+    fillers: agent.filter((t) => /para (eu )?entender (melhor|como)/iu.test(t.message)).length,
     // The fit is the team's call: the agent must never tell a lead the company is out of Paggo's profile.
     saidOutOfProfile: agent.some((t) => /perfil|não se encaix|focad[oa]s? em construtoras/iu.test(t.message)),
     offeredMeeting:
