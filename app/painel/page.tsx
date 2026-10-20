@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { connection } from "next/server";
+import { levelLabel } from "@/lib/briefing";
 import { listLeads, type LeadStatus } from "@/lib/leads";
 
 const STATUS: Record<LeadStatus, { label: string; tone: string }> = {
@@ -34,7 +35,7 @@ async function LeadsTable() {
                 <Link href={`/painel/${lead.id}`}>{lead.form.name}</Link>
               </td>
               <td>{lead.briefing?.company.legalName.value ?? lead.form.company}</td>
-              <td>{lead.briefing?.fit.level ?? "·"}</td>
+              <td>{lead.briefing ? levelLabel(lead.briefing.fit.level) : "·"}</td>
               <td>
                 <span className={`chip ${STATUS[lead.status].tone}`}>{STATUS[lead.status].label}</span>
               </td>

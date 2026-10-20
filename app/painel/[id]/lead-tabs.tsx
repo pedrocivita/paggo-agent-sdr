@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import type { FactValue } from "@/lib/briefing";
+import { levelLabel, type FactValue } from "@/lib/briefing";
 import type { Lead, TrailEvent } from "@/lib/leads";
 import { describeOrigin } from "@/lib/origin";
 import { describeRole } from "@/lib/roles";
@@ -16,7 +16,7 @@ function Fact({ label, fact }: { label: string; fact: FactValue }) {
     <div>
       <dt>{label}</dt>
       <dd>
-        {fact.value} <span className={`chip ${CONFIDENCE_TONE[fact.confidence]}`}>{fact.confidence}</span>
+        {fact.value} <span className={`chip ${CONFIDENCE_TONE[fact.confidence]}`}>{levelLabel(fact.confidence)}</span>
         {fact.source && (
           <a className="src" href={fact.source} target="_blank" rel="noreferrer">
             fonte
@@ -62,7 +62,7 @@ function ResearchTab({ lead }: { lead: Lead }) {
   return (
     <>
       <h3>
-        Fit <span className="chip accent">{b.fit.level}</span>
+        Fit <span className="chip accent">{levelLabel(b.fit.level)}</span>
       </h3>
       <ul>{b.fit.reasons.map((r) => <li key={r}>{r}</li>)}</ul>
 

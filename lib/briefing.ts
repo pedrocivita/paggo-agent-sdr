@@ -42,3 +42,8 @@ export const BriefingSchema = z.object({
 
 export type Briefing = z.infer<typeof BriefingSchema>;
 export type FactValue = z.infer<typeof Fact>;
+
+/** Enum values have no accents (they are the schema's contract); the panel shows the written word. */
+export function levelLabel(level: string): string {
+  return level === "medio" ? "médio" : level === "media" ? "média" : level;
+}
