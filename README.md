@@ -31,6 +31,23 @@ O painel já tem os leads de teste de 16 a 19/10: pessoas fictícias dos casos d
 
 **Rastro.** Toda chamada de ferramenta, da pesquisa e da voz, passa por `traced()` e vira uma linha com entrada, saída, fontes, tempo e erro, ligada ao lead. É a aba Rastro do painel.
 
+## Stack
+
+| Peça | Escolha | Por quê |
+| --- | --- | --- |
+| Linguagem | TypeScript no app; JavaScript nos scripts da voz; Node 24 | O CLI do eve exige Node 24 |
+| App | Next.js 16 (App Router) e React 19, no Vercel | Formulário, painel, rotas e o agente de pesquisa num deploy só |
+| Agente de pesquisa | eve 0.80.1 com Claude Sonnet 5.5, pela API da Anthropic | O eve é o formato que o time da Paggo usa e valida o briefing pelo schema; o Sonnet foi mais rápido e julgou melhor que o Haiku no mesmo lead |
+| Fontes da pesquisa | Site da empresa, BrasilAPI (Receita) e Exa (busca na web) | Cada consulta vira uma linha no Rastro; só a Receita traz o regime tributário, que muda o fit |
+| Voz | ElevenLabs Agents no próprio site (`@elevenlabs/react`), `gemini-2.5-flash` sem raciocínio, voz `eleven_v4_turbo` (Samuel) | Turnos e interrupções resolvidos pela plataforma; o LLM mais rápido entre 4 comparados em simulação |
+| Pós-chamada | Webhook do ElevenLabs assinado com HMAC; SPICED e resumo pela análise da plataforma | A saída estruturada chega sozinha, sem buscar a conversa depois |
+| Agenda | API da Paggo, com uma agenda falsa no lugar quando falta credencial | A rota só marca horário livre da janela, uma trava que não depende do modelo |
+| Dados | Postgres no Neon, duas tabelas, cliente `postgres`; zod nos contratos | O lead guarda formulário, briefing e conversa como JSON; o Rastro é a tabela `events` |
+| Testes | Vitest (25 testes), eve eval (7 casos difíceis), simulações da voz (5 personas), TypeScript e ESLint | Portões antes de cada push; cada erro de uma conversa real virou uma checagem |
+| Construção | Claude Code, com as regras em [AGENTS.md](AGENTS.md) | Todo agente de código lê as mesmas regras e deixa o estado em [docs/STATUS.md](docs/STATUS.md) |
+
+A versão de uma linha de cada escolha, com a alternativa descartada, está em [DECISIONS.md](DECISIONS.md).
+
 ## Limites conhecidos
 
 - A conversa é por voz no navegador; o case deixa o canal livre, e telefone ou WhatsApp usariam o mesmo agente.
