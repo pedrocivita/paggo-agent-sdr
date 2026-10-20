@@ -69,6 +69,8 @@ Cada item tem opções, escolha e prova em [reasoning.md](reasoning.md) e uma li
 | Ter 20/10, 16h | Código congelado. Depois disso, só documentos |
 | Ter 20/10, 18h | Envio: link do app, link do repo, e a senha do painel na mensagem, nunca no repo |
 
+O repositório é privado. A banca entra como colaboradora, só leitura, com os usuários do GitHub que o dono do projeto pedir. Se não chegarem até as 16h de terça, decidir de novo entre tornar público (o histórico não tem segredo, mas tem nomes de contexto e caminhos locais em STATUS antigos) e outra forma de acesso.
+
 ## Pendências que dependem da Paggo
 
 - Avisar a Paggo das três reuniões de teste na agenda do case: 19/10 às 12h, 21/10 às 13h e 21/10 às 14h30. A API não tem rota para desmarcar.
