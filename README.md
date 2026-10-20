@@ -9,7 +9,7 @@ No ar em https://paggo-agent-sdr.vercel.app (painel interno em `/painel`, com a 
 1. Abra https://paggo-agent-sdr.vercel.app e preencha o formulário. Com e-mail de trabalho, a pesquisa começa pelo site da empresa.
 2. A tela de espera mostra "pesquisando sua empresa". O briefing leva de 12 a 33 s; quando ficar pronto, o botão "Falar com a Paggo" libera. O navegador pede o microfone.
 3. Converse como um lead. O agente confirma o que a pesquisa achou, pergunta só o que falta, responde objeções e, quando você topar a reunião, pergunta o que deixa isso urgente e quem decide antes de oferecer dois horários da agenda da Paggo.
-4. Abra `/painel` e clique no seu nome. Formulário, pesquisa e rastro já estão lá desde o fim da pesquisa; a conversa estruturada e a transcrição chegam pelo pós-chamada, logo depois que a conversa termina (recarregue a página).
+4. Abra `/painel` e clique no seu nome. Formulário, pesquisa e rastro já estão lá desde o fim da pesquisa; a conversa estruturada e a transcrição chegam pelo pós-chamada, 1 a 2 minutos depois que a conversa termina. A página do lead se atualiza sozinha enquanto espera.
 
 O painel já tem os leads de teste de 16 a 19/10: pessoas fictícias dos casos difíceis da pesquisa e as conversas de prova do desenvolvedor.
 

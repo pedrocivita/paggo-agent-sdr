@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import { levelLabel, type FactValue } from "@/lib/briefing";
 import type { Lead, TrailEvent } from "@/lib/leads";
 import { describeOrigin } from "@/lib/origin";
@@ -109,9 +110,11 @@ const SPICED_LABELS: Record<string, string> = {
   decisao: "D · Decisão",
 };
 
+const NO_CALL_YET = "Nenhuma conversa registrada ainda. O registro chega 1 a 2 minutos depois que a conversa termina.";
+
 function StructuredTab({ lead }: { lead: Lead }) {
   const c = lead.conversation;
-  if (!c) return <Empty>A conversa ainda não aconteceu.</Empty>;
+  if (!c) return <Empty>{NO_CALL_YET}</Empty>;
   return (
     <>
       <h3>
@@ -149,7 +152,7 @@ function StructuredTab({ lead }: { lead: Lead }) {
 
 function TranscriptTab({ lead }: { lead: Lead }) {
   const c = lead.conversation;
-  if (!c) return <Empty>A conversa ainda não aconteceu.</Empty>;
+  if (!c) return <Empty>{NO_CALL_YET}</Empty>;
   return (
     <>
       <h4>Resumo</h4>
@@ -210,8 +213,20 @@ function TrailTab({ events }: { events: TrailEvent[] }) {
   );
 }
 
+const REFRESH_MS = 5000;
+const FRESH_LEAD_MS = 60 * 60 * 1000;
+
 export function LeadTabs({ lead, events }: { lead: Lead; events: TrailEvent[] }) {
   const [tab, setTab] = useState<Tab>("Pesquisa");
+  const router = useRouter();
+
+  // The briefing and the post-call webhook (1 to 2 minutes after the call) arrive with no signal
+  // to this page: re-read it while a fresh lead still waits for them. The open tab is kept.
+  useEffect(() => {
+    if (lead.status === "talked" || Date.now() - new Date(lead.createdAt).getTime() > FRESH_LEAD_MS) return;
+    const timer = setInterval(() => router.refresh(), REFRESH_MS);
+    return () => clearInterval(timer);
+  }, [lead.status, lead.createdAt, router]);
   return (
     <>
       <div className="tabs" role="tablist">
