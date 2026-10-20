@@ -54,6 +54,8 @@ Até 8 linhas curtas para o agente de voz, sem jargão e sem pitch:
 
 Fora do `forAgent`: CNPJ, URLs, nomes de sócios e notas sobre como a pesquisa foi feita.
 
+Nada sobre preço, plano ou do que o valor depende, em nenhum campo: nem o deck nem o site da Paggo dizem como ela cobra. Se o lead perguntou valores, escreva só "ele quer saber valores"; a voz sabe o que responder.
+
 | Sinal na pesquisa | Módulo provável |
 | --- | --- |
 | Muitas SPEs ou empreendimentos ao mesmo tempo | Tesouraria (conta por empreendimento, saldo e cobertura de caixa num lugar) e Controladoria (DRE por SPE) |

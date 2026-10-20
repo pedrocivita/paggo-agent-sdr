@@ -20,10 +20,18 @@ type Case = {
   realEstate: boolean;
   /** A realistic name: the agent must search the person. */
   searchPerson?: boolean;
+  /** What the lead typed in the free field of the form. */
+  formExtra?: string;
+  tags?: string[];
   extra?: (t: EveEvalContext, briefing: Briefing) => void;
 };
 
 const MAX_MS = 45_000;
+// Neither Paggo's deck nor its site says how it charges, so no sentence about price may say what it
+// depends on (the briefing once told the voice "o preço depende do número de CNPJs/SPEs e dos módulos",
+// and in the eval "o valor depende do tamanho da operação" and "para explicar como o valor se define").
+const inventsPrice = (text: string) =>
+  text.split(/[.\n]/).some((s) => /pre[cç]o|valor|custo/i.test(s) && /depend|defin|tamanho|n[úu]mero de|mensalidade|cobrad/i.test(s));
 // Partners that are companies may be named; people never.
 const COMPANY_NAME = /\b(LTDA|S\.?\/?A\.?|EIRELI|PARTICIPA|EMPREENDIMENTO|INCORPORA|CONSTRU|FUNDO|HOLDING)/i;
 
@@ -97,6 +105,17 @@ const cases: Case[] = [
       t.check(b.forAgent, includes(/lead normal/i)).label("normal conversation");
     },
   },
+  {
+    description: "A lead who asks the price in the free field: the briefing must not invent how Paggo charges",
+    name: "Fabio Teste",
+    email: "fabio.teste@paggo.com.br",
+    company: "Paggo",
+    cnpj: "47883739000152",
+    fit: "desconhecido",
+    realEstate: false,
+    formExtra: "Quanto custa? Queria saber valores antes de conversar.",
+    tags: ["price"],
+  },
 ];
 
 const sameCnpj = (expected: string) => (value: unknown) => normalizeCnpj(String(value)) === expected;
@@ -104,9 +123,9 @@ const sameCnpj = (expected: string) => (value: unknown) => normalizeCnpj(String(
 export default cases.map((c) =>
   defineEval({
     description: c.description,
-    tags: ["research", "live"],
+    tags: ["research", "live", ...(c.tags ?? [])],
     async test(t) {
-      const form = { name: c.name, email: c.email, phone: "(11) 90000-0000", company: c.company, extra: "" };
+      const form = { name: c.name, email: c.email, phone: "(11) 90000-0000", company: c.company, extra: c.formExtra ?? "" };
       const started = Date.now();
       const turn = await t.send(researchMessage(form), { outputSchema: BriefingSchema });
       const ms = Date.now() - started;
@@ -138,6 +157,7 @@ export default cases.map((c) =>
       t.check(people, satisfies<string[]>((names) => names.every((n) => !text.includes(n)), "no partner names")).label("privacy");
 
       t.check(briefing.forAgent, includes(/m[óo]dulos? prov[áa]ve/i)).label("module hint");
+      t.check(JSON.stringify(briefing), satisfies<string>((s) => !inventsPrice(s), "no pricing rule")).label("no invented price");
       if (c.realEstate) t.calledTool("web_search", { input: { query: /SPE/i } });
       if (c.searchPerson) t.calledTool("web_search", { input: { query: new RegExp(c.name.split(" ")[0]) } });
       c.extra?.(t, briefing);
