@@ -33,7 +33,7 @@ O canal fica a nosso critério. Pode ser uma ligação para o telefone do lead, 
 - Link do repositório.
 - As regras de negócio pensadas e usadas ([business-rules.md](business-rules.md)).
 - O mapeamento de objeções, com a resposta para cada uma ([objections.md](objections.md)).
-- Um documento curto com o raciocínio por trás de cada parte construída (entregue em [reasoning.md](reasoning.md); a versão de uma linha de cada decisão está em [DECISIONS.md](../DECISIONS.md)).
+- Um documento curto com o raciocínio por trás de cada parte construída (entregue em [reasoning-summary.md](reasoning-summary.md); o diário com cada medição está em [reasoning.md](reasoning.md), e a versão de uma linha de cada decisão, em [DECISIONS.md](../DECISIONS.md)).
 
 ## Como o agente qualifica
 

@@ -36,7 +36,8 @@ Sem `AGENDA_URL` e `AGENDA_TOKEN`, uma agenda falsa responde no lugar da real. A
 
 | Arquivo | O que tem |
 | --- | --- |
-| [docs/reasoning.md](docs/reasoning.md) | O raciocínio de cada parte: opções, escolha, por que não as outras e a prova |
+| [docs/reasoning-summary.md](docs/reasoning-summary.md) | O raciocínio de cada parte, em resumo: o documento curto do case |
+| [docs/reasoning.md](docs/reasoning.md) | O diário do raciocínio: cada medição, opção e prova, na ordem em que aconteceram |
 | [docs/business-rules.md](docs/business-rules.md) | Regras de qualificação, fit, SPICED e agenda |
 | [docs/objections.md](docs/objections.md) | Objeções e como o agente responde cada uma |
 | [docs/architecture.md](docs/architecture.md) | Diagramas, contratos e mapa de arquivos |
