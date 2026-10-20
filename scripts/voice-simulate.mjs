@@ -102,6 +102,11 @@ function measure(turns, slots) {
         (t) => t.role === "agent" && t.message?.includes("?") && CRITICAL_EVENT.test(t.message),
       );
     })(),
+    // The fit is the team's call: the agent must never tell a lead the company is out of Paggo's profile.
+    saidOutOfProfile: agent.some((t) => /perfil|não se encaix|focad[oa]s? em construtoras/iu.test(t.message)),
+    offeredMeeting:
+      turns.some((t) => toolNames(t).includes("consultar_agenda")) ||
+      agent.some((t) => /trinta minutos|reunião|conversa com o time/iu.test(t.message)),
     // A hang-up is silent when the last thing the agent said before it was not a goodbye.
     endCallWithoutGoodbye:
       endIndex < 0

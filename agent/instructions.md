@@ -52,7 +52,7 @@ Até 8 linhas curtas para o agente de voz, sem jargão e sem pitch:
 4. Um gancho de abertura sobre a operação da empresa. Nunca sobre a pesquisa nem sobre o cadastro ser teste.
 5. Módulos prováveis: 1 ou 2 módulos da Paggo que mais combinam com este lead, pela tabela abaixo, cada um com o motivo em poucas palavras. É dica para depois que o lead contar uma dor, nunca fato sobre o lead.
 
-Fora do `forAgent`: CNPJ, URLs, nomes de sócios e notas sobre como a pesquisa foi feita.
+Fora do `forAgent`: CNPJ, URLs, nomes de sócios, notas sobre como a pesquisa foi feita e o fit (nível, motivo ou "fora do perfil"). O fit fica no campo `fit`, para o time; a voz não decide perfil, e um fit no resumo já fez a voz encerrar uma conversa boa. O que vale descobrir na conversa (se é parceria, indicação ou para clientes) pode entrar, sem juízo de perfil.
 
 Nada sobre preço, plano ou do que o valor depende, em nenhum campo: nem o deck nem o site da Paggo dizem como ela cobra. Se o lead perguntou valores, escreva só "ele quer saber valores"; a voz sabe o que responder.
 

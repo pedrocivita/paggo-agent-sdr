@@ -30,8 +30,12 @@ const MAX_MS = 45_000;
 // Neither Paggo's deck nor its site says how it charges, so no sentence about price may say what it
 // depends on (the briefing once told the voice "o preço depende do número de CNPJs/SPEs e dos módulos",
 // and in the eval "o valor depende do tamanho da operação" and "para explicar como o valor se define").
+// Questions end in "?": without that cut, two open questions ("tamanho do time", "tempo, custo ou
+// risco") made one sentence and tripped the check (20/10).
 const inventsPrice = (text: string) =>
-  text.split(/[.\n]/).some((s) => /pre[cç]o|valor|custo/i.test(s) && /depend|defin|tamanho|n[úu]mero de|mensalidade|cobrad/i.test(s));
+  text.split(/[.?!\n]/).some((s) => /pre[cç]o|valor|custo/i.test(s) && /depend|defin|tamanho|n[úu]mero de|mensalidade|cobrad/i.test(s));
+// "perfil" alone is a LinkedIn profile ("a busca achou perfil de analista"); these are fit judgments.
+const FIT_TALK = /\bfit\b|fora do perfil|perfil (d[ao] |ideal)|cliente ideal/i;
 // Partners that are companies may be named; people never.
 const COMPANY_NAME = /\b(LTDA|S\.?\/?A\.?|EIRELI|PARTICIPA|EMPREENDIMENTO|INCORPORA|CONSTRU|FUNDO|HOLDING)/i;
 
@@ -157,6 +161,8 @@ export default cases.map((c) =>
       t.check(people, satisfies<string[]>((names) => names.every((n) => !text.includes(n)), "no partner names")).label("privacy");
 
       t.check(briefing.forAgent, includes(/m[óo]dulos? prov[áa]ve/i)).label("module hint");
+      // The fit is for the team: once it reached the voice as "Fit baixo" and the agent hung up on the lead.
+      t.check(briefing.forAgent, satisfies<string>((s) => !FIT_TALK.test(s), "no fit in forAgent")).label("no fit for the voice");
       t.check(JSON.stringify(briefing), satisfies<string>((s) => !inventsPrice(s), "no pricing rule")).label("no invented price");
       if (c.realEstate) t.calledTool("web_search", { input: { query: /SPE/i } });
       if (c.searchPerson) t.calledTool("web_search", { input: { query: new RegExp(c.name.split(" ")[0]) } });

@@ -93,6 +93,40 @@ Como agir:
 ${CALL_STYLE}`,
   },
 
+  // The production call of 20/10: a consulting firm whose clients are builders, and a briefing that
+  // carried the research's fit. The agent said the company did not fit Paggo and hung up.
+  "fora-do-perfil": {
+    lead: {
+      lead_name: "Rafael",
+      lead_role: "Analista ou Coordenador Financeiro; papel na compra: Usuário Principal",
+      company_name: "Atlas Consultoria Financeira Ltda",
+      briefing: [
+        "Rafael Lima informou que é Analista ou Coordenador Financeiro, papel de Usuário Principal. A busca achou perfil de Analista de Tecnologia na Atlas. Confirme o cargo com ele.",
+        "A Atlas é uma consultoria financeira de Belo Horizonte (BPO financeiro e controladoria terceirizada), com uns 25 funcionários.",
+        "Confirme logo se ele busca a Paggo para a própria Atlas ou para os clientes. Pergunte que tipo de cliente atendem, se há construtoras.",
+        "Gancho: pergunte como hoje eles juntam os dados financeiros dos clientes e qual parte ainda é manual.",
+        "Módulos prováveis, só depois de ele contar uma dor: Automações com IA e Contas a pagar.",
+        "Fit baixo: não é construtora e não tem SPEs. Vale descobrir se é uma parceria ou uma indicação.",
+      ].join("\n"),
+    },
+    user: `Você é Rafael Lima, analista de tecnologia da Atlas Consultoria Financeira, em Belo Horizonte. A Atlas faz o financeiro terceirizado de umas 15 construtoras de médio porte.
+
+O que é verdade (conte só quando perguntarem):
+- Você quer conhecer a Paggo para recomendar aos clientes construtoras, e talvez usar na própria operação da Atlas.
+- Os clientes mandam extratos, boletos e planilhas por e-mail; a Atlas junta tudo à mão numa planilha por cliente. Os ERPs dos clientes são antigos.
+- O impacto: dois analistas passam a semana inteira consolidando.
+- O evento: três construtoras novas entram como clientes no começo de 2027.
+- A decisão: quem decide ferramentas e parcerias é o Marcos, sócio-diretor da Atlas; você recomenda.
+
+Como agir:
+- Na primeira fala, diga só "pode falar, beleza".
+- Se perguntarem seu cargo, diga que é da tecnologia e cuida das integrações.
+- Diga cedo que os clientes de vocês são construtoras.
+- Se o agente oferecer uma conversa com o time, aceite e escolha o primeiro horário oferecido.
+
+${CALL_STYLE}`,
+  },
+
   "pessoa-errada": {
     lead: {
       lead_name: "Juliana",
