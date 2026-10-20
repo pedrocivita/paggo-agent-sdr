@@ -56,7 +56,7 @@ O documento curto que o case pede: para cada parte construída, o problema, a es
 
 - **Escolha:** ElevenLabs Agents, conversa no próprio site, `gemini-2.5-flash` sem raciocínio, voz brasileira da conta da Paggo. O agente se apresenta como assistente virtual da Paggo, o formulário avisa que a conversa é com IA, e ele confirma se perguntarem. O prompt e a configuração ficam em `voice/` e são publicados por um script, para a banca ler o agente no repo.
 - **Por que não as outras:** montar fala-para-texto, LLM e voz à mão gastaria o tempo em encanamento; telefone ou WhatsApp pedem número e aprovação, e o case diz que o canal importa menos. Entre 4 LLMs em 20 simulações, o `claude-haiku-5-5` teve o melhor estilo, mas 31% das falas acima de 2 s; demora é critério Alto e não se corrige no prompt.
-- **Prova:** duas conversas em produção na conta da Paggo, de ponta a ponta; na última, mediana de 1,25 s do fim da fala do lead até o áudio.
+- **Prova:** três conversas em produção na conta da Paggo, de ponta a ponta. Do fim da fala do lead até o áudio, mediana de 1,25 s na de 19/10, à noite, e de 2,19 s na de 20/10, no meio do dia, com o LLM uns 0,3 s mais lento e as falas depois das ferramentas acima de 2,7 s.
 
 ## Agenda
 
@@ -66,7 +66,7 @@ O documento curto que o case pede: para cada parte construída, o problema, a es
 
 ## Saída estruturada
 
-- **Escolha:** o webhook pós-chamada do ElevenLabs, assinado com HMAC, grava transcrição, resumo e 10 campos: as 5 letras do SPICED, resultado, horário, objeções, dados corrigidos e o que ficou para o time.
+- **Escolha:** o webhook pós-chamada do ElevenLabs, assinado com HMAC, grava transcrição e 11 campos: as 5 letras do SPICED, resultado, horário, objeções, dados corrigidos, o que ficou para o time e um resumo. O resumo é nosso, com a regra de só dizer o que foi dito, porque o automático do ElevenLabs afirmou um envio de e-mail que nada faz; o dele fica como reserva.
 - **Por que não as outras:** buscar a conversa pela API depois da chamada seria um caminho a mais; o SDK para conferir a assinatura seria uma dependência a mais para 15 linhas.
 - **Prova:** as abas Conversa estruturada e Transcrição das conversas de produção; a rota recusa chamada sem assinatura.
 
@@ -102,11 +102,12 @@ O prompt foi tratado como uma página de conversão: muda, mede, decide.
 
 - **Pesquisa:** um eval do eve com 7 casos difíceis, ferramentas reais e checagens fixas, sem LLM como juiz (`npm run eval`, cerca de US$ 0,45). Um caso novo entra quando aparece um erro novo: o sétimo, um lead que pergunta o preço, entrou quando um briefing de produção inventou como a Paggo cobra.
 - **Voz:** conversas simuladas por texto contra o agente publicado, com 4 personas (interessada, cético com preço, pessoa errada, lead que deixa o agente conduzir) e checagens na transcrição: tamanho das falas, palavras proibidas, decisão antes da agenda, horário da lista, despedida antes de desligar, promessa de envio, abertura que lê o formulário. Cada erro achado numa conversa real virou uma checagem.
-- **Ao vivo:** 4 conversas com microfone na conta de teste e 2 na conta da Paggo, lidas no rastro e na API de conversas do ElevenLabs.
+- **Ao vivo:** 4 conversas com microfone na conta de teste e 3 na conta da Paggo, lidas no rastro e na API de conversas do ElevenLabs.
 
 ## O que não está resolvido
 
-- O agente ainda escorrega em falas longas. Com o lead cético, que não chega a pedir a reunião, pula o evento crítico e às vezes a pergunta de decisão; em cerca de 1 de cada 15 simulações, desliga sem falar.
+- O agente ainda escorrega em falas longas e, em cerca de 1 de cada 15 simulações, desliga sem falar. Com o lead cético, que não chega a pedir a reunião, costuma pular o evento crítico. Em 2 de 14 reuniões simuladas marcou sem perguntar quem decide, e aí a coleta deduz quem decide.
+- A demora sobe no meio do dia: mediana de 2,19 s na conversa de 20/10, contra 1,25 s na de 19/10, à noite, com o mesmo LLM.
 - A pesquisa oscila no caso de e-mail pessoal (às vezes pula a busca de SPEs); a busca pelo cargo só foi testada com nomes fictícios.
 - O `gemini-2.5-flash` sai em 30/11/2026: a comparação de LLMs precisa rodar de novo.
 

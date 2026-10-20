@@ -333,6 +333,22 @@ Erros lidos na transcrição, ainda sem correção:
 
 Na primeira redação, a pergunta do evento crítico começava com "antes de marcar" e ocupou o lugar da pergunta de decisão: a interessada marcou sem dizer quem decide. Na final, as falhas que sobram são do cético, que não chega a pedir a reunião (o agente oferece, e ele aceita com condição): 0 de 2 com evento crítico, e 1 de 2 marcou sem perguntar quem decide. O desligamento mudo é o já registrado (cerca de 1 em 15), logo depois de o lead contar a dor; a mudança não mexe nas regras de desligamento. Publicado na conta da Paggo em 20/10.
 
+Mais 5 rodadas com a versão final (17 no total): evento crítico em 11 de 15 conversas que chegaram à agenda ou à dor, e 2 de 14 reuniões marcadas sem perguntar quem decide (a interessada logo depois de responder o evento crítico; o cético, que não chegou a pedir a reunião, sem nenhuma das duas perguntas). Uma variante mandou fazer a pergunta de quem decide na mesma fala em que o agente responde ao evento crítico, também na descrição de `consultar_agenda`: 12 rodadas, evento crítico em 10 de 11 e 1 de 9 reuniões sem quem decide, numa rodada em que o próprio lead disse "a gente participa e recomenda". O empate está dentro do ruído, e a versão publicada já tinha passado no teste ao vivo: a variante ficou de fora.
+
+**Terceira conversa em produção** (20/10, conversa `conv_7501...`, 3,3 min, 1.535 créditos), com a versão final. O lead foi o próprio desenvolvedor, no papel de uma empresa de intermediação de ingressos.
+
+| O que | Resultado |
+| --- | --- |
+| Evento crítico e decisão | Depois do impacto, perguntou o que deixa isso urgente e, em seguida, quem decide; as cinco letras chegaram à coleta |
+| Gancho do briefing | A primeira pergunta foi sobre recebimentos das vendas de ingressos e repasses aos organizadores, o que a pesquisa achou |
+| Agenda | O lead pediu quinta às 9h, fora dos dois horários oferecidos; o agente repetiu, marcou depois do "confirmo", e a trava aceitou, porque o horário estava livre na janela |
+| Pedido de e-mail | "Deixo anotado para o time", sem prometer envio |
+| Fechamento | Despedida com "até mais" e `end_call` |
+| Deslizes | Um "Perfeito" na primeira resposta; `dados_corrigidos` recebeu os nomes de quem decide |
+| Demora até o áudio | Mediana de 2,19 s em 10 falas (1,25 s na conversa de 19/10, à noite). O LLM respondeu cerca de 0,3 s mais devagar (mediana de 0,78 s até o primeiro token, contra 0,48 s); duas falas depois das ferramentas passaram de 2,7 s, como já acontecia; uma fala somou 1,8 s esperando o fim da fala do lead e 2,1 s de LLM. Nas simulações, o tempo do LLM ficou igual antes e depois da mudança (mediana perto de 1,1 s), então a causa provável é a variação do serviço no meio do dia, não o prompt; uma conversa só não prova |
+
+**Resumo do pós-chamada** (20/10). O resumo dessa conversa, escrito pelo próprio ElevenLabs, dizia que "a confirmação será enviada por e-mail". O agente não prometeu, e nada envia. A config do agente não deixa orientar esse resumo: só escolhe o idioma e o LLM da análise. Opções: deixar como limite conhecido; ou um campo `resumo` nosso na coleta, com a regra de só dizer o que foi dito e nunca afirmar envio ou contato. Escolhido: o campo nosso, que o painel usa, com o resumo do ElevenLabs como reserva se vier vazio (`lib/voice.ts`, com teste). Prova: 5 simulações, nenhum resumo afirma envio, e o pedido de material do cético ficou em `duvidas`. Numa delas, a coleta escreveu que a própria lead decide, sem ela ter dito, e o resumo repetiu: a coleta ainda deduz quando a conversa pula a pergunta.
+
 ## Interface
 
 Base: os tokens que vieram com o case (`app/paggo.css`) e o deck institucional, lido nas páginas 1 e 18.

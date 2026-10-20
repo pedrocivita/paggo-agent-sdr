@@ -1,105 +1,94 @@
 # Status
 
-Memória viva do projeto: onde estamos, o que está provado, o que falta e as armadilhas. Toda sessão lê este arquivo no começo e o reescreve antes do push (substituir, não acrescentar). Atualizado em 19/10/2026, à noite.
+Memória viva do projeto: onde estamos, o que está provado, o que falta e as armadilhas. Toda sessão lê este arquivo no começo e o reescreve antes do push (substituir, não acrescentar). Atualizado em 20/10/2026, dia da entrega, antes do congelamento do código.
 
 ## Índice
 
 - [Onde estamos](#onde-estamos)
-- [O que mudou em 19/10](#o-que-mudou-em-1910)
+- [O que mudou em 20/10](#o-que-mudou-em-2010)
 - [Provado e não provado](#provado-e-não-provado)
 - [Próximos passos](#próximos-passos)
 - [Entrega](#entrega)
 - [Pendências que dependem da Paggo](#pendências-que-dependem-da-paggo)
 - [Dados de teste no banco](#dados-de-teste-no-banco)
 - [Armadilhas](#armadilhas)
-- [Linha de corte](#linha-de-corte)
 
 ## Onde estamos
 
-- **Tudo em produção:** formulário, pesquisa, voz na conta da Paggo (voz Samuel, `gemini-2.5-flash`), agenda real com trava na marcação, pós-chamada e painel com as 5 abas.
-- **Última prova ponta a ponta:** segunda conversa em produção (19/10, noite, `conv_6301...`, 5,4 min), depois de todas as mudanças do dia. Detalhes em [reasoning.md](reasoning.md#agente-de-voz).
-- **O entregável está completo:** app no ar, repo, regras de negócio, objeções e o raciocínio curto ([reasoning-summary.md](reasoning-summary.md)), com custo por lead e por reunião. O que resta é entendimento e defesa (Bloco 1), a base legal da LGPD mais detalhada e a varredura final.
+- **Tudo em produção:** formulário, pesquisa, voz na conta da Paggo (voz Samuel, `gemini-2.5-flash`), agenda real com trava na marcação, pós-chamada com resumo próprio e painel com as 5 abas.
+- **Última prova ponta a ponta:** terceira conversa em produção (20/10, `conv_7501...`, 3,3 min), depois das mudanças do dia. Detalhes em [reasoning.md](reasoning.md#agente-de-voz).
+- **O entregável está completo:** app no ar, repo com README de teste para a banca, regras de negócio com a base legal da LGPD, objeções e o raciocínio curto ([reasoning-summary.md](reasoning-summary.md)). Falta só o envio.
 
-## O que mudou em 19/10
+## O que mudou em 20/10
 
-Cada item tem opções, escolha e prova em [reasoning.md](reasoning.md) e uma linha em [DECISIONS.md](../DECISIONS.md).
+Cada item tem opções, escolha e prova em [reasoning.md](reasoning.md) e uma linha em [DECISIONS.md](../DECISIONS.md) quando é decisão.
 
 | Mudança | Prova |
 | --- | --- |
-| O agente não promete convite: a agenda do case é fictícia e não manda nada | 3 simulações sem "convite"; conversa em produção sem convite |
-| "Deixo anotado para o time" no lugar de "o time manda" (material, pessoa errada, falha da agenda), com exemplo bom e ruim e no máximo duas ofertas de reunião | Checagem `promisedSending`: 0 em 5 rodadas na versão final; conversa em produção |
-| Regras de decisão e de desligamento na descrição de `consultar_agenda` e `end_call`; "nunca encerre por achar que a empresa não tem o perfil" | Lote de 15 e mais 5 rodadas; as taxas baixas não provam queda, só que nada quebrou |
-| Trava na rota de marcação: só horário livre da janela | Teste unitário; duas recusas em produção; caminho feliz na conversa em produção |
-| Abertura sem ler o formulário de volta | Persona `direto`: 2 de 5 aberturas liam o formulário antes, 0 de 5 depois |
-| A pesquisa não inventa como a Paggo cobra | 7º caso no eval: 2 de 2 rodadas inventavam antes, 0 depois |
-| Formulário pede "Nome completo"; origem do lead (UTM e site de origem) gravada e mostrada no painel | Print no dev local; lead de teste em produção vindo de `example.com` com as 3 UTM |
-| Revisão dos documentos da banca: texto velho, promessas, fontes de cada número | Commits de 19/10 |
+| O agente pergunta o evento crítico antes da agenda, numerado com a pergunta de quem decide | Simulação: 2 de 6 antes, 11 de 15 depois; conversa em produção com as cinco letras na coleta |
+| Resumo do pós-chamada próprio (campo `resumo`), porque o do ElevenLabs afirmou um envio de e-mail que nada faz | Teste unitário; 5 simulações sem afirmar envio |
+| Formulário cabia fora da tela no celular (o select de cargo empurrava a grade) | Dev local a 375 px: documento com 375 px; CSS conferido em produção |
+| Painel mostra "médio" e "média" com acento | Dev local |
+| README abre com o teste de 5 minutos, o que cada aba mostra e os limites conhecidos | Commit |
+| LGPD: base legal de cada dado e o que fica para a operação real | [business-rules.md](business-rules.md#dados-pessoais) |
+| Raciocínio curto revisado contra o código: a abertura diz "assistente virtual", não "sou IA"; o formulário avisa da IA | Commit |
+| Checagem `askedCriticalEvent` no `voice-simulate.mjs` | Conferida nas transcrições |
 
 ## Provado e não provado
 
 | Item | Estado | Como foi provado |
 | --- | --- | --- |
-| Portões | Provado | `npm test` (24), `npm run typecheck`, `npm run lint`, `npm run build` |
-| Pesquisa | Provado, com uma oscilação | Eval de 7 casos em 19/10: 6 de 7, 71 de 72 gates. A Cury oscila (pula a busca de SPEs ou dá confiança alta sem domínio), com ou sem a regra nova; o CNPJ escolhido sempre foi o certo ([research-cases.md](research-cases.md)) |
-| Voz em produção | Provado | Duas conversas na conta da Paggo; a última com mediana de 1,25 s até o áudio, SPICED no pós-chamada e reunião marcada pela trava |
-| Agenda real | Provado | Consulta (20 a 22 horários em 6 dias úteis), marcação, 409 e recusa de horário fora da janela, todos pelas rotas de produção |
-| Pós-chamada | Provado | Webhook HMAC na conta da Paggo; rota recusa chamada sem assinatura ou com assinatura falsa (401) |
-| Origem do lead | Provado | Lead de teste em produção com UTM e referrer; aba Formulário mostra a linha Origem |
-| Simulações por texto | Ferramenta | `scripts/voice-simulate.mjs` com 4 personas (interessado, cetico, pessoa-errada, direto) e checagens de estilo, decisão, agenda, despedida, promessa e abertura |
-| Não provado | Aberto | O agente quase nunca pergunta o evento crítico; ainda escorrega em falas longas; leu "outro dia, à tarde" como a tarde do mesmo dia; desligamento mudo e decisão pulada aparecem em cerca de 1 de cada 15 simulações; a falha da agenda (timeout) nunca foi provocada ao vivo; a busca pelo cargo só foi testada com nomes fictícios |
+| Portões | Provado | `npm test` (25), `npm run typecheck`, `npm run lint`, `npm run build` |
+| Pesquisa | Provado, com uma oscilação | Eval de 7 casos em 19/10: 6 de 7, 71 de 72 checagens. A Cury oscila (pula a busca de SPEs); o CNPJ escolhido sempre foi o certo ([research-cases.md](research-cases.md)) |
+| Voz em produção | Provado | Três conversas na conta da Paggo; a de 20/10 com evento crítico e quem decide antes da agenda, reunião marcada pela trava e pedido de e-mail anotado sem promessa |
+| Demora | Provado, com uma ressalva | Mediana de 1,25 s em 19/10, à noite; 2,19 s em 20/10, no meio do dia, com o LLM uns 0,3 s mais lento. Nas simulações o prompt novo não mudou o tempo do LLM |
+| Agenda real | Provado | Consulta, marcação, 409 e recusa de horário fora da janela, todos pelas rotas de produção |
+| Pós-chamada | Provado | Webhook HMAC na conta da Paggo; rota recusa assinatura falsa (401). O campo `resumo` foi provado em simulação; numa conversa ao vivo, ainda não |
+| Não provado | Aberto | Em 2 de 14 reuniões simuladas marcou sem perguntar quem decide (e a coleta deduz quem decide); desligamento mudo em cerca de 1 de 15 simulações; falas longas com o cético; a falha da agenda (timeout) nunca foi provocada ao vivo; a busca pelo cargo só foi testada com nomes fictícios |
 
 ## Próximos passos
 
-1. **Bloco 1, com o dono do projeto:** tour do código seguindo um lead (o passo 1, formulário e `app/actions.ts`, está feito); rodar uma vez `npm run eval` e uma simulação lendo o rastro e as medidas; kit de defesa fora do repo.
-2. **Feito em 19/10, à noite:** o raciocínio curto ([reasoning-summary.md](reasoning-summary.md)), com o custo por lead (cerca de R$ 2,70 com conversa) e por reunião (cerca de R$ 9,90, com um funil hipotético), cada preço com fonte.
-3. **LGPD:** detalhar a base legal nas regras de negócio, com a lei e o guia da ANPD (hoje só cita o consentimento, art. 7º, I).
-4. **Varredura final antes do congelamento** (ver [Dados de teste no banco](#dados-de-teste-no-banco)), com ok item por item.
+1. **16h, congelamento:** depois disso, só documentos.
+2. **Envio, até 18h:** tornar o repo público (decidido em 20/10; o histórico não tem segredo, varrido em 20/10), conferir que o link abre sem login e mandar a mensagem com o link do app, o do repo e a senha do painel. A senha vai só na mensagem.
+3. **Na mensagem**, avisar a Paggo das reuniões de teste na agenda do case (lista abaixo).
 
 ### Depois do case
 
 - O `simulate-conversation` sai do ar em 31/10/2026: trocar por `agent-testing/create` e `run-tests` no `voice-simulate.mjs`.
-- O `gemini-2.5-flash` sai em 30/11/2026, com desvio de parte das chamadas a partir de 1/11 (`deprecation_info` do `GET /v1/convai/llm/list`): rodar a comparação de LLMs de novo.
-- O eval monta o formulário sem o cargo (`researchMessage` recebe nome, e-mail, telefone, empresa e campo livre): incluir o cargo nos casos.
+- O `gemini-2.5-flash` sai em 30/11/2026, com desvio de parte das chamadas a partir de 1/11: rodar a comparação de LLMs de novo, medindo também no meio do dia.
+- Pergunta de quem decide com garantia em código (campo obrigatório em `consultar_agenda`), agora que o evento crítico divide o mesmo momento.
+- O eval monta o formulário sem o cargo: incluir o cargo nos casos.
 - Passar o fit para a voz com uma regra no prompt; convite e retorno ao lead pela integração com o CRM da Paggo; "como conheceu" no formulário, ao lado da origem medida.
+- LGPD para operação real: canal para os direitos do titular, prazo de retenção e cláusulas-padrão da ANPD nos contratos com os serviços de fora do Brasil.
 
 ## Entrega
 
 | Quando | O quê |
 | --- | --- |
 | Ter 20/10, 16h | Código congelado. Depois disso, só documentos |
-| Ter 20/10, 18h | Envio: link do app, link do repo, e a senha do painel na mensagem, nunca no repo |
-
-O repositório é privado. A banca entra como colaboradora, só leitura, com os usuários do GitHub que o dono do projeto pedir. Se não chegarem até as 16h de terça, decidir de novo entre tornar público (o histórico não tem segredo, mas tem nomes de contexto e caminhos locais em STATUS antigos) e outra forma de acesso.
+| Ter 20/10, 18h | Envio: link do app, link do repo (público) e a senha do painel na mensagem, nunca no repo |
 
 ## Pendências que dependem da Paggo
 
-- Avisar a Paggo das três reuniões de teste na agenda do case: 19/10 às 12h, 21/10 às 13h e 21/10 às 14h30. A API não tem rota para desmarcar.
+- Reuniões de teste na agenda do case, que a API não deixa desmarcar: 19/10 às 12h, 21/10 às 13h, 21/10 às 14h30 e 22/10 às 9h.
 - Preço ou faixa que o agente pode falar; quais ERPs têm integração pronta.
 - O estudo de caso, que aparece no menu do deck sem conteúdo.
 
 ## Dados de teste no banco
 
-Dev e produção usam o mesmo banco, e a banca abre o painel. Em 19/10 saíram, com ok do dono do projeto, um lead com dados de uma pessoa real e as 31 linhas sem lead de rodadas antigas do eval. Ficaram, por decisão dele, para a varredura final:
-
-- Leads de pessoas fictícias: os "Teste" dos casos difíceis, "Carla Mendes" (teste do formulário) e "Lucas Origem Teste" (teste da origem).
-- Leads com dados reais do desenvolvedor: as conversas de prova de 17/10, 19/10 de manhã e 19/10 à noite, e um lead de 17/10 sem conversa.
-- Eventos de teste: `teste-manual`, `smoke-*` (inclusive `smoke-2026-10-19` e `smoke-booking-guard-2026-10-19`) e as linhas sem lead das rodadas do eval de 19/10.
+Dev e produção usam o mesmo banco, e a banca abre o painel. Em 20/10 o dono do projeto decidiu não fazer varredura: ficam os leads fictícios dos casos difíceis, os testes do formulário e da origem, as conversas de prova do desenvolvedor (17/10, 19/10 e 20/10) e os eventos de teste e das rodadas do eval. O README avisa a banca que esses leads existem.
 
 ## Armadilhas
 
-- A chave do ElevenLabs está marcada como sensível no Vercel: o `vercel env pull` traz o valor vazio. Scripts usam o arquivo de chave fora do repo. A chave da Paggo não lê a assinatura da conta: créditos aparecem como `null` na simulação.
-- O ElevenLabs só alcança a produção: ferramentas e webhook apontam para `paggo-agent-sdr.vercel.app`. Mudou rota, push antes de testar a voz. Mudou variável que o prompt usa: deploy do código antes da publicação do agente. O `voice-sync.mjs` reaproveita o webhook pela URL e não troca o segredo.
+- A chave do ElevenLabs está marcada como sensível no Vercel: o `vercel env pull` traz o valor vazio. Os scripts usam um arquivo de chave fora do repo, um por conta (teste e Paggo); confira qual conta antes de publicar.
+- O ElevenLabs só alcança a produção: ferramentas e webhook apontam para `paggo-agent-sdr.vercel.app`. Mudou rota, push antes de testar a voz. O `voice-sync.mjs` reaproveita o webhook pela URL e não troca o segredo.
+- A simulação aceita no máximo 8 conversas ao mesmo tempo por conta (HTTP 429); rodar em lotes de 6.
 - Na simulação as ferramentas da agenda são falsas: a trava da marcação só é exercitada em produção.
-- Uma taxa de 1 em 15 não se prova com 15 rodadas; uma checagem por palavra deixa passar a mesma ideia dita de outro jeito (aconteceu com o preço: virou uma checagem por frase).
-- Cada rodada do eval grava eventos sem lead no banco compartilhado; entram na varredura.
-- Em 19/10 esta máquina ficou uns 10 minutos sem alcançar o Neon (porta 5432 e 443), com a produção normal: antes de depurar o código, testar a conexão.
-- O painel do navegador do app troca `127.0.0.1` por `localhost`: para provar o referrer, navegar a partir de um site externo em HTTPS para a produção.
-- Voz com moderação ao vivo não pode ser usada em agente; o prompt fala no masculino.
+- Uma taxa de 1 em 15 não se prova com 15 rodadas; com 6 a 12 rodadas, diferença de uma ocorrência é ruído.
+- A demora da voz varia com a hora: comparar conversas no mesmo período do dia.
+- O resumo automático do ElevenLabs não tem prompt configurável; o painel usa o campo `resumo` da coleta.
+- Cada rodada do eval grava eventos sem lead no banco compartilhado.
 - O dev local usa a conta de teste do ElevenLabs (`.env.development.local`, que tem prioridade sobre o `.env.local`). Cada worktree precisa dos dois arquivos, copiados de outro worktree e nunca commitados, e de `npm install`; desfazer a mudança que o install fizer no `package-lock.json`.
 - Mais armadilhas do código em `AGENTS.md`, seção Gotchas.
-
-## Linha de corte
-
-Se atrasar, sai nesta ordem: kit de defesa vira só o roteiro; custo e LGPD ficam curtos; o raciocínio curto vira um sumário no topo do reasoning. Nunca sai: rastro, briefing com fonte, voz em produção, agenda e a saída estruturada da conversa.
 
 Agent: Claude Code (claude-opus-5-5).
