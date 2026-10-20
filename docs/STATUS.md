@@ -54,7 +54,7 @@ Cada item tem opções, escolha e prova em [reasoning.md](reasoning.md) e uma li
 ## Próximos passos
 
 1. **Código congelado às 16h** (último commit de código: `4ba0d16`). Daqui em diante, só documentos.
-2. **Envio, até 18h:** tornar o repo público (decidido em 20/10; o histórico não tem segredo, varrido em 20/10), conferir que o link abre sem login e mandar a mensagem com o link do app, o do repo e a senha do painel. A senha vai só na mensagem.
+2. **Envio, até 18h:** o repo está público desde 20/10, com descrição, e o link, o README e os documentos abrem sem login (conferido; o histórico não tem segredo). Falta mandar a mensagem com o link do app, o do repo e a senha do painel. A senha vai só na mensagem.
 3. **Na mensagem**, avisar a Paggo das reuniões de teste na agenda do case (lista abaixo).
 
 ### Depois do case
