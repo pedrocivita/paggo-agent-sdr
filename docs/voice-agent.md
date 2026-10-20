@@ -76,6 +76,7 @@ Campos da aba Analysis, declarados na config do agente, que chegam prontos no we
 | `objecoes` | Objeções levantadas e como ficaram, separadas por ponto e vírgula |
 | `dados_corrigidos` | Dados que o lead confirmou ou corrigiu (nome, cargo, empresa, e-mail, indicação de outra pessoa) |
 | `duvidas` | Perguntas que o agente não soube responder e ficaram para o time |
+| `resumo` | Resumo de duas a quatro frases, só com o que foi dito, sem afirmar envio ou contato que nada faz. O painel usa este campo; o resumo automático do ElevenLabs fica como reserva |
 
 ## Latência
 

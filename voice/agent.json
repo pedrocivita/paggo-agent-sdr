@@ -125,6 +125,10 @@
         "type": "string",
         "description": "Cargo e área do lead, e o que ele confirmou ou corrigiu: nome, empresa, e-mail, ou nome e contato de quem decide."
       },
+      "resumo": {
+        "type": "string",
+        "description": "Resumo da conversa em duas a quatro frases: quem é o lead, como a operação funciona, a dor, o que deixa isso urgente, quem decide e o resultado. Só o que foi dito. O agente não envia nada e ninguém liga de volta: nunca escreva que algo será enviado, confirmado por e-mail ou que alguém vai entrar em contato. Pedido do lead entra como pedido anotado para o time."
+      },
       "duvidas": {
         "type": "string",
         "description": "O que ficou para o time: perguntas que o agente não soube responder, pontos como integração com um ERP específico ou preço, e pedidos como mandar material por e-mail ou procurar a pessoa indicada. Vazio se nada."

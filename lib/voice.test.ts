@@ -55,6 +55,15 @@ describe("post-call payload", () => {
     expect(record?.conversation.result).toBe("reunião marcada");
   });
 
+  it("prefers our summary field and falls back to the ElevenLabs summary", () => {
+    expect(toConversation(payload)?.conversation.summary).toBe("Ana cuida da tesouraria.");
+    const withOurs = structuredClone(payload) as typeof payload & {
+      data: { analysis: { data_collection_results: Record<string, unknown> } };
+    };
+    withOurs.data.analysis.data_collection_results.resumo = { value: "Ana pediu material, anotado para o time." };
+    expect(toConversation(withOurs)?.conversation.summary).toBe("Ana pediu material, anotado para o time.");
+  });
+
   it("ignores other webhook events", () => {
     expect(toConversation({ type: "post_call_audio", data: {} })).toBeNull();
   });

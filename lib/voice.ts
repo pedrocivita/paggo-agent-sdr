@@ -53,7 +53,9 @@ export function toConversation(payload: PostCall): PostCallRecord | null {
       transcript: (d.transcript ?? [])
         .filter((t) => (t.role === "agent" || t.role === "user") && t.message)
         .map((t) => ({ role: t.role as "agent" | "user", text: withoutAudioTags(String(t.message)) })),
-      summary: d.analysis?.transcript_summary ?? "",
+      // Our own summary field first: ElevenLabs' fixed summary once said a confirmation would go by
+      // e-mail, which nothing sends. Theirs stays as the fallback.
+      summary: field("resumo") || d.analysis?.transcript_summary || "",
       spiced: Object.fromEntries(
         ["situacao", "dor", "impacto", "evento_critico", "decisao"].map((k) => [k, field(k)]),
       ),
