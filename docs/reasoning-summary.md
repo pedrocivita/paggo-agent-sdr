@@ -18,6 +18,7 @@ O documento curto que o case pede: para cada parte construída, o problema, a es
 - [Saída estruturada](#saída-estruturada)
 - [Qualificação e objeções](#qualificação-e-objeções)
 - [Dados pessoais](#dados-pessoais)
+- [Custo por lead e por reunião](#custo-por-lead-e-por-reunião)
 - [Como foi testado](#como-foi-testado)
 - [O que não está resolvido](#o-que-não-está-resolvido)
 
@@ -79,6 +80,21 @@ O documento curto que o case pede: para cada parte construída, o problema, a es
 
 - **Escolha:** aceite obrigatório no formulário, com data e hora guardadas (consentimento, LGPD, art. 7º, I); só informação pública da empresa; nada de CPF, idade ou dado pessoal de sócios, nem no briefing nem na fala; o CPF que aparece na razão social de MEI é removido.
 - **Prova:** o eval confere que nenhum nome de sócio pessoa física aparece no briefing.
+
+## Custo por lead e por reunião
+
+Medidas do próprio projeto, preços de tabela, dólar PTAX de venda de 16/10/2026, R$ 5,0826 ([Banco Central](https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='10-16-2026'&$format=json)).
+
+| Parte | Medida | Preço | Por lead |
+| --- | --- | --- | --- |
+| Pesquisa (Claude Sonnet 5.5) | Média de US$ 0,060 por briefing nos casos difíceis, pelos tokens medidos | US$ 2 e US$ 10 por milhão de tokens de entrada e de saída ([Anthropic](https://platform.claude.com/docs/en/about-claude/pricing)) | US$ 0,06 |
+| Busca (Exa) | Média de 1,7 busca por briefing, cada uma com o texto de 5 páginas | US$ 0,007 por busca, e até US$ 0,005 se o texto for cobrado como no `/contents` ([Exa](https://exa.ai/pricing)) | até US$ 0,02 |
+| Voz (ElevenLabs) | As conversas de produção levaram de 4 a 5,4 min; a conta usa 5 | US$ 0,08 por minuto além dos incluídos no plano ([ElevenLabs](https://elevenlabs.io/pricing/agents)), mais US$ 0,010 por minuto de LLM, a estimativa da própria plataforma para este prompt | US$ 0,45 |
+| Hospedagem, banco, Receita | Vercel e Neon nos planos grátis; BrasilAPI grátis | | perto de zero no volume do case |
+
+- **Lead que conversa:** cerca de US$ 0,53, ou **R$ 2,70**. **Lead que só preenche:** cerca de US$ 0,08, ou R$ 0,40.
+- **Por reunião:** custo de todos os leads dividido pelas reuniões. Com uma hipótese de funil, sem fonte (de 100 leads, 60 conversam e 18 marcam), são US$ 35 para 18 reuniões: cerca de US$ 1,94, ou **R$ 9,90 por reunião**. O funil de verdade sai do painel, pelo resultado de cada conversa, e por canal, pela origem gravada.
+- O minuto de voz usa o preço do minuto além do plano, o lado conservador: os minutos já incluídos no plano da Paggo baixam o custo. Na conta da Paggo, a conversa de 5,4 min gastou 2.557 créditos, cerca de 470 por minuto.
 
 ## Como foi testado
 

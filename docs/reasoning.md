@@ -423,6 +423,7 @@ Prova: teste unitário de `isFreeSlot` em `lib/agenda.ts` (o mesmo instante com 
 - [Preços do AI Gateway](https://vercel.com/docs/ai-gateway/pricing)
 - [Preços do ElevenAgents](https://elevenlabs.io/pricing/agents) e [preços do ElevenLabs](https://elevenlabs.io/pricing)
 - [Preços da Anthropic](https://platform.claude.com/docs/en/about-claude/pricing)
+- [Preços da Exa](https://exa.ai/pricing) e o dólar PTAX do Banco Central, usados no custo por lead de [reasoning-summary.md](reasoning-summary.md#custo-por-lead-e-por-reunião)
 - [Modelos de voz do ElevenLabs](https://elevenlabs.io/docs/overview/models), com as latências de cada um
 - [Simulate conversation](https://elevenlabs.io/docs/api-reference/agents/simulate-conversation), com a data de saída, e o [changelog de 6/7/2026](https://elevenlabs.io/docs/changelog/2026/7/6), que aponta o substituto
 - `GET /v1/convai/llm/list` da API do ElevenLabs, lido em 19/10/2026: a data de saída e o substituto de cada LLM (`deprecation_info`)

@@ -18,7 +18,7 @@ Memória viva do projeto: onde estamos, o que está provado, o que falta e as ar
 
 - **Tudo em produção:** formulário, pesquisa, voz na conta da Paggo (voz Samuel, `gemini-2.5-flash`), agenda real com trava na marcação, pós-chamada e painel com as 5 abas.
 - **Última prova ponta a ponta:** segunda conversa em produção (19/10, noite, `conv_6301...`, 5,4 min), depois de todas as mudanças do dia. Detalhes em [reasoning.md](reasoning.md#agente-de-voz).
-- **Nenhuma funcionalidade falta para a entrega.** O que resta é entendimento e defesa (Bloco 1), documentos (raciocínio curto, custo, LGPD) e a varredura final.
+- **O entregável está completo:** app no ar, repo, regras de negócio, objeções e o raciocínio curto ([reasoning-summary.md](reasoning-summary.md)), com custo por lead e por reunião. O que resta é entendimento e defesa (Bloco 1), a base legal da LGPD mais detalhada e a varredura final.
 
 ## O que mudou em 19/10
 
@@ -51,10 +51,9 @@ Cada item tem opções, escolha e prova em [reasoning.md](reasoning.md) e uma li
 ## Próximos passos
 
 1. **Bloco 1, com o dono do projeto:** tour do código seguindo um lead (o passo 1, formulário e `app/actions.ts`, está feito); rodar uma vez `npm run eval` e uma simulação lendo o rastro e as medidas; kit de defesa fora do repo.
-2. **Raciocínio curto:** o case pede "um documento curto". Uma página por parte (problema, opções, escolha, por que não as outras, prova), com o [reasoning.md](reasoning.md) como anexo.
-3. **Custo por lead e por reunião, em reais, com fontes:** pesquisa (preço do Sonnet 5.5 e tokens medidos), busca (Exa), voz (cerca de 470 créditos por minuto no plano da Paggo, medidos em 19/10).
-4. **LGPD:** a base legal nas regras de negócio, com a lei e o guia da ANPD.
-5. **Varredura final antes do congelamento** (ver [Dados de teste no banco](#dados-de-teste-no-banco)), com ok item por item.
+2. **Feito em 19/10, à noite:** o raciocínio curto ([reasoning-summary.md](reasoning-summary.md)), com o custo por lead (cerca de R$ 2,70 com conversa) e por reunião (cerca de R$ 9,90, com um funil hipotético), cada preço com fonte.
+3. **LGPD:** detalhar a base legal nas regras de negócio, com a lei e o guia da ANPD (hoje só cita o consentimento, art. 7º, I).
+4. **Varredura final antes do congelamento** (ver [Dados de teste no banco](#dados-de-teste-no-banco)), com ok item por item.
 
 ### Depois do case
 
