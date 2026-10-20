@@ -126,6 +126,8 @@ Diagrams, contracts and the file map: `docs/architecture.md`.
   already gave until the example "você cuida de qual parte do financeiro?" was made conditional (2026-10-19).
 - A prompt example teaches its sentence shape, not only its content: "vi que... é isso?" for confirming
   the hook came back as "vi aqui que você atua como <cargo do formulário>... confirma?" (2026-10-19).
+- Two questions at the same gate of the voice prompt go numbered, with "one does not replace the
+  other": a critical-event question phrased "antes de marcar" took the decision question's place (2026-10-20).
 - A one-time secret file is deleted only after the Vercel CLI prints "Added" or "Overrode"; and an
   ElevenLabs webhook in use by an agent cannot be deleted until the agent drops it (2026-10-19).
 
