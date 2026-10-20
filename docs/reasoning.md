@@ -94,6 +94,16 @@ O mesmo lead seguiu caminhos diferentes em rodadas seguidas, então uma rodada p
 
 Prova: rodada 2 com os 6 casos certos (CNPJ, fit, fontes) e a primeira execução do eval, 6 de 6, 57 de 57 gates, US$ 0,39.
 
+**Preço inventado** (19/10). Na segunda conversa em produção, o lead perguntou valores no campo livre, e o resumo para a voz mandou explicar que "o preço depende do número de CNPJs/SPEs e dos módulos". Nenhuma ferramenta trouxe preço (conferido no Rastro), e nem o deck nem o site da Paggo dizem como ela cobra; as instruções não falavam de preço, e o modelo improvisou. A voz não repetiu, porque o prompt dela barra preço, mas o texto ficava no briefing do painel.
+
+| Opção | Por que sim | Por que não |
+| --- | --- | --- |
+| **Uma regra nas instruções e um 7º caso no eval, com a checagem em todos os casos (escolhido)** | Corrige na origem e prova: o caso fica no eval como teste permanente | US$ 0,85 nas medições |
+| Só a regra, com o eval de 6 casos | Mais barato | Nenhum caso perguntava preço: não provaria nada |
+| Filtrar o texto no app com uma regex | Determinístico | Esconde o erro do modelo em vez de corrigir; a frase inventada muda de forma a cada rodada |
+
+Prova: antes da regra, o caso novo inventou em 2 de 2 rodadas ("o valor depende do tamanho da operação"; "para explicar como o valor se define"), e a primeira checagem, que procurava só "preço", deixou passar a primeira; virou uma checagem por frase (preço, valor ou custo junto de "depende", "define", "tamanho" ou "número de"). Depois da regra, o eval inteiro: 6 de 7 casos, 71 de 72 gates, nenhum preço inventado. A falha foi a Cury, que oscila sem relação com a regra: sem ela, 0 de 2 rodadas passaram; com ela, 1 de 3 ([research-cases.md](research-cases.md)).
+
 ## Auth do eve em produção
 
 Risco previsto: o servidor chama o agente pela URL do próprio deploy (`VERCEL_URL`), e essa URL responde 302 a navegadores por causa da proteção de deploy do Vercel. O plano B era trocar o eve pelo `ToolLoopAgent` do AI SDK com as mesmas ferramentas.

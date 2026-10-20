@@ -47,7 +47,7 @@ npm test             # vitest
 npm run typecheck
 npm run lint
 npm run build        # runs db/schema.sql first when DATABASE_URL is set
-npm run eval         # eve eval: the 6 hard research cases with real tools (about US$ 0.40)
+npm run eval         # eve eval: the 7 hard research cases with real tools (about US$ 0.45)
 node --env-file=<key file> scripts/voice-sync.mjs   # publish voice/ to an ElevenLabs account
 node --env-file=<key file> scripts/voice-simulate.mjs <persona>   # text-only call with a simulated lead
 npx next typegen     # regenerates PageProps/RouteContext types after adding a route

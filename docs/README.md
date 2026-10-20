@@ -11,7 +11,7 @@ Tudo o que alguém precisa para entender o case e continuar o desenvolvimento. C
 | [business-rules.md](business-rules.md) | Regras de qualificação, fit, SPICED, agenda e dados (entregável) | Banca e prompt da voz |
 | [objections.md](objections.md) | Mapa de objeções com resposta (entregável) | Banca e prompt da voz |
 | [reasoning.md](reasoning.md) | O que foi pesquisado em cada parte, opções, escolha, por que não as outras e a prova (entregável) | Banca |
-| [research-cases.md](research-cases.md) | Os 6 casos difíceis da pesquisa: o que foi pesquisado, CNPJ escolhido e descartado, medições antes e depois, o eval | Quem mexe no agente de pesquisa |
+| [research-cases.md](research-cases.md) | Os casos difíceis da pesquisa: o que foi pesquisado, CNPJ escolhido e descartado, medições antes e depois, o eval | Quem mexe no agente de pesquisa |
 | [paggo.md](paggo.md) | Fatos da Paggo com a fonte (deck institucional e site) e o que o agente não afirma | Prompt da voz, textos da UI |
 | [design.md](design.md) | Tokens e componentes visuais da Paggo usados na UI | Quem mexe na UI |
 

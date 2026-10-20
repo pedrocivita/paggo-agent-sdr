@@ -160,7 +160,7 @@ Custo total do Marco 2: cerca de US$ 0,95 em modelo e umas 30 buscas na Exa.
 
 ## Eval: os 6 casos a cada mudança
 
-Os mesmos 6 casos viraram um eval do eve em `evals/research/hard-cases.eval.ts`, para rodar de novo sempre que `agent/instructions.md`, uma ferramenta ou o modelo mudar:
+Os mesmos 6 casos viraram um eval do eve em `evals/research/hard-cases.eval.ts` (um 7º, o lead que pergunta o preço, entrou em 19/10), para rodar de novo sempre que `agent/instructions.md`, uma ferramenta ou o modelo mudar:
 
 ```bash
 npm run eval
@@ -180,6 +180,7 @@ O eval manda ao agente a mesma mensagem e o mesmo `BriefingSchema` que o app (`r
 | Briefing em menos de 45 s | gate | Meta de velocidade |
 | Caso a caso: Cury sem `fetch_site` e sem confiança alta; Pacaembu em Bauru; Lennar sem CNPJ escolhido; Paggo com "lead normal" | gate | Regras de e-mail pessoal, homônimo, estrangeira e Paggo |
 | Todo CNPJ citado passou pelo `lookup_cnpj` | soft, meta 100% | Dados cadastrais vindos de agregador |
+| Nenhuma frase sobre preço, valor ou custo diz do que ele depende ou como se define (todos os casos, desde 19/10) | gate | O briefing de produção que mandou a voz dizer "o preço depende do número de CNPJs/SPEs e dos módulos" |
 
 Primeira rodada completa, 17/10/2026, 3 casos em paralelo: **6 de 6 passaram, 57 de 57 gates**, CNPJs citados 100% conferidos na Receita.
 
@@ -194,6 +195,8 @@ Primeira rodada completa, 17/10/2026, 3 casos em paralelo: **6 de 6 passaram, 57
 
 Custo da rodada: cerca de US$ 0,39, em 1 minuto. Os detalhes de cada execução (eventos, asserções, `t.log`) ficam em `.eve/evals/<data>/`, fora do git.
 
+**Sétimo caso: o lead que pergunta o preço** (19/10). Um briefing de produção mandou a voz explicar que "o preço depende do número de CNPJs/SPEs e dos módulos", e nem o deck nem o site da Paggo dizem como ela cobra. Entrou um caso com o lead da Paggo escrevendo "Quanto custa? Queria saber valores antes de conversar." no campo livre (tag `price`, roda sozinho com `npx eve eval --tag price`), e a checagem de preço passou a valer para todos os casos. Antes da regra nas instruções, 2 de 2 rodadas inventaram ("o valor depende do tamanho da operação"; "pergunte o tamanho da operação para explicar como o valor se define"). Depois, o eval inteiro: 6 de 7 casos, 71 de 72 gates, nenhum preço inventado. A falha foi a Cury, que oscila sem relação com a regra: sem ela, 0 de 2 rodadas passaram (pulou a busca de SPEs); com ela, 1 de 3. Custo: cerca de US$ 0,85 nas 9 execuções.
+
 Cuidados:
 
 - Roda contra o mundo real: um site que muda ou a BrasilAPI fora do ar derrubam um caso sem que o agente tenha piorado. Antes de mexer nas instruções por causa de uma falha, olhe o evento da ferramenta no artefato.
@@ -202,6 +205,7 @@ Cuidados:
 
 ## O que continua fraco
 
+- **A Cury oscila.** Em 19/10, com e sem a regra de preço, ela falhou em 4 de 5 rodadas: pula a busca de SPEs ou dá confiança alta a um CNPJ achado sem domínio. O CNPJ escolhido sempre foi o certo.
 - **Variação entre rodadas.** O mesmo lead da Even rodou 3 vezes com 3 caminhos diferentes. O eval acima não elimina a variação, mas mostra se ela quebra algo que importa; vale rodá-lo 2 ou 3 vezes antes de mudar uma regra.
 - **Cargo de pessoa real não provado.** Todos os nomes são fictícios: está provado que o agente busca e rejeita homônimos (Cury), não que acha o cargo de alguém real. Teste pendente com uma pessoa real que autorize.
 - **Pequenas deduções ainda passam.** "Companhia aberta" da Pacaembu, e às vezes a fonte de um fato aponta para a Receita quando o dado veio do site (escritórios da Pacaembu).

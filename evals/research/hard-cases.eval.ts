@@ -1,5 +1,5 @@
 // The hard research cases of docs/research-cases.md: real companies, fictional people.
-// Every run hits the live sites, the Receita and Exa (about US$ 0.40 for the six), so the
+// Every run hits the live sites, the Receita and Exa (about US$ 0.45 for the seven), so the
 // checks are the facts that must hold, not the wording.
 
 import { defineEval, type EveEvalContext } from "eve/evals";

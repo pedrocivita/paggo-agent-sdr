@@ -109,7 +109,7 @@ O estado de cada parte (provado ou não) fica em [STATUS.md](STATUS.md).
 | `agent/agent.ts`, `agent/channels/eve.ts` | Agente eve (Claude Sonnet 5.5, raciocínio baixo, só as 3 tools) e a auth do canal (OIDC do Vercel em produção, livre em dev) |
 | `agent/instructions.md` | Ordem da pesquisa, regras de fit, formato do `forAgent`, nunca inventar |
 | `agent/tools/` | `fetch_site`, `lookup_cnpj`, `web_search`, cada uma dentro de `traced()` |
-| `evals/` | Eval do eve com os 6 casos difíceis ([research-cases.md](research-cases.md)) |
+| `evals/` | Eval do eve com os 7 casos difíceis ([research-cases.md](research-cases.md)) |
 | `lib/cnpj.ts`, `lib/site.ts`, `lib/search.ts` | Receita pela BrasilAPI, leitura do site, busca na Exa |
 | `lib/briefing.ts`, `lib/research.ts` | Schema do briefing; abre a sessão do eve e salva o resultado |
 | `lib/voice.ts` | Assinatura do webhook e conversão do pós-chamada para o registro do lead |
