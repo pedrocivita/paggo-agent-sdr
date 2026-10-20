@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { submitLead } from "./actions";
 import { OriginFields } from "./origin-fields";
+import { SubmitButton } from "./submit-button";
 import { ROLES } from "@/lib/roles";
 
 // The research runs inside this page's server action, so it needs room to finish.
@@ -75,9 +76,7 @@ export default function Home({ searchParams }: PageProps<"/">) {
             e a conversa é com um assistente de IA.
           </span>
         </label>
-        <button className="btn" type="submit">
-          Enviar
-        </button>
+        <SubmitButton />
       </form>
     </main>
   );
